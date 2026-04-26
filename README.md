@@ -33,6 +33,12 @@ lib/
 │   │   ├── shared_widgets/    # Reusable UI components
 │   │   └── theming/           # App theme and colors
 │   └── features/              # Feature modules
+│   ├── utils/             # Utility functions and helpers
+│   ├── shared_widgets/    # Reusable UI components
+│   └── theming/           # App theme and colors
+│
+│
+├── features/                  # Feature modules
 │       ├── auth/
 │       │   ├── controller/    # Authentication logic
 │       │   ├── data/          # Auth data models/repositories
