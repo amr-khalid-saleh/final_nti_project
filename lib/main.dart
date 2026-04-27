@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
       ),
-      home: const Onboarding2Screen(), // ← غيرت هنا
+      home: const Onboarding2Screen(), 
     );
   }
 }
