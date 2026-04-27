@@ -1,8 +1,3 @@
-// 📁 lib/features/onboarding/presentation/screens/onboarding2_screen.dart
-//
-// الشاشة التانية من الـ Onboarding
-// مسؤوليته: يرتب الـ widgets بس — مفيهوش منطق
-
 import 'package:flutter/material.dart';
 import '../widgets/mood_grid_widget.dart';
 import '../widgets/next_button_widget.dart';
@@ -18,7 +13,6 @@ class Onboarding2Screen extends StatelessWidget {
         width: double.infinity,
         height: double.infinity,
 
-        // نفس الخلفية الداكنة من الشاشة الأولى
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -35,34 +29,29 @@ class Onboarding2Screen extends StatelessWidget {
               children: [
                 const SizedBox(height: 16),
 
-                // ① الـ TopBar (X زرار + Musix)
                 _TopBar(),
 
                 const SizedBox(height: 20),
 
-                // ② الـ Grid بتاع الكروت
                 const MoodGridWidget(),
 
                 const Spacer(),
 
-                // ③ النص الرئيسي
                 _TextSection(),
 
                 const SizedBox(height: 32),
 
-                // ④ زرار Next
                 NextButtonWidget(
                   onTap: () {
-                    // TODO: navigation للشاشة التالتة
+                    // TODO: navigation 
                   },
                 ),
                 const SizedBox(height: 16),
 
-                // ⑤ النقط — النقطة التانية نشطة (activeDot: 1)
                 Center(
                   child: const DotsIndicatorWidget(
                     totalDots: 3,
-                    activeDot: 1, // ← الشاشة التانية
+                    activeDot: 1, 
                   ),
                 ),
 
@@ -76,14 +65,12 @@ class Onboarding2Screen extends StatelessWidget {
   }
 }
 
-// شريط العنوان: Musix + زرار X
 class _TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // اسم التطبيق
         const Text(
           'Musix',
           style: TextStyle(
@@ -93,10 +80,8 @@ class _TopBar extends StatelessWidget {
           ),
         ),
 
-        // زرار الإغلاق
         GestureDetector(
           onTap: () {
-            // هنا ممكن تضيف navigation لو عايز
           },
           child: Icon(
             Icons.close,
@@ -109,14 +94,12 @@ class _TopBar extends StatelessWidget {
   }
 }
 
-// النصوص: العنوان + الـ subtitle
 class _TextSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // العنوان الكبير
         const Text(
           'Curate\nYour Mood',
           style: TextStyle(
@@ -129,7 +112,6 @@ class _TextSection extends StatelessWidget {
 
         const SizedBox(height: 12),
 
-        // النص التوضيحي
         Text(
           'Build the perfect soundtrack for\nevery moment.',
           style: TextStyle(
