@@ -1,8 +1,3 @@
-// 📁 lib/features/onboarding/presentation/screens/onboarding1_screen.dart
-//
-// الشاشة الأولى من الـ Onboarding
-// مسؤوليته: يرتب الـ widgets بس — مش فيه أي رسم تفصيلي
-
 import 'package:flutter/material.dart';
 import '../widgets/vinyl_widget.dart';
 import '../widgets/next_button_widget.dart';
@@ -18,52 +13,43 @@ class OnboardingScreen extends StatelessWidget {
         width: double.infinity,
         height: double.infinity,
 
-        // الخلفية: صورة الـ wallpaper مع طبقة داكنة فوقها
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/images/wallpaper.png'),
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
-              Color(0x99000000), // 0x99 = 60% شفافية سوداء
+              Color(0x99000000), // 0x99 = 60% 
               BlendMode.darken,
             ),
           ),
         ),
 
         child: SafeArea(
-          // SafeArea: بيحمي المحتوى من الـ notch والـ status bar
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 28.0),
             child: Column(
               children: [
                 const SizedBox(height: 16),
 
-                // ① اسم التطبيق
                 _TopBar(),
 
                 const SizedBox(height: 20),
 
-                // ② الاسطوانة الدوارة
                 const VinylWidget(),
 
-                // Spacer: بيملا المساحة الفاضية بين الـ vinyl والنص
                 const Spacer(),
 
-                // ③ العنوان والـ subtitle
                 _TextSection(),
 
                 const SizedBox(height: 36),
 
-                // ④ زرار Next — بنبعتله onTap فاضي دلوقتي
                 NextButtonWidget(
                   onTap: () {
-                    // TODO: هنضيف Navigation للشاشة التانية هنا
                   },
                 ),
 
                 const SizedBox(height: 16),
 
-                // ⑤ النقط — الشاشة الأولى (activeDot: 0)
                 const DotsIndicatorWidget(
                   totalDots: 3,
                   activeDot: 0,
@@ -79,12 +65,7 @@ class OnboardingScreen extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────
-// Private Widgets — خاصة بالشاشة دي بس
-// مش محتاجة ملفات منفصلة لأنها بسيطة
-// ─────────────────────────────────────────
 
-// اسم التطبيق في الأعلى
 class _TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -105,7 +86,6 @@ class _TopBar extends StatelessWidget {
   }
 }
 
-// العنوان الكبير + النص التوضيحي
 class _TextSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
