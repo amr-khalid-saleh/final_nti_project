@@ -31,7 +31,6 @@ class ProfileHeaderWidget extends StatelessWidget {
 
         const SizedBox(height: 12),
 
-        // الاسم
         const Text(
           'Alex Rivera',
           style: TextStyle(
@@ -43,7 +42,6 @@ class ProfileHeaderWidget extends StatelessWidget {
 
         const SizedBox(height: 8),
 
-        // Badge
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
           decoration: BoxDecoration(
