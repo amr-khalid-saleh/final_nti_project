@@ -5,7 +5,7 @@ class AppColors {
 
   // backgrounds
   static const Color scaffoldBgTop    = Color(0xFF080808);
-  static const Color scaffoldBgBottom = Color(0xFF220601);
+  static const Color scaffoldBgBottom = Color(0xFF250A06);
   static const Color scaffoldBg       = Color(0xFF110800);
   static const Color cardBg           = Color(0xFF1E1008);
   static const Color cardBgAlt        = Color(0xFF261608);
