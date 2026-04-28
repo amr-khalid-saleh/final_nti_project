@@ -1,6 +1,13 @@
+// 📁 lib/features/onboarding/presentation/widgets/next_button_widget.dart
+//
+// مسؤوليته: رسم زرار Next البرتقالي
+// قابل لإعادة الاستخدام في كل شاشات الـ Onboarding
+
 import 'package:flutter/material.dart';
 
 class NextButtonWidget extends StatelessWidget {
+  // onTap: الـ callback اللي بيتنفذ لما المستخدم يضغط
+  // required: لازم تبعته لما تستخدم الـ widget
   final VoidCallback onTap;
 
   const NextButtonWidget({
@@ -11,13 +18,14 @@ class NextButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap, 
+      onTap: onTap, // لما يضغط، نفذ الـ callback
       child: Container(
-        width: double.infinity, 
+        width: double.infinity, // عرض كامل
         height: 56,
         decoration: BoxDecoration(
+          // اللون البرتقالي-الأحمر
           color: const Color(0xFFE84818),
-          borderRadius: BorderRadius.circular(50), 
+          borderRadius: BorderRadius.circular(50), // شكل pill مدور
         ),
         child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,

@@ -9,6 +9,7 @@ class MoodGridWidget extends StatelessWidget {
       height: 280,
       child: Row(
         children: [
+          // العمود الأيسر: Late Night + Jazz Focus
           Expanded(
             child: Column(
               children: [
@@ -34,6 +35,7 @@ class MoodGridWidget extends StatelessWidget {
 
           const SizedBox(width: 8),
 
+          // العمود الأيمن: Power Mix + Daily Fresh
           Expanded(
             child: Column(
               children: [
@@ -82,11 +84,13 @@ class _MoodCard extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
+          // الخلفية: صورة أو لون
           if (imagePath != null)
             Image.asset(imagePath!, fit: BoxFit.cover)
           else
             Container(color: color ?? Colors.black),
 
+          // طبقة داكنة فوق الصورة
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -100,6 +104,7 @@ class _MoodCard extends StatelessWidget {
             ),
           ),
 
+          // الأيقونة لو مفيش صورة
           if (icon != null)
             Center(
               child: Icon(
@@ -109,6 +114,7 @@ class _MoodCard extends StatelessWidget {
               ),
             ),
 
+          // الاسم في الأسفل
           Positioned(
             bottom: 10,
             left: 10,
