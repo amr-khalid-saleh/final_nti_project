@@ -15,13 +15,16 @@ class Onboarding3Screen extends StatelessWidget {
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/onboarding_background.png'),
+            fit: BoxFit.cover,          ),
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [Color(0xFF0D0500), Color(0xFF1A0A00), Color(0xFF0D0500)],
           ),
         ),
-        child:  SafeArea(
+        child: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
@@ -29,12 +32,8 @@ class Onboarding3Screen extends StatelessWidget {
               children: [
                 SizedBox(height: 16),
                 OnboardingTopBar(),
-                SizedBox(height: 40),
 
-                Expanded(
-                  child: Center(child: Placeholder(fallbackHeight: 300)),
-                ),
-
+                Spacer(),
                 const SizedBox(height: 24),
 
                 OnboardingTextSection(
@@ -55,10 +54,7 @@ class Onboarding3Screen extends StatelessWidget {
                 const SizedBox(height: 16),
 
                 // Dots Indicator
-                OnboardingDotsIndicator(
-                  totalDots: 3,
-                  activeDot: 2,
-                ),
+                OnboardingDotsIndicator(totalDots: 3, activeDot: 2),
                 SizedBox(height: 32),
               ],
             ),
