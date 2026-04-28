@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/onboarding_text_section.dart';
 import '../widgets/onboarding_top_bar.dart';
 
 class Onboarding3Screen extends StatelessWidget {
@@ -38,8 +39,12 @@ class Onboarding3Screen extends StatelessWidget {
                   ),
                 ),
 
-                Placeholder(fallbackHeight: 120),
+                const SizedBox(height: 24),
 
+                 OnboardingTextSection(
+                  title: 'Discover\nEndless Music',
+                  subtitle: 'Millions of songs, playlists, and artists\nat your fingertips.',
+                ),
                 SizedBox(height: 32),
 
                 Placeholder(fallbackHeight: 56),
