@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:musix/features/onboarding/presentation/screens/onboarding3_screen.dart';
+import 'package:musix/features/profile/presentation/screens/profile_screen.dart';
 
 import 'features/search/presentation/screens/search_screen.dart';
 
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Musix',
       theme: ThemeData(scaffoldBackgroundColor: Colors.black,),
-      home: SearchScreen(),
+      home:ProfileScreen(),
     );
   }
 }
