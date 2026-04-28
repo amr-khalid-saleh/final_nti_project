@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/categories_grid.dart';
+import '../widgets/discover_card.dart';
 import '../widgets/search_app_bar.dart';
 import '../widgets/search_bar_widget.dart';
 import '../widgets/browse_categories_title.dart';
@@ -30,7 +31,6 @@ class SearchScreen extends StatelessWidget {
                 const BrowseCategoriesTitle(),
                 const SizedBox(height: 16),
 
-                // Categories Grid
                 GridView.count(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
@@ -64,13 +64,13 @@ class SearchScreen extends StatelessWidget {
 
                 const SizedBox(height: 32),
 
-                // Trending Artists
                 const TrendingArtistsSection(),
-
                 const SizedBox(height: 40),
 
-                // Discover Section (placeholder)
-                const Placeholder(fallbackHeight: 220),
+                // Discover Section
+                const DiscoverCard(),
+
+                const SizedBox(height: 40),
               ],
             ),
           ),
