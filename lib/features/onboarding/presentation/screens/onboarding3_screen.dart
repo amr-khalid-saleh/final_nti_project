@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/dots_indicator_widget.dart';
 import '../widgets/next_button_widget.dart';
 import '../widgets/onboarding_text_section.dart';
 import '../widgets/onboarding_top_bar.dart';
@@ -51,12 +52,13 @@ class Onboarding3Screen extends StatelessWidget {
                     print('Next button tapped - Onboarding 3');
                   },
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
-                Center(
-                  child: Placeholder(fallbackHeight: 10, fallbackWidth: 80),
+                // Dots Indicator
+                OnboardingDotsIndicator(
+                  totalDots: 3,
+                  activeDot: 2,
                 ),
-
                 SizedBox(height: 32),
               ],
             ),
