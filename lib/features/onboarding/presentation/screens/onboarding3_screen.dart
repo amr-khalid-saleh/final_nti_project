@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/onboarding_top_bar.dart';
+
 class Onboarding3Screen extends StatelessWidget {
   const Onboarding3Screen({super.key});
 
@@ -27,8 +29,7 @@ class Onboarding3Screen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 16),
-                Placeholder(fallbackHeight: 40),
-
+                OnboardingTopBar(),
                 SizedBox(height: 40),
 
                 Expanded(
