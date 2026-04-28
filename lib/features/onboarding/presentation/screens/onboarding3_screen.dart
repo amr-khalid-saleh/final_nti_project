@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/next_button_widget.dart';
 import '../widgets/onboarding_text_section.dart';
 import '../widgets/onboarding_top_bar.dart';
 
@@ -16,14 +17,10 @@ class Onboarding3Screen extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF0D0500),
-              Color(0xFF1A0A00),
-              Color(0xFF0D0500),
-            ],
+            colors: [Color(0xFF0D0500), Color(0xFF1A0A00), Color(0xFF0D0500)],
           ),
         ),
-        child: const SafeArea(
+        child:  SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
@@ -34,21 +31,26 @@ class Onboarding3Screen extends StatelessWidget {
                 SizedBox(height: 40),
 
                 Expanded(
-                  child: Center(
-                    child: Placeholder(fallbackHeight: 300),
-                  ),
+                  child: Center(child: Placeholder(fallbackHeight: 300)),
                 ),
 
                 const SizedBox(height: 24),
 
-                 OnboardingTextSection(
+                OnboardingTextSection(
                   title: 'Discover\nEndless Music',
-                  subtitle: 'Millions of songs, playlists, and artists\nat your fingertips.',
+                  subtitle:
+                      'Millions of songs, playlists, and artists\nat your fingertips.',
                 ),
+
                 SizedBox(height: 32),
 
-                Placeholder(fallbackHeight: 56),
-
+                // Next Button
+                OnboardingNextButton(
+                  onTap: () {
+                    // TODO: Navigate to next screen (Login or Home)
+                    print('Next button tapped - Onboarding 3');
+                  },
+                ),
                 SizedBox(height: 16),
 
                 Center(
