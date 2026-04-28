@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import '../widgets/browse_categories_title.dart';
 import '../widgets/categories_grid.dart';
 import '../widgets/search_app_bar.dart';
 import '../widgets/search_bar_widget.dart';
+import '../widgets/browse_categories_title.dart';
+import '../widgets/trending_artists_section.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
@@ -12,29 +13,31 @@ class SearchScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFF0D0D0D),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 8),
-              const SearchAppBar(),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 8),
+                const SearchAppBar(),
 
-              const SizedBox(height: 20),
-              const SearchBarWidget(),
+                const SizedBox(height: 20),
+                const SearchBarWidget(),
 
-              const SizedBox(height: 32),
+                const SizedBox(height: 32),
 
-              const BrowseCategoriesTitle(),
-              const SizedBox(height: 16),
+                const BrowseCategoriesTitle(),
+                const SizedBox(height: 16),
 
-              Expanded(
-                flex: 2,
-                child: GridView.count(
+                // Categories Grid
+                GridView.count(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
                   crossAxisCount: 2,
                   mainAxisSpacing: 12,
                   crossAxisSpacing: 12,
-                  childAspectRatio: 1.1,
+                  childAspectRatio: 1.05,
                   children: const [
                     CategoryCard(
                       title: 'Rock & Roll',
@@ -58,22 +61,18 @@ class SearchScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 32),
 
-              // Trending Artists Title (placeholder)
-              const Placeholder(fallbackHeight: 30),
+                const SizedBox(height: 32),
 
-              const SizedBox(height: 16),
+                // Trending Artists
+                const TrendingArtistsSection(),
 
-              // Trending Artists (placeholder)
-              const Placeholder(fallbackHeight: 90),
+                const SizedBox(height: 40),
 
-              const SizedBox(height: 32),
-
-              // Discover Section (placeholder)
-              const Placeholder(fallbackHeight: 200),
-            ],
+                // Discover Section (placeholder)
+                const Placeholder(fallbackHeight: 220),
+              ],
+            ),
           ),
         ),
       ),
