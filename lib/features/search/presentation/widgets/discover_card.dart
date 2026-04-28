@@ -1,12 +1,36 @@
 import 'package:flutter/material.dart';
 
+class DiscoverSection extends StatelessWidget {
+  const DiscoverSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Discover',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 16),
+        const DiscoverCard(),
+      ],
+    );
+  }
+}
+
 class DiscoverCard extends StatelessWidget {
   const DiscoverCard({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 220,
+      width: double.infinity,
+      height: 300,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         image: const DecorationImage(
@@ -43,7 +67,7 @@ class DiscoverCard extends StatelessWidget {
                   color: Colors.white,
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
-                  letterSpacing: 1,
+                  letterSpacing: 0.5,
                 ),
               ),
             ),
@@ -57,7 +81,7 @@ class DiscoverCard extends StatelessWidget {
                 height: 1.1,
               ),
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 8),
             const Text(
               'Curated by top listeners in your area\nfor those late night sessions.',
               style: TextStyle(
@@ -66,13 +90,12 @@ class DiscoverCard extends StatelessWidget {
                 height: 1.4,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
             SizedBox(
-              width: 140,
-              height: 42,
+              width: 160,
+              height: 44,
               child: ElevatedButton(
                 onPressed: () {
-                  // TODO: Play playlist
                   print('Listen Now tapped');
                 },
                 style: ElevatedButton.styleFrom(

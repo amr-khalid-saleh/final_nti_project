@@ -67,8 +67,7 @@ class SearchScreen extends StatelessWidget {
                 const TrendingArtistsSection(),
                 const SizedBox(height: 40),
 
-                // Discover Section
-                const DiscoverCard(),
+                const DiscoverSection(),
 
                 const SizedBox(height: 40),
               ],
