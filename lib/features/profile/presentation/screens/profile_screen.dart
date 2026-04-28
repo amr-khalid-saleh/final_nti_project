@@ -16,27 +16,22 @@ class ProfileScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // ① AppBar
               const ProfileAppBarWidget(),
 
               const SizedBox(height: 20),
 
-              // ② Header: صورة + اسم + badge
               const ProfileHeaderWidget(),
 
               const SizedBox(height: 24),
 
-              // ③ Stats
               const StatsRowWidget(),
 
               const SizedBox(height: 20),
 
-              // ④ Subscription
               const SubscriptionCardWidget(),
 
               const SizedBox(height: 24),
 
-              // ⑤ Recent Activity
               const RecentActivityWidget(),
 
               const SizedBox(height: 20),
