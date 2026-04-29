@@ -82,7 +82,7 @@ class _TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         // اسم التطبيق
         const Text(
@@ -91,18 +91,6 @@ class _TopBar extends StatelessWidget {
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.w700,
-          ),
-        ),
-
-        // زرار الإغلاق
-        GestureDetector(
-          onTap: () {
-            // هنا ممكن تضيف navigation لو عايز
-          },
-          child: Icon(
-            Icons.close,
-            color: Colors.white.withValues(alpha: 0.6),
-            size: 20,
           ),
         ),
       ],

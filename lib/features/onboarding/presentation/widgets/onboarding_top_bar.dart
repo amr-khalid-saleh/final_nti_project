@@ -6,7 +6,7 @@ class OnboardingTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         const Text(
           'Musix',
@@ -14,16 +14,6 @@ class OnboardingTopBar extends StatelessWidget {
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.w700,
-          ),
-        ),
-        GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Icon(
-            Icons.close,
-            color: Colors.white.withValues(alpha: 0.6),
-            size: 20,
           ),
         ),
       ],
