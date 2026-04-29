@@ -20,7 +20,7 @@ class FreshFindCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.cardBg,
+          color: Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -29,7 +29,7 @@ class FreshFindCard extends StatelessWidget {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: AppColors.cardBgAlt,
+                  color: Colors.transparent,
                   borderRadius:
                       const BorderRadius.vertical(top: Radius.circular(12)),
                 ),
