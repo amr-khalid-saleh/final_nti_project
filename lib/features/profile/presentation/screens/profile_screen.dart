@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/profile_action_buttons.dart';
 import '../widgets/profile_artist_info.dart';
 import '../widgets/profile_hero_image.dart';
 
@@ -20,6 +21,10 @@ class ProfileScreen extends StatelessWidget {
               ProfileArtistInfo(
                 artistName: 'Julian Vane',
                 isVerified: true,
+              ),
+              ProfileActionButtons(
+                onPlay: () {},
+                onFollow: () {},
               ),
             ],
           ),
