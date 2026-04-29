@@ -22,7 +22,6 @@ class AppBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // الـ Container الخارجي شفاف تماماً — الـ padding بس
     return Container(
       color: Colors.transparent,
       padding: const EdgeInsets.only(left: 16, right: 16, bottom: 20),

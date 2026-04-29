@@ -4,6 +4,9 @@ class AppColors {
   AppColors._();
 
   // backgrounds
+  static const Color scaffoldBgTop    = Color(0xFF080808);
+  static const Color scaffoldBgBottom = Color(0xFF250A06);
+  static const Color scaffoldBg       = Color(0xFF110800);
   static const Color scaffoldBgTop    = Color(0xFF1C0A00); // أسود + نبضة برتقالي
   static const Color scaffoldBgBottom = Color(0xFF080808); // أسود
   static const Color scaffoldBg       = Color(0xFF110800); // fallback solid

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'core/theming/app_theme.dart';
+import 'core/utils/app_routes.dart';
+import 'features/home/presentation/screens/home_screen.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'features/library/presentation/screens/album_details_screen.dart';
@@ -7,16 +10,14 @@ import 'features/library/presentation/screens/album_details_screen.dart';
 
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MusixApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MusixApp extends StatelessWidget {
+  const MusixApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-
-
     return ScreenUtilInit(
       designSize: const Size(430, 932),
       minTextAdapt: true,
