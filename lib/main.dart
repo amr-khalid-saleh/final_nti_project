@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-//import 'package:musix/features/onboarding/presentation/screens/onboarding2_screen.dart';
-import 'package:musix/features/profile/presentation/screens/profile_screen.dart';
+
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'features/library/presentation/screens/album_details_screen.dart';
+// import 'features/library/presentation/screens/artist_details_screen.dart';
+// import 'features/library/presentation/screens/library_splash_screen.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -11,17 +15,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Musix',
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.black,
-      ),
-<<<<<<< HEAD
-      home: const ProfileScreen(), // ← غيرت هنا
-=======
-      home: const Onboarding2Screen(), 
->>>>>>> f42a10b278fc84d30507169f035c9eb1c9216c3a
+
+    return ScreenUtilInit(
+      designSize: const Size(430, 932),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (_, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            scaffoldBackgroundColor: Colors.black,
+            fontFamily: 'SFProDisplay',
+          ),
+          home: child,
+        );
+      },
+      child: const AlbumDetailsScreen(),
     );
   }
 }
