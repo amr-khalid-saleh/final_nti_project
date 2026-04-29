@@ -49,7 +49,7 @@ class AlbumDetailsScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(28.r),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFFFF3B1D).withOpacity(.28),
+                          color: const Color(0xFFFF3B1D).withValues(alpha: .28),
                           blurRadius: 40,
                           spreadRadius: 2,
                         ),
@@ -69,7 +69,7 @@ class AlbumDetailsScreen extends StatelessWidget {
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(.55),
+                                color: Colors.black.withValues(alpha: .55),
                                 blurRadius: 30,
                                 offset: const Offset(0, 15),
                               ),

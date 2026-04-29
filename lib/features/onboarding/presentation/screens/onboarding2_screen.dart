@@ -101,7 +101,7 @@ class _TopBar extends StatelessWidget {
           },
           child: Icon(
             Icons.close,
-            color: Colors.white.withOpacity(0.6),
+            color: Colors.white.withValues(alpha: 0.6),
             size: 20,
           ),
         ),
@@ -134,7 +134,7 @@ class _TextSection extends StatelessWidget {
         Text(
           'Build the perfect soundtrack for\nevery moment.',
           style: TextStyle(
-            color: Colors.white.withOpacity(0.5),
+            color: Colors.white.withValues(alpha: 0.5),
             fontSize: 14,
             height: 1.6,
           ),

@@ -29,7 +29,7 @@ class OnboardingDotsIndicator extends StatelessWidget {
             decoration: BoxDecoration(
               color: isActive
                   ? const Color(0xFFE84818)          // نشطة: برتقالي
-                  : Colors.white.withOpacity(0.3),   // غير نشطة: أبيض شفاف
+                  : Colors.white.withValues(alpha: 0.3),   // غير نشطة: أبيض شفاف
               borderRadius: BorderRadius.circular(3),
             ),
           ),

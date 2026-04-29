@@ -42,7 +42,7 @@ class ProfilePopularTracks extends StatelessWidget {
               Text(
                 'See all',
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.5),
+                  color: Colors.white.withValues(alpha: 0.5),
                   fontSize: 13,
                 ),
               ),

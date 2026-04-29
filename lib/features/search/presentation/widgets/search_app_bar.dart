@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 class SearchAppBar extends StatelessWidget {
@@ -24,7 +26,7 @@ class SearchAppBar extends StatelessWidget {
         IconButton(
           onPressed: () {
             // TODO: Open filter
-            print('Filter button tapped');
+            log('Filter button tapped');
           },
           icon: const Icon(
             Icons.search,

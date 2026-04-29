@@ -28,7 +28,7 @@ class SubscriptionCardWidget extends StatelessWidget {
             Text(
               'Your plan expires in 14 days. Renew now to keep enjoying lossless audio and offline playback.',
               style: TextStyle(
-                color: Colors.white.withOpacity(0.5),
+                color: Colors.white.withValues(alpha: 0.5),
                 fontSize: 13,
                 height: 1.5,
               ),

@@ -98,7 +98,7 @@ class _MoodCard extends StatelessWidget {
                 end: Alignment.bottomCenter,
                 colors: [
                   Colors.transparent,
-                  Colors.black.withOpacity(0.6),
+                  Colors.black.withValues(alpha: 0.6),
                 ],
               ),
             ),
@@ -109,7 +109,7 @@ class _MoodCard extends StatelessWidget {
             Center(
               child: Icon(
                 icon,
-                color: Colors.white.withOpacity(0.3),
+                color: Colors.white.withValues(alpha: 0.3),
                 size: 40,
               ),
             ),

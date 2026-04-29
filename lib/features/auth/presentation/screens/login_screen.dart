@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
@@ -91,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
                   colors: [
-                    Color(0xFFFF5B3D).withOpacity(0.4),
+                    Color(0xFFFF5B3D).withValues(alpha: 0.4),
                     Colors.transparent,
                   ],
                 ),
@@ -254,7 +254,7 @@ class _LoginPageState extends State<LoginPage> {
                           backgroundColor: Color(0xFFFF5B3D),
                           disabledBackgroundColor: Color(
                             0xFFFF5B3D,
-                          ).withOpacity(0.7),
+                          ).withValues(alpha: 0.7),
                           padding: EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),

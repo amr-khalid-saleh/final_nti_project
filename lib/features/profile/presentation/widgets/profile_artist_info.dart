@@ -29,7 +29,7 @@ class ProfileArtistInfo extends StatelessWidget {
                 Text(
                   'VERIFIED ARTIST',
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.7),
+                    color: Colors.white.withValues(alpha: 0.7),
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 1.2,

@@ -53,7 +53,7 @@ class _BottomNav extends StatelessWidget {
         color: const Color(0xFF111111),
         border: Border(
           top: BorderSide(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withValues(alpha: 0.1),
             width: 0.5,
           ),
         ),
@@ -62,11 +62,11 @@ class _BottomNav extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Icon(Icons.home_outlined,
-              color: Colors.white.withOpacity(0.4), size: 24),
+              color: Colors.white.withValues(alpha: 0.4), size: 24),
           Icon(Icons.search,
-              color: Colors.white.withOpacity(0.4), size: 24),
+              color: Colors.white.withValues(alpha: 0.4), size: 24),
           Icon(Icons.library_music_outlined,
-              color: Colors.white.withOpacity(0.4), size: 24),
+              color: Colors.white.withValues(alpha: 0.4), size: 24),
           const Icon(Icons.person,
               color: Color(0xFFE84818), size: 24),
         ],

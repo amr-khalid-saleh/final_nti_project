@@ -48,9 +48,9 @@ class ArtistDetailsScreen extends StatelessWidget {
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: [
-                              Colors.black.withOpacity(.15),
-                              Colors.black.withOpacity(.25),
-                              Colors.black.withOpacity(.85),
+                              Colors.black.withValues(alpha: 0.15),
+                              Colors.black.withValues(alpha: 0.25),
+                              Colors.black.withValues(alpha: 0.85),
                               Colors.black,
                             ],
                           ),

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 class TrendingArtistsSection extends StatelessWidget {
@@ -22,7 +24,7 @@ class TrendingArtistsSection extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 // TODO: Navigate to all artists
-                print('See All tapped');
+                log('See All tapped');
               },
               child: const Text(
                 'SEE ALL',

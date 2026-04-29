@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 class DiscoverSection extends StatelessWidget {
@@ -46,7 +48,7 @@ class DiscoverCard extends StatelessWidget {
             end: Alignment.bottomCenter,
             colors: [
               Colors.transparent,
-              Colors.black.withOpacity(0.85),
+              Colors.black.withValues(alpha: 0.85),
             ],
           ),
         ),
@@ -96,7 +98,7 @@ class DiscoverCard extends StatelessWidget {
               height: 44,
               child: ElevatedButton(
                 onPressed: () {
-                  print('Listen Now tapped');
+                  log('Listen Now tapped');
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFE84818),

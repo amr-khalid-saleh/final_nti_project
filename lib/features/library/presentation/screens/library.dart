@@ -6,7 +6,7 @@ import '../../../../core/utils/app_routes.dart';
 import '../../../../core/shared_widgets/app_mini_player.dart';
 
 class MusicLibraryPage extends StatefulWidget {
-  const MusicLibraryPage({Key? key}) : super(key: key);
+  const MusicLibraryPage({super.key});
 
   @override
   State<MusicLibraryPage> createState() => _MusicLibraryPageState();
@@ -33,7 +33,7 @@ class _MusicLibraryPageState extends State<MusicLibraryPage>
     return Scaffold(
       backgroundColor: AppColors.scaffoldBg,
       appBar: AppBar(
-        backgroundColor: AppColors.scaffoldBg.withOpacity(0.8),
+        backgroundColor: AppColors.scaffoldBg.withValues(alpha: 0.8),
         elevation: 0,
         title: Row(
           children: [
@@ -110,7 +110,7 @@ class _MusicLibraryPageState extends State<MusicLibraryPage>
                             gradient: LinearGradient(
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
-                              colors: [Colors.transparent, Colors.black.withOpacity(0.8)],
+                              colors: [Colors.transparent, Colors.black.withValues(alpha: 0.8)],
                             ),
                           ),
                           padding: const EdgeInsets.all(20),

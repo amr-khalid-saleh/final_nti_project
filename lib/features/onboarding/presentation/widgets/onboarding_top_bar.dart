@@ -22,7 +22,7 @@ class OnboardingTopBar extends StatelessWidget {
           },
           child: Icon(
             Icons.close,
-            color: Colors.white.withOpacity(0.6),
+            color: Colors.white.withValues(alpha: 0.6),
             size: 20,
           ),
         ),

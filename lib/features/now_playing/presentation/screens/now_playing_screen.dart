@@ -75,7 +75,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.accent.withOpacity(0.3),
+                        color: AppColors.accent.withValues(alpha: 0.3),
                         blurRadius: 40,
                         offset: const Offset(0, 12),
                       ),

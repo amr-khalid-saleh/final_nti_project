@@ -48,7 +48,7 @@ class ProfileHeaderWidget extends StatelessWidget {
             color: const Color(0xFF2A1500),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: const Color(0xFFE84818).withOpacity(0.5),
+              color: const Color(0xFFE84818).withValues(alpha: 0.5),
             ),
           ),
           child: const Text(

@@ -12,7 +12,10 @@ class AppBottomNavBar extends StatelessWidget {
     switch (index) {
       case 0:
         Navigator.pushNamedAndRemoveUntil(
-            context, AppRoutes.home, (route) => false);
+          context,
+          AppRoutes.home,
+          (route) => false,
+        );
         break;
       case 1:
         // Navigator.pushNamed(context, AppRoutes.search);
@@ -36,7 +39,7 @@ class AppBottomNavBar extends StatelessWidget {
         borderRadius: BorderRadius.circular(40),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.4),
+            color: Colors.black.withValues(alpha: 0.4),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),

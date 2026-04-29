@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({Key? key}) : super(key: key);
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -280,7 +280,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: Color(0xFFFF5B3D).withOpacity(0.6),
+                            color: Color(0xFFFF5B3D).withValues(alpha: 0.6),
                             blurRadius: 20,
                             spreadRadius: 2,
                             offset: Offset(0, 10),
@@ -296,7 +296,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             backgroundColor: Color(0xFFFF5B3D),
                             disabledBackgroundColor: Color(
                               0xFFFF5B3D,
-                            ).withOpacity(0.7),
+                            ).withValues(alpha: 0.7),
                             padding: EdgeInsets.symmetric(vertical: 14),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
@@ -445,9 +445,9 @@ class _SignUpPageState extends State<SignUpPage> {
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
                   colors: [
-                    Color(0xFFFF5B3D).withOpacity(0.3),
-                    Color(0xFFFF5B3D).withOpacity(0.15),
-                    Color(0xFFFF5B3D).withOpacity(0.0),
+                    Color(0xFFFF5B3D).withValues(alpha: 0.3),
+                    Color(0xFFFF5B3D).withValues(alpha: 0.15),
+                    Color(0xFFFF5B3D).withValues(alpha: 0.0),
                   ],
                 ),
               ),
