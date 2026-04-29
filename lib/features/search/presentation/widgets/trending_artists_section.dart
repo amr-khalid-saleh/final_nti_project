@@ -48,11 +48,11 @@ class TrendingArtistsSection extends StatelessWidget {
             separatorBuilder: (context, index) => const SizedBox(width: 20),
             itemBuilder: (context, index) {
               final artists = [
-                {'name': 'Elias', 'image': 'assets/man.png'},
-                {'name': 'Muna', 'image': 'assets/man.png'},
-                {'name': 'Kael', 'image': 'assets/man.png'},
-                {'name': 'Luna', 'image': 'assets/man.png'},
-                {'name': 'Zed', 'image': 'assets/man.png'},
+                {'name': 'Elias', 'image': 'assets/images/man.png'},
+                {'name': 'Muna', 'image': 'assets/images/man.png'},
+                {'name': 'Kael', 'image': 'assets/images/man.png'},
+                {'name': 'Luna', 'image': 'assets/images/man.png'},
+                {'name': 'Zed', 'image': 'assets/images/man.png'},
               ];
 
               final artist = artists[index % artists.length];

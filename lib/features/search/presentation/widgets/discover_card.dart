@@ -36,7 +36,7 @@ class DiscoverCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         image: const DecorationImage(
-          image: AssetImage('assets/discover_background.png'),
+          image: AssetImage('assets/images/discover_background.png'),
           fit: BoxFit.cover,
         ),
       ),

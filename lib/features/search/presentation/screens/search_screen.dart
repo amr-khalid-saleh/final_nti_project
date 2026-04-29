@@ -40,22 +40,22 @@ class SearchScreen extends StatelessWidget {
                   children: const [
                     CategoryCard(
                       title: 'Rock & Roll',
-                      imagePath: 'assets/card1.png',
+                      imagePath: 'assets/images/card1.png',
                       icon: Icons.electric_bolt,
                     ),
                     CategoryCard(
                       title: 'Electronic\nBeats',
-                      imagePath: 'assets/card2.png',
+                      imagePath: 'assets/images/card2.png',
                       icon: Icons.music_note,
                     ),
                     CategoryCard(
                       title: 'Lo-Fi Study',
-                      imagePath: 'assets/card3.png',
+                      imagePath: 'assets/images/card3.png',
                       icon: Icons.coffee,
                     ),
                     CategoryCard(
                       title: 'Jazz Nights',
-                      imagePath: 'assets/card4.png',
+                      imagePath: 'assets/images/card4.png',
                       icon: Icons.nightlight_round,
                     ),
                   ],

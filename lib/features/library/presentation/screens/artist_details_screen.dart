@@ -66,16 +66,7 @@ class ArtistDetailsScreen extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            GestureDetector(
-                              onTap: () => Navigator.pop(context),
-                              child: CircleAvatar(
-                                radius: 20.r,
-                                backgroundColor: Colors.white10,
-                                backgroundImage: const NetworkImage(
-                                  'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80',
-                                ),
-                              ),
-                            ),
+                            _circleIcon(context, Icons.arrow_back_ios_new),
                             Text(
                               'Musix',
                               style: AppTextStyles.font22WhiteBold
@@ -275,6 +266,21 @@ class ArtistDetailsScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+  Widget _circleIcon(BuildContext context, IconData icon) {
+    return GestureDetector(
+      onTap: icon == Icons.arrow_back_ios_new ? () => Navigator.pop(context) : null,
+      child: Container(
+        width: 44.w,
+        height: 44.w,
+        decoration: BoxDecoration(
+          color: Colors.white10,
+          shape: BoxShape.circle,
+          border: Border.all(color: Colors.white12),
+        ),
+        child: Icon(icon, color: Colors.white, size: 20.sp),
       ),
     );
   }
