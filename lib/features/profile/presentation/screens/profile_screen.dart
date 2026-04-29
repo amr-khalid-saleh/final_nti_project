@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/profile_action_buttons.dart';
+import '../widgets/profile_albums.dart';
 import '../widgets/profile_artist_info.dart';
 import '../widgets/profile_hero_image.dart';
 import '../widgets/profile_popular_tracks.dart';
@@ -29,6 +30,8 @@ class ProfileScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const ProfilePopularTracks(),
+              const SizedBox(height: 8),
+              const ProfileAlbums(),
             ],
           ),
         ),
