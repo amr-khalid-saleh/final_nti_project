@@ -4,25 +4,27 @@ class AppColors {
   AppColors._();
 
   // backgrounds
-  static const Color scaffoldBgTop    = Color(0xFF080808);
-  static const Color scaffoldBgBottom = Color(0xFF250A06);
-  static const Color scaffoldBg       = Color(0xFF110800);
-  static const Color cardBg           = Color(0xFF1E1008);
-  static const Color cardBgAlt        = Color(0xFF261608);
-  static const Color bottomNavBg      = Color(0xFF1A0E04);
+  static const Color scaffoldBgTop    = Color(0xFF0C0C0C);
+  static const Color scaffoldBgBottom = Color(0xFF1A0A08);
+  static const Color scaffoldBg       = Color(0xFF080808);
+  static const Color cardBg           = Color(0xFF161616);
+  static const Color cardBgAlt        = Color(0xFF1E1E1E);
+  static const Color bottomNavBg      = Color(0xFF121212);
 
-  // accent — red/orange from Figma
-  static const Color accent        = Color(0xFFE8472A);
+  // accent — vibrant orange/red
+  static const Color accent        = Color(0xFFFF4B2B);
   static const Color accentLight   = Color(0xFFFF6B47);
-  static const Color accentDark    = Color(0xFFB33520);
+  static const Color accentDark    = Color(0xFFCC3A20);
 
   // text
   static const Color textPrimary   = Color(0xFFFFFFFF);
-  static const Color textSecondary = Color(0xFF9E9E9E);
-  static const Color textHint      = Color(0xFF5A5A5A);
+  static const Color textSecondary = Color(0xFFB3B3B3);
+  static const Color textHint      = Color(0xFF666666);
 
-  // misc
-  static const Color divider       = Color(0xFF2A1A0A);
-  static const Color iconInactive  = Color(0xFF5A4030);
-  static const Color sliderTrack   = Color(0xFF2A1A0A);
+  // status/misc
+  static const Color success       = Color(0xFF4CAF50);
+  static const Color error         = Color(0xFFE53935);
+  static const Color divider       = Color(0xFF262626);
+  static const Color iconInactive  = Color(0xFF888888);
+  static const Color sliderTrack   = Color(0xFF333333);
 }

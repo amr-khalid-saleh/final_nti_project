@@ -1,49 +1,57 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'app_colors.dart';
 
 class AppTextStyles {
   AppTextStyles._();
 
-  static const TextStyle heading1 = TextStyle(
-    fontSize: 22,
-    fontWeight: FontWeight.bold,
+  static TextStyle font28WhiteExtraBold = TextStyle(
+    fontSize: 28.sp,
+    fontWeight: FontWeight.w800,
+    color: AppColors.textPrimary,
+    letterSpacing: -0.5,
+  );
+
+  static TextStyle font22WhiteBold = TextStyle(
+    fontSize: 22.sp,
+    fontWeight: FontWeight.w700,
     color: AppColors.textPrimary,
   );
 
-  static const TextStyle heading2 = TextStyle(
-    fontSize: 18,
+  static TextStyle font18WhiteSemiBold = TextStyle(
+    fontSize: 18.sp,
     fontWeight: FontWeight.w600,
     color: AppColors.textPrimary,
   );
 
-  static const TextStyle heading3 = TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.w600,
-    color: AppColors.textPrimary,
-  );
-
-  static const TextStyle bodyMedium = TextStyle(
-    fontSize: 14,
+  static TextStyle font16WhiteMedium = TextStyle(
+    fontSize: 16.sp,
     fontWeight: FontWeight.w500,
     color: AppColors.textPrimary,
   );
 
-  static const TextStyle bodySmall = TextStyle(
-    fontSize: 12,
+  static TextStyle font14WhiteMedium = TextStyle(
+    fontSize: 14.sp,
+    fontWeight: FontWeight.w500,
+    color: AppColors.textPrimary,
+  );
+
+  static TextStyle font12GreyRegular = TextStyle(
+    fontSize: 12.sp,
     fontWeight: FontWeight.w400,
     color: AppColors.textSecondary,
   );
 
-  static const TextStyle caption = TextStyle(
-    fontSize: 11,
-    fontWeight: FontWeight.w400,
+  static TextStyle font11GreyMedium = TextStyle(
+    fontSize: 11.sp,
+    fontWeight: FontWeight.w500,
     color: AppColors.textHint,
-    letterSpacing: 0.5,
+    letterSpacing: 1.0,
   );
 
-  static const TextStyle accentLink = TextStyle(
-    fontSize: 13,
-    fontWeight: FontWeight.w500,
+  static TextStyle font13AccentSemiBold = TextStyle(
+    fontSize: 13.sp,
+    fontWeight: FontWeight.w600,
     color: AppColors.accent,
   );
 }
