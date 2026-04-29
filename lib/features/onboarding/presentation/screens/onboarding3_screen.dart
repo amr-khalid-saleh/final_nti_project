@@ -17,7 +17,8 @@ class Onboarding3Screen extends StatelessWidget {
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/onboarding_background.png'),
-            fit: BoxFit.cover,          ),
+            fit: BoxFit.cover,
+          ),
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -45,12 +46,7 @@ class Onboarding3Screen extends StatelessWidget {
                 SizedBox(height: 32),
 
                 // Next Button
-                OnboardingNextButton(
-                  onTap: () {
-                    // TODO: Navigate to next screen (Login or Home)
-                    print('Next button tapped - Onboarding 3');
-                  },
-                ),
+                NextButtonWidget(onTap: () {}),
                 const SizedBox(height: 16),
 
                 // Dots Indicator

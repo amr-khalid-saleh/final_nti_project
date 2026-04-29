@@ -64,7 +64,7 @@ class OnboardingScreen extends StatelessWidget {
                 const SizedBox(height: 16),
 
                 // ⑤ النقط — الشاشة الأولى (activeDot: 0)
-                const DotsIndicatorWidget(
+                const OnboardingDotsIndicator(
                   totalDots: 3,
                   activeDot: 0,
                 ),

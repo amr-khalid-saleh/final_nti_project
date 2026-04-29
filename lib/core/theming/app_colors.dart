@@ -7,9 +7,6 @@ class AppColors {
   static const Color scaffoldBgTop    = Color(0xFF080808);
   static const Color scaffoldBgBottom = Color(0xFF250A06);
   static const Color scaffoldBg       = Color(0xFF110800);
-  static const Color scaffoldBgTop    = Color(0xFF1C0A00); // أسود + نبضة برتقالي
-  static const Color scaffoldBgBottom = Color(0xFF080808); // أسود
-  static const Color scaffoldBg       = Color(0xFF110800); // fallback solid
   static const Color cardBg           = Color(0xFF1E1008);
   static const Color cardBgAlt        = Color(0xFF261608);
   static const Color bottomNavBg      = Color(0xFF1A0E04);

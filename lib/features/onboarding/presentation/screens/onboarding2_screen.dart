@@ -60,7 +60,7 @@ class Onboarding2Screen extends StatelessWidget {
 
                 // ⑤ النقط — النقطة التانية نشطة (activeDot: 1)
                 Center(
-                  child: const DotsIndicatorWidget(
+                  child: const OnboardingDotsIndicator(
                     totalDots: 3,
                     activeDot: 1, // ← الشاشة التانية
                   ),
