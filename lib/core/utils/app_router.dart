@@ -6,7 +6,7 @@ import '../../features/onboarding/presentation/screens/onboarding2_screen.dart';
 import '../../features/onboarding/presentation/screens/onboarding3_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/now_playing/presentation/screens/now_playing_screen.dart';
-import '../../features/library/presentation/screens/library.dart';
+import '../../features/library/presentation/screens/library_screen.dart';
 import '../../features/library/presentation/screens/album_details_screen.dart';
 import '../../features/library/presentation/screens/artist_details_screen.dart';
 
@@ -39,7 +39,7 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const NowPlayingScreen());
       
       case AppRoutes.library:
-        return MaterialPageRoute(builder: (_) => const MusicLibraryPage());
+        return MaterialPageRoute(builder: (_) => const LibraryScreen());
       
       case AppRoutes.profile:
         return MaterialPageRoute(builder: (_) => const ProfileScreen());

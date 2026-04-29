@@ -17,7 +17,7 @@ class Onboarding3Screen extends StatelessWidget {
         height: double.infinity,
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/onboarding_background.png'),
+            image: AssetImage('assets/images/onboarding_background.png'),
             fit: BoxFit.cover,
           ),
           gradient: LinearGradient(

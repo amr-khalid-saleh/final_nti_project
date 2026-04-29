@@ -1,13 +1,13 @@
 import '../../../../core/shared_widgets/main_scaffold.dart';
 
-class MusicLibraryPage extends StatefulWidget {
-  const MusicLibraryPage({super.key});
+class LibraryScreen extends StatefulWidget {
+  const LibraryScreen({super.key});
 
   @override
-  State<MusicLibraryPage> createState() => _MusicLibraryPageState();
+  State<LibraryScreen> createState() => _LibraryScreenState();
 }
 
-class _MusicLibraryPageState extends State<MusicLibraryPage>
+class _LibraryScreenState extends State<LibraryScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
 
