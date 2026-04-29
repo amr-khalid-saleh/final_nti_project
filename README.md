@@ -29,6 +29,10 @@ The app includes the following screens:
 ```
 lib/
 ├── core/
+│   ├── utils/                 # Utility functions and helpers
+│   │   ├── shared_widgets/    # Reusable UI components
+│   │   └── theming/           # App theme and colors
+│   └── features/              # Feature modules
 │   ├── utils/             # Utility functions and helpers
 │   ├── shared_widgets/    # Reusable UI components
 │   └── theming/           # App theme and colors

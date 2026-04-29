@@ -1,0 +1,178 @@
+import 'package:flutter/material.dart';
+import '../../../../core/theming/app_colors.dart';
+import '../../../../core/theming/app_text_styles.dart';
+import '../../../../core/shared_widgets/app_bottom_nav_bar.dart';
+import '../../../../core/utils/app_routes.dart';
+import '../widgets/speed_dial_card.dart';
+import '../widgets/trending_tile.dart';
+import '../widgets/fresh_find_card.dart';
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [AppColors.scaffoldBgTop, AppColors.scaffoldBgBottom],
+          stops: [0.0, 0.97],
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Stack(
+          children: [
+            SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 100),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 12),
+
+                    // App Bar
+                    Row(
+                      children: [
+                        Container(
+                          width: 38,
+                          height: 38,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.cardBg,
+                            border: Border.all(color: AppColors.divider),
+                          ),
+                          child: const Icon(Icons.person,
+                              color: AppColors.textSecondary, size: 20),
+                        ),
+                        const SizedBox(width: 10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('EVENING, ALEX', style: AppTextStyles.caption),
+                            Text('Welcome back', style: AppTextStyles.heading2),
+                          ],
+                        ),
+                        const Spacer(),
+                        IconButton(
+                          icon: const Icon(Icons.search,
+                              color: AppColors.textPrimary, size: 22),
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Speed Dial
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Speed Dial', style: AppTextStyles.heading3),
+                        Text('View History', style: AppTextStyles.accentLink),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      height: 200,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: _speedDialItems.length,
+                        separatorBuilder: (_, __) => const SizedBox(width: 12),
+                        itemBuilder: (context, index) {
+                          final item = _speedDialItems[index];
+                          return SpeedDialCard(
+                            title: item['title']!,
+                            subtitle: item['subtitle']!,
+                            onTap: () => Navigator.pushNamed(
+                                context, AppRoutes.nowPlaying),
+                          );
+                        },
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Trending Now
+                    Text('Trending Now', style: AppTextStyles.heading3),
+                    const SizedBox(height: 12),
+                    ...List.generate(_trendingItems.length, (index) {
+                      final item = _trendingItems[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: TrendingTile(
+                          title: item['title']!,
+                          artist: item['artist']!,
+                          duration: item['duration']!,
+                          onTap: () => Navigator.pushNamed(
+                              context, AppRoutes.nowPlaying),
+                        ),
+                      );
+                    }),
+
+                    const SizedBox(height: 24),
+
+                    // Fresh Finds
+                    Text('Fresh Finds', style: AppTextStyles.heading3),
+                    const SizedBox(height: 12),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: _freshFindsItems.length,
+                      gridDelegate:
+                      const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
+                        childAspectRatio: 0.85,
+                      ),
+                      itemBuilder: (context, index) {
+                        final item = _freshFindsItems[index];
+                        return FreshFindCard(
+                          title: item['title']!,
+                          genre: item['genre']!,
+                          onTap: () => Navigator.pushNamed(
+                              context, AppRoutes.nowPlaying),
+                        );
+                      },
+                    ),
+
+                    const SizedBox(height: 24),
+                  ],
+                ),
+              ),
+            ),
+
+            const Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: AppBottomNavBar(currentIndex: 0),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+const _speedDialItems = [
+  {'title': 'Late Night Echoes', 'subtitle': 'Techno · 24 Tracks'},
+  {'title': 'Solaris Fade',      'subtitle': 'Ambient · 18 Tracks'},
+  {'title': 'Dark Waves',        'subtitle': 'Electronic · 12 Tracks'},
+];
+
+const _trendingItems = [
+  {'title': 'Midnight Motion', 'artist': 'Neon Velocity',   'duration': '3:42'},
+  {'title': 'Glass Horizon',   'artist': 'The Architect',   'duration': '4:15'},
+  {'title': 'Raw Sessions',    'artist': 'Unplugged Kings', 'duration': '5:01'},
+];
+
+const _freshFindsItems = [
+  {'title': 'Liquid States', 'genre': 'EXPERIMENTAL'},
+  {'title': 'Urban Pulse',   'genre': 'ELECTRONIC'},
+  {'title': 'Echo Park',     'genre': 'INDIE ROCK'},
+  {'title': 'Morning Mist',  'genre': 'ACOUSTIC'},
+];

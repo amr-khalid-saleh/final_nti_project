@@ -1,48 +1,75 @@
 import 'package:flutter/material.dart';
-import '../widgets/profile_about.dart';
-import '../widgets/profile_action_buttons.dart';
-import '../widgets/profile_albums.dart';
-import '../widgets/profile_artist_info.dart';
-import '../widgets/profile_hero_image.dart';
-import '../widgets/profile_popular_tracks.dart';
+import '../widgets/profile_app_bar_widget.dart';
+import '../widgets/profile_header_widget.dart';
+import '../widgets/stats_row_widget.dart';
+import '../widgets/subscription_card_widget.dart';
+import '../widgets/recent_activity_widget.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: const Color(0xFF0D0D0D),
-        body: SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: const Color(0xFF0D0D0D),
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ProfileHeroImage(
-                imageUrl: 'assets/artist.png',
-              ),
-              ProfileArtistInfo(
-                artistName: 'Julian Vane',
-                isVerified: true,
-              ),
-              ProfileActionButtons(
-                onPlay: () {},
-                onFollow: () {},
-              ),
-              const SizedBox(height: 8),
-              const ProfilePopularTracks(),
-              const SizedBox(height: 8),
-              const ProfileAlbums(),
-              const SizedBox(height: 8),
-              ProfileAbout(
-                bio:
-                'Julian Vane is an electronic visionary hailing from the underground scene of Berlin. His sound blends cinematic atmospheric textures with hard-hitting rhythmic foundations, creating a unique sonic landscape that has captivated millions of listeners worldwide.',
-                monthlyListeners: '4.2M',
-                globalRank: '128',
-              ),
+              const ProfileAppBarWidget(),
+
+              const SizedBox(height: 20),
+
+              const ProfileHeaderWidget(),
+
+              const SizedBox(height: 24),
+
+              const StatsRowWidget(),
+
+              const SizedBox(height: 20),
+
+              const SubscriptionCardWidget(),
+
+              const SizedBox(height: 24),
+
+              const RecentActivityWidget(),
+
+              const SizedBox(height: 20),
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: _BottomNav(),
+    );
+  }
+}
+
+class _BottomNav extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 60,
+      decoration: BoxDecoration(
+        color: const Color(0xFF111111),
+        border: Border(
+          top: BorderSide(
+            color: Colors.white.withOpacity(0.1),
+            width: 0.5,
+          ),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Icon(Icons.home_outlined,
+              color: Colors.white.withOpacity(0.4), size: 24),
+          Icon(Icons.search,
+              color: Colors.white.withOpacity(0.4), size: 24),
+          Icon(Icons.library_music_outlined,
+              color: Colors.white.withOpacity(0.4), size: 24),
+          const Icon(Icons.person,
+              color: Color(0xFFE84818), size: 24),
+        ],
       ),
     );
   }
