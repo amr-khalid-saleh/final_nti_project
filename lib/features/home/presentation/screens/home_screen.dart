@@ -6,6 +6,7 @@ import '../../../../core/utils/app_routes.dart';
 import '../widgets/speed_dial_card.dart';
 import '../widgets/trending_tile.dart';
 import '../widgets/fresh_find_card.dart';
+import '../../../../core/shared_widgets/app_mini_player.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -27,7 +28,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             SafeArea(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 100),
+                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 200),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -51,8 +52,8 @@ class HomeScreen extends StatelessWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('EVENING, ALEX', style: AppTextStyles.caption),
-                            Text('Welcome back', style: AppTextStyles.heading2),
+                            Text('EVENING, ALEX', style: AppTextStyles.font11GreyMedium),
+                            Text('Welcome back', style: AppTextStyles.font22WhiteBold),
                           ],
                         ),
                         const Spacer(),
@@ -70,8 +71,8 @@ class HomeScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Speed Dial', style: AppTextStyles.heading3),
-                        Text('View History', style: AppTextStyles.accentLink),
+                        Text('Speed Dial', style: AppTextStyles.font18WhiteSemiBold),
+                        Text('View History', style: AppTextStyles.font13AccentSemiBold),
                       ],
                     ),
                     const SizedBox(height: 12),
@@ -96,7 +97,7 @@ class HomeScreen extends StatelessWidget {
                     const SizedBox(height: 24),
 
                     // Trending Now
-                    Text('Trending Now', style: AppTextStyles.heading3),
+                    Text('Trending Now', style: AppTextStyles.font18WhiteSemiBold),
                     const SizedBox(height: 12),
                     ...List.generate(_trendingItems.length, (index) {
                       final item = _trendingItems[index];
@@ -115,7 +116,7 @@ class HomeScreen extends StatelessWidget {
                     const SizedBox(height: 24),
 
                     // Fresh Finds
-                    Text('Fresh Finds', style: AppTextStyles.heading3),
+                    Text('Fresh Finds', style: AppTextStyles.font18WhiteSemiBold),
                     const SizedBox(height: 12),
                     GridView.builder(
                       shrinkWrap: true,
@@ -143,6 +144,13 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
               ),
+            ),
+
+            const Positioned(
+              bottom: 110,
+              left: 16,
+              right: 16,
+              child: AppMiniPlayer(),
             ),
 
             const Positioned(

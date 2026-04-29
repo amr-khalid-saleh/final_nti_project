@@ -28,7 +28,7 @@ class SettingsTile extends StatelessWidget {
           children: [
             Icon(icon, color: AppColors.textSecondary, size: 20),
             const SizedBox(width: 14),
-            Expanded(child: Text(label, style: AppTextStyles.bodyMedium)),
+            Expanded(child: Text(label, style: AppTextStyles.font14WhiteMedium)),
             const Icon(Icons.chevron_right,
                 color: AppColors.textSecondary, size: 20),
           ],

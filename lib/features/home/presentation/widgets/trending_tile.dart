@@ -42,12 +42,12 @@ class TrendingTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: AppTextStyles.bodyMedium),
-                  Text(artist, style: AppTextStyles.bodySmall),
+                  Text(title, style: AppTextStyles.font14WhiteMedium),
+                  Text(artist, style: AppTextStyles.font12GreyRegular),
                 ],
               ),
             ),
-            Text(duration, style: AppTextStyles.bodySmall),
+            Text(duration, style: AppTextStyles.font12GreyRegular),
             const SizedBox(width: 8),
             const Icon(Icons.more_vert,
                 color: AppColors.textSecondary, size: 18),

@@ -43,7 +43,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           color: AppColors.textPrimary, size: 22),
                     ),
                     const SizedBox(width: 12),
-                    Text('Settings', style: AppTextStyles.heading2),
+                    Text('Settings', style: AppTextStyles.font22WhiteBold),
                   ],
                 ),
 
@@ -77,7 +77,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       const SizedBox(width: 14),
                       Expanded(
                         child: Text('Notifications',
-                            style: AppTextStyles.bodyMedium),
+                            style: AppTextStyles.font14WhiteMedium),
                       ),
                       Switch(
                         value: notificationsEnabled,
@@ -132,7 +132,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                 Center(
                   child: Text('Version 4.12.0 (Premium)',
-                      style: AppTextStyles.caption),
+                      style: AppTextStyles.font11GreyMedium),
                 ),
               ],
             ),

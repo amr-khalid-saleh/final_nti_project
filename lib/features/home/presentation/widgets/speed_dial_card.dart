@@ -46,11 +46,11 @@ class SpeedDialCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(title,
-                      style: AppTextStyles.bodyMedium,
+                      style: AppTextStyles.font14WhiteMedium,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis),
                   Text(subtitle,
-                      style: AppTextStyles.bodySmall,
+                      style: AppTextStyles.font12GreyRegular,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis),
                 ],

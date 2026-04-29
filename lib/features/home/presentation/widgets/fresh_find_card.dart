@@ -44,10 +44,10 @@ class FreshFindCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(title,
-                      style: AppTextStyles.bodyMedium,
+                      style: AppTextStyles.font14WhiteMedium,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis),
-                  Text(genre, style: AppTextStyles.caption),
+                  Text(genre, style: AppTextStyles.font11GreyMedium),
                 ],
               ),
             ),

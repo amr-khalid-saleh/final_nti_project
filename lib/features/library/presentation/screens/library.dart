@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theming/app_colors.dart';
+import '../../../../core/theming/app_text_styles.dart';
+import '../../../../core/shared_widgets/app_bottom_nav_bar.dart';
+import '../../../../core/utils/app_routes.dart';
+import '../../../../core/shared_widgets/app_mini_player.dart';
 
 class MusicLibraryPage extends StatefulWidget {
   const MusicLibraryPage({Key? key}) : super(key: key);
@@ -26,281 +31,261 @@ class _MusicLibraryPageState extends State<MusicLibraryPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.scaffoldBg,
       appBar: AppBar(
-        backgroundColor: Colors.black87,
+        backgroundColor: AppColors.scaffoldBg.withOpacity(0.8),
+        elevation: 0,
         title: Row(
           children: [
             Container(
-              width: 40,
-              height: 40,
+              width: 38,
+              height: 38,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: AssetImage(
-                    'assets/images/profile.jpg',
-                  ), // ADD IMAGE PATH HERE
-                  fit: BoxFit.cover,
-                ),
+                color: AppColors.cardBg,
+                border: Border.all(color: AppColors.divider),
               ),
+              child: const Icon(Icons.person, color: AppColors.textSecondary, size: 20),
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 12),
             Text(
               'Musix',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: AppTextStyles.font22WhiteBold,
             ),
           ],
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.search, color: Colors.white),
+            icon: const Icon(Icons.search, color: AppColors.textPrimary),
             onPressed: () {},
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // TabBar with Playlists, Artists, Albums
-            Container(
-              color: Colors.black87,
-              child: TabBar(
-                dividerColor: Colors.transparent,
-                controller: _tabController,
-                indicatorColor: Colors.red,
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.grey,
-                indicatorWeight: 3,
-                tabAlignment: TabAlignment.center,
-                labelStyle: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: const EdgeInsets.only(bottom: 200),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // TabBar with Playlists, Artists, Albums
+                Container(
+                  color: AppColors.scaffoldBg,
+                  child: TabBar(
+                    dividerColor: Colors.transparent,
+                    controller: _tabController,
+                    indicatorColor: AppColors.accent,
+                    labelColor: AppColors.textPrimary,
+                    unselectedLabelColor: AppColors.textSecondary,
+                    indicatorWeight: 3,
+                    tabAlignment: TabAlignment.center,
+                    labelStyle: AppTextStyles.font18WhiteSemiBold,
+                    unselectedLabelStyle: AppTextStyles.font18WhiteSemiBold,
+                    isScrollable: true,
+                    tabs: const [
+                      Tab(text: 'Playlists'),
+                      Tab(text: 'Artists'),
+                      Tab(text: 'Albums'),
+                    ],
+                  ),
                 ),
-                unselectedLabelStyle: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-                isScrollable: true,
-                tabs: [
-                  Tab(text: 'Playlists'),
-                  Tab(text: 'Artists'),
-                  Tab(text: 'Albums'),
-                ],
-              ),
-            ),
-            // Liked Songs Card
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: Stack(
-                children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/Head.png'),
-                        fit: BoxFit.cover,
-                        colorFilter: ColorFilter.mode(
-                          Colors.black.withOpacity(0.5),
-                          BlendMode.darken,
+                // Liked Songs Card
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Stack(
+                    children: [
+                      Container(
+                        height: 240,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          image: const DecorationImage(
+                            image: NetworkImage('https://images.unsplash.com/photo-1493225255756-d9584f8606e9?auto=format&fit=crop&w=800&q=80'),
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
-                    ),
-                    child: Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Icon(Icons.favorite, color: Colors.red, size: 28),
-                            SizedBox(height: 8),
-                            Text(
-                              'Liked Songs',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [Colors.transparent, Colors.black.withOpacity(0.8)],
+                            ),
+                          ),
+                          padding: const EdgeInsets.all(20),
+                            child: InkWell(
+                              onTap: () => Navigator.pushNamed(context, AppRoutes.playlistDetails),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Icon(Icons.favorite, color: AppColors.accent, size: 32),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    'Liked Songs',
+                                    style: AppTextStyles.font28WhiteExtraBold,
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '1,248 tracks',
+                                    style: AppTextStyles.font14WhiteMedium.copyWith(color: AppColors.textSecondary),
+                                  ),
+                                ],
                               ),
                             ),
-                            SizedBox(height: 8),
-                            Text(
-                              '1,248 tracks',
-                              style: TextStyle(
-                                color: Colors.grey[300],
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
                         ),
                       ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 16,
-                    right: 16,
-                    child: Container(
-                      width: 56,
-                      height: 56,
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
+                      Positioned(
+                        bottom: 20,
+                        right: 20,
+                        child: Container(
+                          width: 56,
+                          height: 56,
+                          decoration: const BoxDecoration(
+                            color: AppColors.accent,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(color: Colors.black45, blurRadius: 10, offset: Offset(0, 4)),
+                            ],
+                          ),
+                          child: const Icon(Icons.play_arrow, color: Colors.white, size: 32),
+                        ),
                       ),
-                      child: Icon(
-                        Icons.play_arrow,
-                        color: Colors.white,
-                        size: 28,
-                      ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-            // Recently Modified Section
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: Text(
-                'RECENTLY MODIFIED',
-                style: TextStyle(
-                  color: Colors.grey[500],
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.2,
                 ),
-              ),
-            ),
-            _playlistTile(
-              'assets/images/Jazz.jpg',
-              'Midnight Jazz',
-              'Playlist · 42 songs',
-            ),
-            _playlistTile(
-              'assets/images/high.png',
-              'High Energy',
-              'Playlist · 18 songs',
-            ),
-            _playlistTile(
-              'assets/images/drive.jpg',
-              'Late Night Drive',
-              'Playlist · 68 songs',
-            ),
-            SizedBox(height: 20),
-            // Folders Section
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'FOLDERS',
-                    style: TextStyle(
-                      color: Colors.grey[500],
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.2,
-                    ),
+                // Recently Modified Section
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: Text(
+                    'RECENTLY MODIFIED',
+                    style: AppTextStyles.font11GreyMedium,
                   ),
-                  Text(
-                    'New Folder',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
+                ),
+                _playlistTile(
+                  context,
+                  'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=200&q=80',
+                  'Midnight Jazz',
+                  'Playlist · 42 songs',
+                ),
+                _playlistTile(
+                  context,
+                  'https://images.unsplash.com/photo-1514525253361-bee8a187c9bc?auto=format&fit=crop&w=200&q=80',
+                  'High Energy',
+                  'Playlist · 18 songs',
+                ),
+                _playlistTile(
+                  context,
+                  'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=200&q=80',
+                  'Late Night Drive',
+                  'Playlist · 68 songs',
+                ),
+                const SizedBox(height: 24),
+                // Folders Section
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'FOLDERS',
+                        style: AppTextStyles.font11GreyMedium,
+                      ),
+                      Text(
+                        'New Folder',
+                        style: AppTextStyles.font13AccentSemiBold,
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      Expanded(child: _folderTile('Archives', '12 items')),
+                      const SizedBox(width: 12),
+                      Expanded(child: _folderTile('Production', '9 items')),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  Expanded(child: _folderTile('Archives', '12 items')),
-                  SizedBox(width: 12),
-                  Expanded(child: _folderTile('Production', '9 items')),
-                ],
-              ),
+          ),
+            const Positioned(
+              bottom: 110,
+              left: 16,
+              right: 16,
+              child: AppMiniPlayer(),
             ),
-            SizedBox(height: 20),
-          ],
-        ),
+
+            const Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: AppBottomNavBar(currentIndex: 2),
+            ),
+        ],
       ),
-      bottomNavigationBar: Container(
-        color: Colors.black,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    );
+  }
+
+  Widget _playlistTile(BuildContext context, String imageUrl, String title, String subtitle) {
+    return InkWell(
+      onTap: () {
+        if (title == 'Midnight Jazz') {
+           Navigator.pushNamed(context, AppRoutes.playlistDetails);
+        } else if (title == 'High Energy') {
+           Navigator.pushNamed(context, AppRoutes.albumDetails);
+        } else {
+           Navigator.pushNamed(context, AppRoutes.artistDetails);
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: AppColors.cardBg,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.divider),
+          ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _navIcon(Icons.home),
-              _navIcon(Icons.search),
-              _navIcon(Icons.library_music),
-              _navIcon(Icons.person),
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  image: DecorationImage(
+                    image: NetworkImage(imageUrl),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: AppTextStyles.font16WhiteMedium,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle,
+                      style: AppTextStyles.font12GreyRegular,
+                    ),
+                  ],
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.more_vert, color: AppColors.textHint),
+                onPressed: () {},
+              ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _navIcon(IconData icon) {
-    return Container(
-      padding: EdgeInsets.all(12),
-      child: Icon(icon, color: Colors.white, size: 24),
-    );
-  }
-
-  Widget _playlistTile(String imagePath, String title, String subtitle) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.grey[900],
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6),
-                image: DecorationImage(
-                  image: AssetImage(imagePath),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(color: Colors.white, fontSize: 14),
-                  ),
-                  SizedBox(height: 6),
-                  Text(
-                    subtitle,
-                    style: TextStyle(color: Colors.grey[500], fontSize: 12),
-                  ),
-                ],
-              ),
-            ),
-            IconButton(
-              icon: Icon(Icons.more_vert, color: Colors.grey[600]),
-              onPressed: () {},
-            ),
-          ],
         ),
       ),
     );
@@ -309,19 +294,19 @@ class _MusicLibraryPageState extends State<MusicLibraryPage>
   Widget _folderTile(String name, String count) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey[900],
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey[800]!),
+        color: AppColors.cardBg,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.divider),
       ),
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.folder, color: Colors.grey, size: 32),
-          SizedBox(height: 12),
-          Text(name, style: TextStyle(color: Colors.white, fontSize: 14)),
-          SizedBox(height: 6),
-          Text(count, style: TextStyle(color: Colors.grey[500], fontSize: 12)),
+          const Icon(Icons.folder_rounded, color: AppColors.textSecondary, size: 36),
+          const SizedBox(height: 12),
+          Text(name, style: AppTextStyles.font14WhiteMedium),
+          const SizedBox(height: 4),
+          Text(count, style: AppTextStyles.font12GreyRegular),
         ],
       ),
     );

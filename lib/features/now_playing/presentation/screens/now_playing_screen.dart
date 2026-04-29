@@ -47,7 +47,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                       child: Column(
                         children: [
                           Text('PLAYING FROM PLAYLIST',
-                              style: AppTextStyles.caption),
+                              style: AppTextStyles.font11GreyMedium),
                           Text(
                             'Cyberpunk Echoes',
                             style: TextStyle(
@@ -96,9 +96,9 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Midnight Protocol', style: AppTextStyles.heading2),
+                        Text('Midnight Protocol', style: AppTextStyles.font22WhiteBold),
                         SizedBox(height: 4),
-                        Text('Synthetic Horizons', style: AppTextStyles.bodySmall),
+                        Text('Synthetic Horizons', style: AppTextStyles.font12GreyRegular),
                       ],
                     ),
                     Icon(Icons.favorite_border,
@@ -118,8 +118,8 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: const [
-                      Text('2:14', style: AppTextStyles.bodySmall),
-                      Text('4:58', style: AppTextStyles.bodySmall),
+                      Text('2:14', style: AppTextStyles.font12GreyRegular),
+                      Text('4:58', style: AppTextStyles.font12GreyRegular),
                     ],
                   ),
                 ),
@@ -186,7 +186,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                         Icon(Icons.speaker,
                             color: AppColors.textSecondary, size: 18),
                         SizedBox(width: 6),
-                        Text('Studio Speakers', style: AppTextStyles.bodySmall),
+                        Text('Studio Speakers', style: AppTextStyles.font12GreyRegular),
                       ],
                     ),
                     Row(
