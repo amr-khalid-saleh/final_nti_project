@@ -1,15 +1,32 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/utils/app_routes.dart';
 
-class SplashScreen extends StatelessWidget {
-  final splashTitle = 'Musix';
-  final splashSubtitle = 'SOUND UNBOUND';
-  final splashBottomText = 'Premium Listening Experience';
-
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
   @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Timer(const Duration(seconds: 3), () {
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, AppRoutes.onboarding);
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    const splashTitle = 'Musix';
+    const splashSubtitle = 'SOUND UNBOUND';
+    const splashBottomText = 'Premium Listening Experience';
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Container(

@@ -4,6 +4,7 @@ import '../widgets/dots_indicator_widget.dart';
 import '../widgets/next_button_widget.dart';
 import '../widgets/onboarding_text_section.dart';
 import '../widgets/onboarding_top_bar.dart';
+import '../../../../core/utils/app_routes.dart';
 
 class Onboarding3Screen extends StatelessWidget {
   const Onboarding3Screen({super.key});
@@ -46,7 +47,9 @@ class Onboarding3Screen extends StatelessWidget {
                 SizedBox(height: 32),
 
                 // Next Button
-                NextButtonWidget(onTap: () {}),
+                NextButtonWidget(onTap: () {
+                  Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (route) => false);
+                }),
                 const SizedBox(height: 16),
 
                 // Dots Indicator

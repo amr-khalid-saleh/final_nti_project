@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import '../widgets/mood_grid_widget.dart';
 import '../widgets/next_button_widget.dart';
 import '../widgets/dots_indicator_widget.dart';
+import '../../../../core/utils/app_routes.dart';
 
 class Onboarding2Screen extends StatelessWidget {
   const Onboarding2Screen({super.key});
@@ -53,7 +54,7 @@ class Onboarding2Screen extends StatelessWidget {
                 // ④ زرار Next
                 NextButtonWidget(
                   onTap: () {
-                    // TODO: navigation للشاشة التالتة
+                    Navigator.pushNamed(context, AppRoutes.onboarding3);
                   },
                 ),
                 const SizedBox(height: 16),

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import '../widgets/vinyl_widget.dart';
 import '../widgets/next_button_widget.dart';
 import '../widgets/dots_indicator_widget.dart';
+import '../../../../core/utils/app_routes.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -57,7 +58,7 @@ class OnboardingScreen extends StatelessWidget {
                 // ④ زرار Next — بنبعتله onTap فاضي دلوقتي
                 NextButtonWidget(
                   onTap: () {
-                    // TODO: هنضيف Navigation للشاشة التانية هنا
+                    Navigator.pushNamed(context, AppRoutes.onboarding2);
                   },
                 ),
 
