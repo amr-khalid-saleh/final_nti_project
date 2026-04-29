@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theming/app_colors.dart';
 import '../../../../core/theming/app_text_styles.dart';
-import '../../data/library_data.dart';
 import '../../../../core/shared_widgets/app_bottom_nav_bar.dart';
 import '../../../../core/shared_widgets/app_mini_player.dart';
 
@@ -21,10 +20,7 @@ class PlaylistDetailsScreen extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xFF1E1E1E),
-                  AppColors.scaffoldBg,
-                ],
+                colors: [Color(0xFF1E1E1E), AppColors.scaffoldBg],
               ),
             ),
           ),
@@ -34,11 +30,17 @@ class PlaylistDetailsScreen extends StatelessWidget {
               children: [
                 // Top Bar
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 10.h,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _circleIcon(Icons.arrow_back, onTap: () => Navigator.pop(context)),
+                      _circleIcon(
+                        Icons.arrow_back,
+                        onTap: () => Navigator.pop(context),
+                      ),
                       _circleIcon(Icons.more_horiz),
                     ],
                   ),
@@ -58,7 +60,9 @@ class PlaylistDetailsScreen extends StatelessWidget {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(24.r),
                               image: const DecorationImage(
-                                image: NetworkImage('https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=800&q=80'),
+                                image: NetworkImage(
+                                  'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=800&q=80',
+                                ),
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -71,11 +75,12 @@ class PlaylistDetailsScreen extends StatelessWidget {
                                 child: Text(
                                   'AFTER HOURS ECHOES',
                                   textAlign: TextAlign.center,
-                                  style: AppTextStyles.font11GreyMedium.copyWith(
-                                    color: Colors.white,
-                                    fontSize: 14.sp,
-                                    letterSpacing: 2,
-                                  ),
+                                  style: AppTextStyles.font11GreyMedium
+                                      .copyWith(
+                                        color: Colors.white,
+                                        fontSize: 14.sp,
+                                        letterSpacing: 2,
+                                      ),
                                 ),
                               ),
                             ),
@@ -92,12 +97,16 @@ class PlaylistDetailsScreen extends StatelessWidget {
                             children: [
                               Text(
                                 'After Hours Echoes',
-                                style: AppTextStyles.font22WhiteBold.copyWith(fontSize: 24.sp),
+                                style: AppTextStyles.font22WhiteBold.copyWith(
+                                  fontSize: 24.sp,
+                                ),
                               ),
                               SizedBox(height: 4.h),
                               Text(
                                 'Curated by Musix Editorial',
-                                style: AppTextStyles.font14WhiteMedium.copyWith(color: AppColors.textSecondary),
+                                style: AppTextStyles.font14WhiteMedium.copyWith(
+                                  color: AppColors.textSecondary,
+                                ),
                               ),
                               SizedBox(height: 4.h),
                               Text(
@@ -123,7 +132,11 @@ class PlaylistDetailsScreen extends StatelessWidget {
                                   color: AppColors.accent,
                                   shape: BoxShape.circle,
                                 ),
-                                child: Icon(Icons.play_arrow, color: Colors.white, size: 32.sp),
+                                child: Icon(
+                                  Icons.play_arrow,
+                                  color: Colors.white,
+                                  size: 32.sp,
+                                ),
                               ),
                               SizedBox(width: 16.w),
                               // Shuffle Button
@@ -147,7 +160,11 @@ class PlaylistDetailsScreen extends StatelessWidget {
                                 'Tracks',
                                 style: AppTextStyles.font18WhiteSemiBold,
                               ),
-                              Icon(Icons.sort, color: AppColors.textSecondary, size: 20.sp),
+                              Icon(
+                                Icons.sort,
+                                color: AppColors.textSecondary,
+                                size: 20.sp,
+                              ),
                             ],
                           ),
                         ),
@@ -247,8 +264,6 @@ class PlaylistDetailsScreen extends StatelessWidget {
       ),
     );
   }
-
-  }
 }
 
 const _sampleTracks = [
@@ -256,24 +271,28 @@ const _sampleTracks = [
     'title': 'Midnight City Lights',
     'artist': 'The Midnight Specter',
     'duration': '3:45',
-    'image': 'https://images.unsplash.com/photo-1514525253361-bee8a187c9bc?auto=format&fit=crop&w=100&q=80'
+    'image':
+        'https://images.unsplash.com/photo-1514525253361-bee8a187c9bc?auto=format&fit=crop&w=100&q=80',
   },
   {
     'title': 'Velvet Horizon',
     'artist': 'Neon Dreams',
     'duration': '4:12',
-    'image': 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=100&q=80'
+    'image':
+        'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=100&q=80',
   },
   {
     'title': 'Crimson Rain',
     'artist': 'Luna Shadows',
     'duration': '5:20',
-    'image': 'https://images.unsplash.com/photo-1493225255756-d9584f8606e9?auto=format&fit=crop&w=100&q=80'
+    'image':
+        'https://images.unsplash.com/photo-1493225255756-d9584f8606e9?auto=format&fit=crop&w=100&q=80',
   },
   {
     'title': 'Slow Burn',
     'artist': 'The Jazz Collective',
     'duration': '3:58',
-    'image': 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=100&q=80'
+    'image':
+        'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=100&q=80',
   },
 ];

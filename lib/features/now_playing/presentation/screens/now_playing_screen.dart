@@ -43,12 +43,12 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                       child: const Icon(Icons.keyboard_arrow_down,
                           color: AppColors.textPrimary, size: 28),
                     ),
-                    const Expanded(
+                    Expanded(
                       child: Column(
                         children: [
                           Text('PLAYING FROM PLAYLIST',
                               style: AppTextStyles.font11GreyMedium),
-                          Text(
+                          const Text(
                             'Cyberpunk Echoes',
                             style: TextStyle(
                               color: AppColors.textPrimary,
@@ -90,18 +90,18 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                 const SizedBox(height: 28),
 
                 // Song Info
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('Midnight Protocol', style: AppTextStyles.font22WhiteBold),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text('Synthetic Horizons', style: AppTextStyles.font12GreyRegular),
                       ],
                     ),
-                    Icon(Icons.favorite_border,
+                    const Icon(Icons.favorite_border,
                         color: AppColors.textSecondary, size: 24),
                   ],
                 ),
@@ -117,7 +117,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
+                    children: [
                       Text('2:14', style: AppTextStyles.font12GreyRegular),
                       Text('4:58', style: AppTextStyles.font12GreyRegular),
                     ],
@@ -178,18 +178,18 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                 const SizedBox(height: 28),
 
                 // Bottom Bar
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.speaker,
+                        const Icon(Icons.speaker,
                             color: AppColors.textSecondary, size: 18),
-                        SizedBox(width: 6),
+                        const SizedBox(width: 6),
                         Text('Studio Speakers', style: AppTextStyles.font12GreyRegular),
                       ],
                     ),
-                    Row(
+                    const Row(
                       children: [
                         Icon(Icons.share_outlined,
                             color: AppColors.textSecondary, size: 20),
