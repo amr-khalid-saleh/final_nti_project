@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/theming/app_colors.dart';
+import '../../../../core/theming/app_text_styles.dart';
 import '../../data/library_data.dart';
 import '../widgets/primary_action_button.dart';
 import '../widgets/similar_vibe_card.dart';
@@ -11,7 +13,7 @@ class AlbumDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.scaffoldBg,
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -92,20 +94,12 @@ class AlbumDetailsScreen extends StatelessWidget {
                         SizedBox(height: 20.h),
                         Text(
                           'SAFEE ON WORK',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 2,
-                          ),
+                          style: AppTextStyles.font11GreyMedium.copyWith(color: AppColors.textPrimary, letterSpacing: 2),
                         ),
                         SizedBox(height: 4.h),
                         Text(
                           'Solclone',
-                          style: TextStyle(
-                            color: Colors.white54,
-                            fontSize: 12.sp,
-                          ),
+                          style: AppTextStyles.font12GreyRegular,
                         ),
                       ],
                     ),
@@ -116,22 +110,14 @@ class AlbumDetailsScreen extends StatelessWidget {
                   child: Text(
                     LibraryData.albumTitle,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: const Color(0xFFFFD9D2),
-                      fontSize: 42.sp,
-                      fontWeight: FontWeight.w700,
-                      height: 1.1,
-                    ),
+                    style: AppTextStyles.font28WhiteExtraBold.copyWith(fontSize: 42.sp, color: const Color(0xFFFFD9D2)),
                   ),
                 ),
                 SizedBox(height: 12.h),
                 Center(
                   child: Text(
                     '${LibraryData.albumArtist} • ${LibraryData.albumYear}',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 20.sp,
-                    ),
+                    style: AppTextStyles.font18WhiteSemiBold.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w400),
                   ),
                 ),
                 SizedBox(height: 24.h),

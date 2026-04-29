@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/theming/app_colors.dart';
+import '../../../../core/theming/app_text_styles.dart';
 import '../../data/library_data.dart';
 import '../widgets/album_card.dart';
 import '../widgets/primary_action_button.dart';
@@ -12,7 +14,7 @@ class ArtistDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.scaffoldBg,
       body: SingleChildScrollView(
         child: Container(
           decoration: const BoxDecoration(
@@ -70,12 +72,7 @@ class ArtistDetailsScreen extends StatelessWidget {
                             ),
                             Text(
                               'Musix',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 24.sp,
-                                fontWeight: FontWeight.w700,
-                                fontStyle: FontStyle.italic,
-                              ),
+                              style: AppTextStyles.font22WhiteBold.copyWith(fontStyle: FontStyle.italic),
                             ),
                             Container(
                               width: 42.w,
@@ -115,11 +112,7 @@ class ArtistDetailsScreen extends StatelessWidget {
                           SizedBox(height: 14.h),
                           Text(
                             LibraryData.artistName,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 54.sp,
-                              fontWeight: FontWeight.w500,
-                            ),
+                            style: AppTextStyles.font28WhiteExtraBold.copyWith(fontSize: 54.sp),
                           ),
                           SizedBox(height: 22.h),
                           Row(
