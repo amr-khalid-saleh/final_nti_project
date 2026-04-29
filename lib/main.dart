@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'core/theming/app_theme.dart';
 import 'core/utils/app_routes.dart';
-import 'features/home/presentation/screens/home_screen.dart';
-
+import 'core/utils/app_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'features/library/presentation/screens/album_details_screen.dart';
-// import 'features/library/presentation/screens/artist_details_screen.dart';
-// import 'features/library/presentation/screens/library_splash_screen.dart';
-
 
 void main() {
   runApp(const MusixApp());
@@ -29,10 +24,10 @@ class MusixApp extends StatelessWidget {
             scaffoldBackgroundColor: Colors.black,
             fontFamily: 'SFProDisplay',
           ),
-          home: child,
+          onGenerateRoute: AppRouter.generateRoute,
+          initialRoute: AppRoutes.splash,
         );
       },
-      child: const AlbumDetailsScreen(),
     );
   }
 }
