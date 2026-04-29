@@ -72,7 +72,6 @@ class _ArtistCircle extends StatelessWidget {
   final String imagePath;
 
   const _ArtistCircle({
-    super.key,
     required this.name,
     required this.imagePath,
   });

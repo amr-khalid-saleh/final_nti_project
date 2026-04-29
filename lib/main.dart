@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'core/theming/app_theme.dart';
 import 'core/utils/app_routes.dart';
 import 'core/utils/app_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

@@ -14,7 +14,6 @@ class _SignUpPageState extends State<SignUpPage> {
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
   bool _isLoading = false;
-  bool _agreeToTerms = false;
 
   @override
   void dispose() {
