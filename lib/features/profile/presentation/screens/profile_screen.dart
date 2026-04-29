@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/profile_artist_info.dart';
 import '../widgets/profile_hero_image.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -15,6 +16,10 @@ class ProfileScreen extends StatelessWidget {
             children: [
               ProfileHeroImage(
                 imageUrl: 'assets/artist.png',
+              ),
+              ProfileArtistInfo(
+                artistName: 'Julian Vane',
+                isVerified: true,
               ),
             ],
           ),
