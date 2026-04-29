@@ -1,4 +1,12 @@
+import 'package:flutter/material.dart';
+
 import '../../../../core/shared_widgets/main_scaffold.dart';
+import '../../../../core/theming/app_colors.dart';
+import '../../../../core/theming/app_text_styles.dart';
+import '../../../../core/utils/app_routes.dart';
+import '../widgets/fresh_find_card.dart';
+import '../widgets/speed_dial_card.dart';
+import '../widgets/trending_tile.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/utils/app_routes.dart';
+
 class TrackTile extends StatelessWidget {
   final String index;
   final String title;

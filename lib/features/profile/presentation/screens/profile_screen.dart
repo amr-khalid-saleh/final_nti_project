@@ -1,4 +1,11 @@
+import 'package:flutter/material.dart';
+
 import '../../../../core/shared_widgets/main_scaffold.dart';
+import '../widgets/profile_app_bar_widget.dart';
+import '../widgets/profile_header_widget.dart';
+import '../widgets/recent_activity_widget.dart';
+import '../widgets/stats_row_widget.dart';
+import '../widgets/subscription_card_widget.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});

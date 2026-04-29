@@ -9,7 +9,6 @@ import '../../features/now_playing/presentation/screens/now_playing_screen.dart'
 import '../../features/library/presentation/screens/library_screen.dart';
 import '../../features/library/presentation/screens/album_details_screen.dart';
 import '../../features/library/presentation/screens/artist_details_screen.dart';
-
 import '../../features/library/presentation/screens/playlist_details_screen.dart';
 import '../../features/search/presentation/screens/search_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';

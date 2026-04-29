@@ -1,4 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../../../../core/shared_widgets/main_scaffold.dart';
+import '../../../../core/theming/app_colors.dart';
+import '../../../../core/theming/app_text_styles.dart';
+import '../../../../core/utils/app_routes.dart';
 
 class PlaylistDetailsScreen extends StatelessWidget {
   const PlaylistDetailsScreen({super.key});

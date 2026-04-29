@@ -1,4 +1,13 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../../../../core/shared_widgets/main_scaffold.dart';
+import '../../../../core/theming/app_colors.dart';
+import '../../../../core/theming/app_text_styles.dart';
+import '../../data/library_data.dart';
+import '../widgets/primary_action_button.dart';
+import '../widgets/similar_vibe_card.dart';
+import '../widgets/track_tile.dart';
 
 class AlbumDetailsScreen extends StatelessWidget {
   const AlbumDetailsScreen({super.key});

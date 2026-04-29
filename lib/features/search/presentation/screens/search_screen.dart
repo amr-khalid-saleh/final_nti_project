@@ -1,4 +1,12 @@
+import 'package:flutter/material.dart';
+
 import '../../../../core/shared_widgets/main_scaffold.dart';
+import '../widgets/browse_categories_title.dart';
+import '../widgets/categories_grid.dart';
+import '../widgets/discover_card.dart';
+import '../widgets/search_app_bar.dart';
+import '../widgets/search_bar_widget.dart';
+import '../widgets/trending_artists_section.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
