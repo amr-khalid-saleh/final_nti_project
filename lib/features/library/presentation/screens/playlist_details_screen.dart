@@ -1,17 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/theming/app_colors.dart';
-import '../../../../core/theming/app_text_styles.dart';
-import '../../../../core/shared_widgets/app_bottom_nav_bar.dart';
-import '../../../../core/shared_widgets/app_mini_player.dart';
+import '../../../../core/shared_widgets/main_scaffold.dart';
 
 class PlaylistDetailsScreen extends StatelessWidget {
   const PlaylistDetailsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.scaffoldBg,
+    return MainScaffold(
+      currentIndex: 2,
       body: Stack(
         children: [
           // Background Gradient
@@ -24,7 +19,6 @@ class PlaylistDetailsScreen extends StatelessWidget {
               ),
             ),
           ),
-
           SafeArea(
             child: Column(
               children: [
@@ -45,10 +39,9 @@ class PlaylistDetailsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-
                 Expanded(
                   child: SingleChildScrollView(
-                    padding: EdgeInsets.only(bottom: 150.h),
+                    padding: EdgeInsets.only(bottom: 200.h),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -86,9 +79,7 @@ class PlaylistDetailsScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-
                         SizedBox(height: 24.h),
-
                         // Title & Subtitle
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 24.w),
@@ -116,26 +107,28 @@ class PlaylistDetailsScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-
                         SizedBox(height: 24.h),
-
                         // Action Buttons
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 24.w),
                           child: Row(
                             children: [
                               // Play Button
-                              Container(
-                                width: 56.w,
-                                height: 56.w,
-                                decoration: const BoxDecoration(
-                                  color: AppColors.accent,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.play_arrow,
-                                  color: Colors.white,
-                                  size: 32.sp,
+                              GestureDetector(
+                                onTap: () => Navigator.pushNamed(
+                                    context, AppRoutes.nowPlaying),
+                                child: Container(
+                                  width: 56.w,
+                                  height: 56.w,
+                                  decoration: const BoxDecoration(
+                                    color: AppColors.accent,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.play_arrow,
+                                    color: Colors.white,
+                                    size: 32.sp,
+                                  ),
                                 ),
                               ),
                               SizedBox(width: 16.w),
@@ -147,9 +140,7 @@ class PlaylistDetailsScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-
                         SizedBox(height: 32.h),
-
                         // Tracks Header
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 24.w),
@@ -168,13 +159,11 @@ class PlaylistDetailsScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-
                         SizedBox(height: 16.h),
-
                         // Track List
                         ...List.generate(_sampleTracks.length, (index) {
                           final track = _sampleTracks[index];
-                          return _trackTile(track);
+                          return _trackTile(context, track);
                         }),
                       ],
                     ),
@@ -182,22 +171,6 @@ class PlaylistDetailsScreen extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-
-          // Mini Player
-          Positioned(
-            bottom: 100.h,
-            left: 16.w,
-            right: 16.w,
-            child: const AppMiniPlayer(),
-          ),
-
-          // Bottom Nav Bar
-          const Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: AppBottomNavBar(currentIndex: 2),
           ),
         ],
       ),
@@ -210,7 +183,7 @@ class PlaylistDetailsScreen extends StatelessWidget {
       child: Container(
         width: 40.w,
         height: 40.w,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.black26,
           shape: BoxShape.circle,
         ),
@@ -232,35 +205,38 @@ class PlaylistDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _trackTile(Map<String, String> track) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 10.h),
-      child: Row(
-        children: [
-          Container(
-            width: 48.w,
-            height: 48.w,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8.r),
-              image: DecorationImage(
-                image: NetworkImage(track['image']!),
-                fit: BoxFit.cover,
+  Widget _trackTile(BuildContext context, Map<String, String> track) {
+    return InkWell(
+      onTap: () => Navigator.pushNamed(context, AppRoutes.nowPlaying),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 10.h),
+        child: Row(
+          children: [
+            Container(
+              width: 48.w,
+              height: 48.w,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.r),
+                image: DecorationImage(
+                  image: NetworkImage(track['image']!),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-          SizedBox(width: 16.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(track['title']!, style: AppTextStyles.font14WhiteMedium),
-                SizedBox(height: 2.h),
-                Text(track['artist']!, style: AppTextStyles.font12GreyRegular),
-              ],
+            SizedBox(width: 16.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(track['title']!, style: AppTextStyles.font14WhiteMedium),
+                  SizedBox(height: 2.h),
+                  Text(track['artist']!, style: AppTextStyles.font12GreyRegular),
+                ],
+              ),
             ),
-          ),
-          Text(track['duration']!, style: AppTextStyles.font12GreyRegular),
-        ],
+            Text(track['duration']!, style: AppTextStyles.font12GreyRegular),
+          ],
+        ),
       ),
     );
   }

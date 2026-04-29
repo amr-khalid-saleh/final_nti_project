@@ -1,21 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/theming/app_colors.dart';
-import '../../../../core/theming/app_text_styles.dart';
-import '../../data/library_data.dart';
-import '../widgets/album_card.dart';
-import '../widgets/primary_action_button.dart';
-import '../widgets/start_info_card.dart';
-import '../widgets/track_tile.dart';
+import '../../../../core/shared_widgets/main_scaffold.dart';
 
 class ArtistDetailsScreen extends StatelessWidget {
   const ArtistDetailsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.scaffoldBg,
+    return MainScaffold(
+      currentIndex: 2,
       body: SingleChildScrollView(
+        padding: EdgeInsets.only(bottom: 200.h),
         child: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -59,20 +52,25 @@ class ArtistDetailsScreen extends StatelessWidget {
                     ),
                     SafeArea(
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 24.w, vertical: 12.h),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            CircleAvatar(
-                              radius: 20.r,
-                              backgroundColor: Colors.white10,
-                              backgroundImage: const NetworkImage(
-                                'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80',
+                            GestureDetector(
+                              onTap: () => Navigator.pop(context),
+                              child: CircleAvatar(
+                                radius: 20.r,
+                                backgroundColor: Colors.white10,
+                                backgroundImage: const NetworkImage(
+                                  'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80',
+                                ),
                               ),
                             ),
                             Text(
                               'Musix',
-                              style: AppTextStyles.font22WhiteBold.copyWith(fontStyle: FontStyle.italic),
+                              style: AppTextStyles.font22WhiteBold
+                                  .copyWith(fontStyle: FontStyle.italic),
                             ),
                             Container(
                               width: 42.w,
@@ -82,7 +80,8 @@ class ArtistDetailsScreen extends StatelessWidget {
                                 shape: BoxShape.circle,
                                 border: Border.all(color: Colors.white24),
                               ),
-                              child: const Icon(Icons.search, color: Colors.white),
+                              child:
+                                  const Icon(Icons.search, color: Colors.white),
                             ),
                           ],
                         ),
@@ -97,7 +96,8 @@ class ArtistDetailsScreen extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.verified, color: const Color(0xFFFF7A1A), size: 16.sp),
+                              Icon(Icons.verified,
+                                  color: const Color(0xFFFF7A1A), size: 16.sp),
                               SizedBox(width: 6.w),
                               Text(
                                 LibraryData.verifiedLabel,
@@ -112,7 +112,8 @@ class ArtistDetailsScreen extends StatelessWidget {
                           SizedBox(height: 14.h),
                           Text(
                             LibraryData.artistName,
-                            style: AppTextStyles.font28WhiteExtraBold.copyWith(fontSize: 54.sp),
+                            style: AppTextStyles.font28WhiteExtraBold
+                                .copyWith(fontSize: 54.sp),
                           ),
                           SizedBox(height: 22.h),
                           Row(
@@ -147,13 +148,14 @@ class ArtistDetailsScreen extends StatelessWidget {
                         ),
                         Text(
                           'See all',
-                          style: TextStyle(color: Colors.white38, fontSize: 18.sp),
+                          style:
+                              TextStyle(color: Colors.white38, fontSize: 18.sp),
                         ),
                       ],
                     ),
                     SizedBox(height: 18.h),
                     ...LibraryData.popularTracks.map(
-                          (track) => TrackTile(
+                      (track) => TrackTile(
                         index: track['index']!,
                         title: track['title']!,
                         artist: '',
@@ -173,7 +175,8 @@ class ArtistDetailsScreen extends StatelessWidget {
                         ),
                         Text(
                           'View all',
-                          style: TextStyle(color: Colors.white38, fontSize: 18.sp),
+                          style:
+                              TextStyle(color: Colors.white38, fontSize: 18.sp),
                         ),
                       ],
                     ),
@@ -184,14 +187,14 @@ class ArtistDetailsScreen extends StatelessWidget {
                         children: LibraryData.albums
                             .map(
                               (album) => Padding(
-                            padding: EdgeInsets.only(right: 14.w),
-                            child: AlbumCard(
-                              title: album['title']!,
-                              subtitle: album['subtitle']!,
-                              image: album['image']!,
-                            ),
-                          ),
-                        )
+                                padding: EdgeInsets.only(right: 14.w),
+                                child: AlbumCard(
+                                  title: album['title']!,
+                                  subtitle: album['subtitle']!,
+                                  image: album['image']!,
+                                ),
+                              ),
+                            )
                             .toList(),
                       ),
                     ),

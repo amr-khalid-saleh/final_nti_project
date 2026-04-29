@@ -1,19 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/theming/app_colors.dart';
-import '../../../../core/theming/app_text_styles.dart';
-import '../../data/library_data.dart';
-import '../widgets/primary_action_button.dart';
-import '../widgets/similar_vibe_card.dart';
-import '../widgets/track_tile.dart';
+import '../../../../core/shared_widgets/main_scaffold.dart';
 
 class AlbumDetailsScreen extends StatelessWidget {
   const AlbumDetailsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.scaffoldBg,
+    return MainScaffold(
+      currentIndex: 2,
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -35,8 +28,8 @@ class AlbumDetailsScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _circleIcon(Icons.arrow_back_ios_new),
-                    _circleIcon(Icons.more_vert),
+                    _circleIcon(context, Icons.arrow_back_ios_new),
+                    _circleIcon(context, Icons.more_vert),
                   ],
                 ),
                 SizedBox(height: 26.h),
@@ -94,7 +87,8 @@ class AlbumDetailsScreen extends StatelessWidget {
                         SizedBox(height: 20.h),
                         Text(
                           'SAFEE ON WORK',
-                          style: AppTextStyles.font11GreyMedium.copyWith(color: AppColors.textPrimary, letterSpacing: 2),
+                          style: AppTextStyles.font11GreyMedium.copyWith(
+                              color: AppColors.textPrimary, letterSpacing: 2),
                         ),
                         SizedBox(height: 4.h),
                         Text(
@@ -110,14 +104,17 @@ class AlbumDetailsScreen extends StatelessWidget {
                   child: Text(
                     LibraryData.albumTitle,
                     textAlign: TextAlign.center,
-                    style: AppTextStyles.font28WhiteExtraBold.copyWith(fontSize: 42.sp, color: const Color(0xFFFFD9D2)),
+                    style: AppTextStyles.font28WhiteExtraBold.copyWith(
+                        fontSize: 42.sp, color: const Color(0xFFFFD9D2)),
                   ),
                 ),
                 SizedBox(height: 12.h),
                 Center(
                   child: Text(
                     '${LibraryData.albumArtist} • ${LibraryData.albumYear}',
-                    style: AppTextStyles.font18WhiteSemiBold.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w400),
+                    style: AppTextStyles.font18WhiteSemiBold.copyWith(
+                        color: AppColors.textSecondary,
+                        fontWeight: FontWeight.w400),
                   ),
                 ),
                 SizedBox(height: 24.h),
@@ -151,7 +148,7 @@ class AlbumDetailsScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 18.h),
                 ...LibraryData.trackList.map(
-                      (track) => TrackTile(
+                  (track) => TrackTile(
                     index: track['index'] as String,
                     title: track['title'] as String,
                     artist: track['artist'] as String,
@@ -169,17 +166,17 @@ class AlbumDetailsScreen extends StatelessWidget {
                   children: LibraryData.similarVibes
                       .map(
                         (item) => Padding(
-                      padding: EdgeInsets.only(right: 14.w),
-                      child: SimilarVibeCard(
-                        title: item['title']!,
-                        artist: item['artist']!,
-                        image: item['image']!,
-                      ),
-                    ),
-                  )
+                          padding: EdgeInsets.only(right: 14.w),
+                          child: SimilarVibeCard(
+                            title: item['title']!,
+                            artist: item['artist']!,
+                            image: item['image']!,
+                          ),
+                        ),
+                      )
                       .toList(),
                 ),
-                SizedBox(height: 30.h),
+                SizedBox(height: 200.h),
               ],
             ),
           ),
@@ -188,16 +185,19 @@ class AlbumDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _circleIcon(IconData icon) {
-    return Container(
-      width: 44.w,
-      height: 44.w,
-      decoration: BoxDecoration(
-        color: Colors.white10,
-        shape: BoxShape.circle,
-        border: Border.all(color: Colors.white12),
+  Widget _circleIcon(BuildContext context, IconData icon) {
+    return GestureDetector(
+      onTap: icon == Icons.arrow_back_ios_new ? () => Navigator.pop(context) : null,
+      child: Container(
+        width: 44.w,
+        height: 44.w,
+        decoration: BoxDecoration(
+          color: Colors.white10,
+          shape: BoxShape.circle,
+          border: Border.all(color: Colors.white12),
+        ),
+        child: Icon(icon, color: Colors.white, size: 20.sp),
       ),
-      child: Icon(icon, color: Colors.white, size: 20.sp),
     );
   }
 
