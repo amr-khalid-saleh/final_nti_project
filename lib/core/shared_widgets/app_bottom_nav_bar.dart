@@ -14,74 +14,80 @@ class AppBottomNavBar extends StatelessWidget {
         Navigator.pushNamedAndRemoveUntil(
             context, AppRoutes.home, (route) => false);
         break;
-      case 1: break;
-      case 2: break;
-      case 3: break;
+      case 1:
+        // Navigator.pushNamed(context, AppRoutes.search);
+        break;
+      case 2:
+        Navigator.pushNamed(context, AppRoutes.library);
+        break;
+      case 3:
+        // Navigator.pushNamed(context, AppRoutes.profile);
+        break;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.transparent,
-      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 20),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(28),
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColors.bottomNavBg,
-            borderRadius: BorderRadius.circular(28),
-            border: Border.all(color: AppColors.divider, width: 0.8),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.6),
-                blurRadius: 24,
-                offset: const Offset(0, 8),
-              ),
-              BoxShadow(
-                color: AppColors.accent.withOpacity(0.1),
-                blurRadius: 20,
-                offset: const Offset(0, 4),
-              ),
-            ],
+      margin: const EdgeInsets.fromLTRB(24, 0, 24, 30),
+      height: 72,
+      decoration: BoxDecoration(
+        color: const Color(0xFF141414),
+        borderRadius: BorderRadius.circular(40),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.4),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
           ),
-          child: BottomNavigationBar(
-            currentIndex: currentIndex,
-            onTap: (index) => _onTap(context, index),
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            type: BottomNavigationBarType.fixed,
-            selectedItemColor: AppColors.accent,
-            unselectedItemColor: AppColors.iconInactive,
-            showSelectedLabels: true,
-            showUnselectedLabels: true,
-            selectedLabelStyle:
-                const TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
-            unselectedLabelStyle: const TextStyle(fontSize: 10),
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home_outlined),
-                activeIcon: Icon(Icons.home),
-                label: 'HOME',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.explore_outlined),
-                activeIcon: Icon(Icons.explore),
-                label: 'EXPLORE',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.library_music_outlined),
-                activeIcon: Icon(Icons.library_music),
-                label: 'LIBRARY',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.workspace_premium_outlined),
-                activeIcon: Icon(Icons.workspace_premium),
-                label: 'PREMIUM',
-              ),
-            ],
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _navItem(context, 0, Icons.home_outlined),
+          _navItem(context, 1, Icons.explore_outlined),
+          _navItem(context, 2, Icons.library_music_outlined),
+          _navItem(context, 3, Icons.person_outline),
+        ],
+      ),
+    );
+  }
+
+  Widget _navItem(BuildContext context, int index, IconData icon) {
+    bool isActive = currentIndex == index;
+    return GestureDetector(
+      onTap: () => _onTap(context, index),
+      behavior: HitTestBehavior.opaque,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: isActive ? Colors.white : Colors.transparent,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              color: isActive ? Colors.black : Colors.white54,
+              size: 24,
+            ),
           ),
-        ),
+          if (isActive) ...[
+            const SizedBox(height: 4),
+            Container(
+              width: 4,
+              height: 4,
+              decoration: const BoxDecoration(
+                color: AppColors.accent,
+                shape: BoxShape.circle,
+              ),
+            ),
+          ] else
+            const SizedBox(height: 8),
+        ],
       ),
     );
   }
