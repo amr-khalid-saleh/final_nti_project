@@ -1,15 +1,10 @@
-// 📁 lib/features/onboarding/presentation/widgets/dots_indicator_widget.dart
-//
-// مسؤوليته: رسم نقط الصفحات
-// بيستقبل عدد النقط والنقطة النشطة
-
 import 'package:flutter/material.dart';
 
-class DotsIndicatorWidget extends StatelessWidget {
-  final int totalDots;  // عدد الصفحات الكلي
-  final int activeDot;  // رقم الصفحة الحالية (يبدأ من 0)
+class OnboardingDotsIndicator extends StatelessWidget {
+  final int totalDots;
+  final int activeDot;
 
-  const DotsIndicatorWidget({
+  const OnboardingDotsIndicator({
     super.key,
     required this.totalDots,
     required this.activeDot,
