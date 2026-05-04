@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:musix/core/utils/app_routes.dart';
+import 'package:musix/features/auth/cubit/auth_cubit.dart';
+import 'package:musix/features/auth/cubit/auth_state.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,7 +16,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
-  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -22,62 +25,49 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _handleLogin() {
-    if (_emailController.text.isEmpty) {
-      _showErrorSnackbar('Please enter your email');
-      return;
-    }
-    if (_passwordController.text.isEmpty) {
-      _showErrorSnackbar('Please enter your password');
-      return;
-    }
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    Future.delayed(Duration(seconds: 3), () {
-      setState(() {
-        _isLoading = false;
-      });
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Login successful!')));
-    });
+    // For a Spotify-powered app, we must use Spotify OAuth to get the access token.
+    // Triggering the PKCE flow:
+    context.read<AuthCubit>().loginWithSpotify();
   }
 
   void _handleGoogleLogin() {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('Google login not implemented')));
+    ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Google login not implemented')));
   }
 
   void _handleAppleLogin() {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('Apple login not implemented')));
+    ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Apple login not implemented')));
   }
 
   void _handleForgotPassword() {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Password reset link sent to your email')),
+      const SnackBar(content: Text('Password reset link sent to your email')),
     );
   }
 
   void _handleSignUp() {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('Navigate to Sign Up page')));
+    ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Navigate to Sign Up page')));
   }
 
   void _showErrorSnackbar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Color(0xFFFF5B3D)),
+      SnackBar(content: Text(message), backgroundColor: const Color(0xFFFF5B3D)),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is Authenticated) {
+          Navigator.pushReplacementNamed(context, AppRoutes.home);
+        } else if (state is AuthError) {
+          _showErrorSnackbar(state.message);
+        }
+      },
+      child: Scaffold(
       backgroundColor: Color(0xFF0A0A0A),
       body: Stack(
         children: [
@@ -248,38 +238,43 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(
                       width: double.infinity,
                       height: 50,
-                      child: ElevatedButton(
-                        onPressed: _isLoading ? null : _handleLogin,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFFFF5B3D),
-                          disabledBackgroundColor: Color(
-                            0xFFFF5B3D,
-                          ).withValues(alpha: 0.7),
-                          padding: EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: _isLoading
-                            ? SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    Colors.white,
-                                  ),
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : Text(
-                                'Login',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                      child: BlocBuilder<AuthCubit, AuthState>(
+                        builder: (context, state) {
+                          final isLoading = state is AuthLoading;
+                          return ElevatedButton(
+                            onPressed: isLoading ? null : _handleLogin,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFFF5B3D),
+                              disabledBackgroundColor: const Color(
+                                0xFFFF5B3D,
+                              ).withValues(alpha: 0.7),
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
                               ),
+                              elevation: 0,
+                            ),
+                            child: isLoading
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white,
+                                      ),
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : const Text(
+                                    'Login with Spotify',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                          );
+                        },
                       ),
                     ),
 
