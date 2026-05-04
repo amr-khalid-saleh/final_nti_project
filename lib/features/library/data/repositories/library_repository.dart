@@ -1,0 +1,57 @@
+import 'package:dartz/dartz.dart';
+import 'package:musix/core/error/failures.dart';
+import 'package:musix/core/models/spotify_models.dart';
+import 'package:musix/features/library/data/data_sources/library_remote_data_source.dart';
+
+abstract class LibraryRepository {
+  Future<Either<Failure, List<PlaylistModel>>> getUserPlaylists();
+  Future<Either<Failure, List<TrackModel>>> getSavedTracks();
+  Future<Either<Failure, List<ArtistModel>>> getFollowedArtists();
+  Future<Either<Failure, List<AlbumModel>>> getSavedAlbums();
+}
+
+class LibraryRepositoryImpl implements LibraryRepository {
+  final LibraryRemoteDataSource remoteDataSource;
+
+  LibraryRepositoryImpl({required this.remoteDataSource});
+
+  @override
+  Future<Either<Failure, List<PlaylistModel>>> getUserPlaylists() async {
+    try {
+      final data = await remoteDataSource.getUserPlaylists();
+      return Right(data);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<TrackModel>>> getSavedTracks() async {
+    try {
+      final data = await remoteDataSource.getSavedTracks();
+      return Right(data);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ArtistModel>>> getFollowedArtists() async {
+    try {
+      final data = await remoteDataSource.getFollowedArtists();
+      return Right(data);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<AlbumModel>>> getSavedAlbums() async {
+    try {
+      final data = await remoteDataSource.getSavedAlbums();
+      return Right(data);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+}
