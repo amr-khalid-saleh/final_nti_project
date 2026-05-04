@@ -14,6 +14,7 @@ class OnboardingTopBar extends StatelessWidget {
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.w700,
+            fontStyle: FontStyle.italic,
           ),
         ),
       ],

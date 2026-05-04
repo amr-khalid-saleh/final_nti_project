@@ -91,6 +91,7 @@ class _TopBar extends StatelessWidget {
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.w700,
+            fontStyle: FontStyle.italic,
           ),
         ),
       ],
@@ -107,7 +108,7 @@ class _TextSection extends StatelessWidget {
       children: [
         // العنوان الكبير
         const Text(
-          'Curate\nYour Mood',
+          'Create\nYour Mood',
           style: TextStyle(
             color: Colors.white,
             fontSize: 40,

@@ -90,13 +90,14 @@ class _TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
           'Musix',
           style: TextStyle(
             color: Colors.white,
             fontSize: 18,
+            fontStyle: FontStyle.italic,
             fontWeight: FontWeight.w600,
             letterSpacing: 0.5,
           ),
