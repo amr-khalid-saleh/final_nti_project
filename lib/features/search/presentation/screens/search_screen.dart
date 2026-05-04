@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../../core/shared_widgets/main_scaffold.dart';
 import '../../../../core/theming/app_colors.dart';
 import '../../../../core/theming/app_text_styles.dart';
-import '../cubit/search_cubit.dart';
-import '../cubit/search_state.dart';
+import '../../cubit/search_cubit.dart';
+import '../../cubit/search_state.dart';
 import '../widgets/browse_categories_title.dart';
 import '../widgets/search_app_bar.dart';
 import '../widgets/search_bar_widget.dart';
@@ -32,7 +31,7 @@ class _SearchScreenState extends State<SearchScreen> {
         child: BlocBuilder<SearchCubit, SearchState>(
           builder: (context, state) {
             if (state is SearchLoading) {
-              return const Center(child: CircularProgressIndicator(color: AppColors.primary));
+              return const Center(child: CircularProgressIndicator(color: AppColors.textPrimary));
             } else if (state is SearchError) {
                return Center(
                   child: Column(
@@ -123,7 +122,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   const SizedBox(height: 8),
                                   Text(
                                     artist.name,
-                                    style: AppTextStyles.font13WhiteMedium,
+                                    style: AppTextStyles.font14WhiteMedium,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ],
@@ -166,7 +165,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                       const SizedBox(height: 4),
                                       Text(
                                         album.artists?.isNotEmpty == true ? album.artists!.first.name : 'Unknown Artist',
-                                        style: AppTextStyles.font13GreyRegular,
+                                        style: AppTextStyles.font12GreyRegular,
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ],
@@ -192,7 +191,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   return ListTile(
                     contentPadding: EdgeInsets.zero,
                     title: Text(track.name, style: AppTextStyles.font16WhiteSemiBold),
-                    subtitle: Text(track.artists.isNotEmpty ? track.artists.first.name : 'Unknown', style: AppTextStyles.font13GreyRegular),
+                    subtitle: Text(track.artists.isNotEmpty ? track.artists.first.name : 'Unknown', style: AppTextStyles.font12GreyRegular),
                     trailing: const Icon(Icons.more_horiz, color: AppColors.textSecondary),
                   );
                 },
