@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:musix/features/profile/data/models/user_profile_model.dart';
 
 class SubscriptionCardWidget extends StatelessWidget {
-  const SubscriptionCardWidget({super.key});
+  final UserProfileModel profile;
+
+  const SubscriptionCardWidget({super.key, required this.profile});
 
   @override
   Widget build(BuildContext context) {
+    final isPremium = profile.product == 'premium';
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
@@ -16,9 +21,9 @@ class SubscriptionCardWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Musix Premium Plus',
-              style: TextStyle(
+            Text(
+              isPremium ? 'Musix Premium Plus' : 'Musix Free',
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -26,7 +31,9 @@ class SubscriptionCardWidget extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Your plan expires in 14 days. Renew now to keep enjoying lossless audio and offline playback.',
+              isPremium 
+                  ? 'Your plan is active. Enjoy lossless audio and offline playback.'
+                  : 'Upgrade to Premium for ad-free listening, offline playback, and high-quality audio.',
               style: TextStyle(
                 color: Colors.white.withValues(alpha: 0.5),
                 fontSize: 13,
@@ -45,9 +52,9 @@ class SubscriptionCardWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                child: const Text(
-                  'Manage Subscription',
-                  style: TextStyle(
+                child: Text(
+                  isPremium ? 'Manage Subscription' : 'Upgrade to Premium',
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 14,
                     fontWeight: FontWeight.w600,

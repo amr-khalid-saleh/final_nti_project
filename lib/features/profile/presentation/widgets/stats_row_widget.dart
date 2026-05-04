@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:musix/features/profile/data/models/user_profile_model.dart';
 
 class StatsRowWidget extends StatelessWidget {
-  const StatsRowWidget({super.key});
+  final UserProfileModel profile;
+
+  const StatsRowWidget({super.key, required this.profile});
 
   @override
   Widget build(BuildContext context) {
@@ -10,11 +13,11 @@ class StatsRowWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _StatItem(value: '1,284', label: 'Followers'),
+          _StatItem(value: '${profile.followers}', label: 'Followers'),
           _VerticalDivider(),
-          _StatItem(value: '452', label: 'Following'),
+          _StatItem(value: '0', label: 'Following'), // Requires separate endpoint
           _VerticalDivider(),
-          _StatItem(value: '32', label: 'Playlists'),
+          _StatItem(value: '0', label: 'Playlists'), // Requires separate endpoint
         ],
       ),
     );
