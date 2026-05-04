@@ -31,21 +31,27 @@ class _SearchScreenState extends State<SearchScreen> {
         child: BlocBuilder<SearchCubit, SearchState>(
           builder: (context, state) {
             if (state is SearchLoading) {
-              return const Center(child: CircularProgressIndicator(color: AppColors.textPrimary));
+              return const Center(
+                child: CircularProgressIndicator(color: AppColors.textPrimary),
+              );
             } else if (state is SearchError) {
-               return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(state.message, style: AppTextStyles.font16WhiteSemiBold),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () => context.read<SearchCubit>().fetchInitialData(),
-                        child: const Text('Retry'),
-                      ),
-                    ],
-                  ),
-                );
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      state.message,
+                      style: AppTextStyles.font16WhiteSemiBold,
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () =>
+                          context.read<SearchCubit>().fetchInitialData(),
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
+              );
             } else if (state is SearchInitialDataLoaded) {
               return SingleChildScrollView(
                 padding: const EdgeInsets.only(bottom: 200),
@@ -59,35 +65,45 @@ class _SearchScreenState extends State<SearchScreen> {
                       const SizedBox(height: 20),
                       // Pass callback to SearchBarWidget
                       SearchBarWidget(
-                        onSubmitted: (query) {
+                        /* onSubmitted: (query) {
                           context.read<SearchCubit>().searchTracks(query);
-                        },
+                        },*/
                       ),
                       const SizedBox(height: 32),
-                      
+
                       const BrowseCategoriesTitle(),
                       const SizedBox(height: 16),
                       GridView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: state.categories.length,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 12,
-                          crossAxisSpacing: 12,
-                          childAspectRatio: 1.05,
-                        ),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 12,
+                              crossAxisSpacing: 12,
+                              childAspectRatio: 1.05,
+                            ),
                         itemBuilder: (context, index) {
                           final category = state.categories[index];
                           // Basic generic fallback icon if no image
-                          final imageUrl = category.icons.isNotEmpty ? category.icons.first.url : null;
+                          final imageUrl = category.icons.isNotEmpty
+                              ? category.icons.first.url
+                              : null;
                           return Container(
                             decoration: BoxDecoration(
                               color: AppColors.cardBg,
                               borderRadius: BorderRadius.circular(12),
-                              image: imageUrl != null 
-                                ? DecorationImage(image: NetworkImage(imageUrl), fit: BoxFit.cover, colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.4), BlendMode.darken))
-                                : null,
+                              image: imageUrl != null
+                                  ? DecorationImage(
+                                      image: NetworkImage(imageUrl),
+                                      fit: BoxFit.cover,
+                                      colorFilter: ColorFilter.mode(
+                                        Colors.black.withValues(alpha: 0.4),
+                                        BlendMode.darken,
+                                      ),
+                                    )
+                                  : null,
                             ),
                             alignment: Alignment.center,
                             child: Text(
@@ -99,17 +115,21 @@ class _SearchScreenState extends State<SearchScreen> {
                         },
                       ),
                       const SizedBox(height: 32),
-                      
+
                       // Trending Artists Section
                       if (state.trendingArtists.isNotEmpty) ...[
-                        Text('Trending Artists', style: AppTextStyles.font18WhiteSemiBold),
+                        Text(
+                          'Trending Artists',
+                          style: AppTextStyles.font18WhiteSemiBold,
+                        ),
                         const SizedBox(height: 16),
                         SizedBox(
                           height: 120,
                           child: ListView.separated(
                             scrollDirection: Axis.horizontal,
                             itemCount: state.trendingArtists.length,
-                            separatorBuilder: (_, __) => const SizedBox(width: 16),
+                            separatorBuilder: (_, __) =>
+                                const SizedBox(width: 16),
                             itemBuilder: (context, index) {
                               final artist = state.trendingArtists[index];
                               return Column(
@@ -117,7 +137,11 @@ class _SearchScreenState extends State<SearchScreen> {
                                   CircleAvatar(
                                     radius: 40,
                                     backgroundColor: AppColors.cardBg,
-                                    child: Icon(Icons.person, color: AppColors.textSecondary, size: 30),
+                                    child: Icon(
+                                      Icons.person,
+                                      color: AppColors.textSecondary,
+                                      size: 30,
+                                    ),
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
@@ -135,16 +159,22 @@ class _SearchScreenState extends State<SearchScreen> {
 
                       // Discover Section (Albums)
                       if (state.discoverAlbums.isNotEmpty) ...[
-                        Text('Discover Albums', style: AppTextStyles.font18WhiteSemiBold),
+                        Text(
+                          'Discover Albums',
+                          style: AppTextStyles.font18WhiteSemiBold,
+                        ),
                         const SizedBox(height: 16),
                         ListView.separated(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: state.discoverAlbums.length,
-                          separatorBuilder: (_, __) => const SizedBox(height: 12),
+                          separatorBuilder: (_, __) =>
+                              const SizedBox(height: 12),
                           itemBuilder: (context, index) {
                             final album = state.discoverAlbums[index];
-                            final imageUrl = album.images.isNotEmpty ? album.images.first.url : null;
+                            final imageUrl = album.images.isNotEmpty
+                                ? album.images.first.url
+                                : null;
                             return Row(
                               children: [
                                 Container(
@@ -153,18 +183,31 @@ class _SearchScreenState extends State<SearchScreen> {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8),
                                     color: AppColors.cardBg,
-                                    image: imageUrl != null ? DecorationImage(image: NetworkImage(imageUrl), fit: BoxFit.cover) : null,
+                                    image: imageUrl != null
+                                        ? DecorationImage(
+                                            image: NetworkImage(imageUrl),
+                                            fit: BoxFit.cover,
+                                          )
+                                        : null,
                                   ),
                                 ),
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text(album.name, style: AppTextStyles.font16WhiteSemiBold, overflow: TextOverflow.ellipsis),
+                                      Text(
+                                        album.name,
+                                        style:
+                                            AppTextStyles.font16WhiteSemiBold,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                       const SizedBox(height: 4),
                                       Text(
-                                        album.artists?.isNotEmpty == true ? album.artists!.first.name : 'Unknown Artist',
+                                        album.artists?.isNotEmpty == true
+                                            ? album.artists!.first.name
+                                            : 'Unknown Artist',
                                         style: AppTextStyles.font12GreyRegular,
                                         overflow: TextOverflow.ellipsis,
                                       ),
@@ -183,16 +226,30 @@ class _SearchScreenState extends State<SearchScreen> {
               );
             } else if (state is SearchResultsLoaded) {
               return ListView.separated(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 20,
+                ),
                 itemCount: state.tracks.length,
                 separatorBuilder: (_, __) => const SizedBox(height: 12),
                 itemBuilder: (context, index) {
                   final track = state.tracks[index];
                   return ListTile(
                     contentPadding: EdgeInsets.zero,
-                    title: Text(track.name, style: AppTextStyles.font16WhiteSemiBold),
-                    subtitle: Text(track.artists.isNotEmpty ? track.artists.first.name : 'Unknown', style: AppTextStyles.font12GreyRegular),
-                    trailing: const Icon(Icons.more_horiz, color: AppColors.textSecondary),
+                    title: Text(
+                      track.name,
+                      style: AppTextStyles.font16WhiteSemiBold,
+                    ),
+                    subtitle: Text(
+                      track.artists.isNotEmpty
+                          ? track.artists.first.name
+                          : 'Unknown',
+                      style: AppTextStyles.font12GreyRegular,
+                    ),
+                    trailing: const Icon(
+                      Icons.more_horiz,
+                      color: AppColors.textSecondary,
+                    ),
                   );
                 },
               );

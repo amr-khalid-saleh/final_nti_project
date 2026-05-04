@@ -5,10 +5,7 @@ import 'package:musix/core/injection/injection_container.dart' as di;
 import 'package:musix/core/utils/app_routes.dart';
 import 'package:musix/core/utils/app_router.dart';
 import 'package:musix/features/auth/cubit/auth_cubit.dart';
-import 'package:musix/features/home/cubit/home_cubit.dart';
-import 'package:musix/features/library/cubit/library_cubit.dart';
 import 'package:musix/features/profile/cubit/profile_cubit.dart';
-import 'package:musix/features/search/cubit/search_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
