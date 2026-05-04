@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:musix/features/auth/presentation/screens/login_screen.dart';
+import 'package:musix/features/auth/presentation/screens/signup_screen.dart';
 import '../utils/app_routes.dart';
 import '../../features/splash/presentation/screens/splash_screen.dart';
 import '../../features/onboarding/presentation/screens/onboarding1_screen.dart';
@@ -18,34 +20,40 @@ class AppRouter {
     switch (settings.name) {
       case AppRoutes.splash:
         return MaterialPageRoute(builder: (_) => const SplashScreen());
-      
+
       case AppRoutes.onboarding:
         return MaterialPageRoute(builder: (_) => const OnboardingScreen());
-      
+
       case AppRoutes.onboarding2:
         return MaterialPageRoute(builder: (_) => const Onboarding2Screen());
 
       case AppRoutes.onboarding3:
         return MaterialPageRoute(builder: (_) => const Onboarding3Screen());
-      
+
+      case AppRoutes.login:
+        return MaterialPageRoute(builder: (_) => const LoginScreen());
+
+      case AppRoutes.signup:
+        return MaterialPageRoute(builder: (_) => const SignUpScreen());
+
       case AppRoutes.home:
         return MaterialPageRoute(builder: (_) => const HomeScreen());
-      
+
       case AppRoutes.search:
         return MaterialPageRoute(builder: (_) => const SearchScreen());
-      
+
       case AppRoutes.nowPlaying:
         return MaterialPageRoute(builder: (_) => const NowPlayingScreen());
-      
+
       case AppRoutes.library:
         return MaterialPageRoute(builder: (_) => const LibraryScreen());
-      
+
       case AppRoutes.profile:
         return MaterialPageRoute(builder: (_) => const ProfileScreen());
-      
+
       case AppRoutes.albumDetails:
         return MaterialPageRoute(builder: (_) => const AlbumDetailsScreen());
-      
+
       case AppRoutes.artistDetails:
         return MaterialPageRoute(builder: (_) => const ArtistDetailsScreen());
 

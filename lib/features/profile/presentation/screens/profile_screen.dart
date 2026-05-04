@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../../core/shared_widgets/main_scaffold.dart';
 import '../../../../core/theming/app_colors.dart';
 import '../../../../core/theming/app_text_styles.dart';
-import '../cubit/profile_cubit.dart';
-import '../cubit/profile_state.dart';
+import '../../cubit/profile_cubit.dart';
+import '../../cubit/profile_state.dart';
 import '../widgets/profile_app_bar_widget.dart';
 import '../widgets/profile_header_widget.dart';
 import '../widgets/recent_activity_widget.dart';
@@ -34,7 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, state) {
             if (state is ProfileLoading) {
-              return const Center(child: CircularProgressIndicator(color: AppColors.primary));
+              return const Center(child: CircularProgressIndicator(color: AppColors.textPrimary));
             } else if (state is ProfileError) {
               return Center(
                 child: Column(

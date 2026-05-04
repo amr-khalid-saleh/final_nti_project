@@ -11,7 +11,7 @@ class SpeedDialCard extends StatelessWidget {
     super.key,
     required this.title,
     required this.subtitle,
-    required this.onTap,
+    required this.onTap, String? imageUrl,
   });
 
   @override

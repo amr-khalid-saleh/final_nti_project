@@ -6,8 +6,9 @@ import '../../../../core/theming/app_colors.dart';
 import '../../../../core/theming/app_text_styles.dart';
 import '../../../../core/utils/app_routes.dart';
 import '../../../../core/models/spotify_models.dart';
-import '../cubit/library_cubit.dart';
-import '../cubit/library_state.dart';
+import '../../cubit/library_cubit.dart';
+import '../../cubit/library_state.dart';
+
 
 class LibraryScreen extends StatefulWidget {
   const LibraryScreen({super.key});
@@ -40,7 +41,7 @@ class _LibraryScreenState extends State<LibraryScreen>
       body: BlocBuilder<LibraryCubit, LibraryState>(
         builder: (context, state) {
           if (state is LibraryLoading) {
-            return const Center(child: CircularProgressIndicator(color: AppColors.primary));
+            return const Center(child: CircularProgressIndicator(color: AppColors.textPrimary));
           } else if (state is LibraryError) {
              return Center(
                 child: Column(

@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:musix/core/constants/api_constants.dart';
+import 'package:musix/core/constants/spotify_constants.dart';
 import 'package:musix/core/error/failures.dart';
 import 'package:musix/features/auth/data/models/token_model.dart';
 import 'package:pkce/pkce.dart';

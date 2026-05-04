@@ -48,7 +48,7 @@ class Onboarding3Screen extends StatelessWidget {
 
                 // Next Button
                 NextButtonWidget(onTap: () {
-                  Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (route) => false);
+                  Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (route) => false);
                 }),
                 const SizedBox(height: 16),
 

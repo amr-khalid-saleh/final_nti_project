@@ -11,7 +11,7 @@ class FreshFindCard extends StatelessWidget {
     super.key,
     required this.title,
     required this.genre,
-    required this.onTap,
+    required this.onTap, String? imageUrl,
   });
 
   @override

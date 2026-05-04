@@ -13,7 +13,7 @@ class TrendingTile extends StatelessWidget {
     required this.title,
     required this.artist,
     required this.duration,
-    required this.onTap,
+    required this.onTap, String? imageUrl,
   });
 
   @override

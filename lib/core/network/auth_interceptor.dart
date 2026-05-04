@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:musix/core/storage/secure_storage_service.dart';
-import 'package:musix/core/constants/api_constants.dart';
+import 'package:musix/core/constants/spotify_constants.dart';
 
 class AuthInterceptor extends Interceptor {
   final SecureStorageService secureStorage;

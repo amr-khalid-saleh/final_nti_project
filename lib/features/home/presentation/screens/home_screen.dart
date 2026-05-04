@@ -5,8 +5,8 @@ import '../../../../core/shared_widgets/main_scaffold.dart';
 import '../../../../core/theming/app_colors.dart';
 import '../../../../core/theming/app_text_styles.dart';
 import '../../../../core/utils/app_routes.dart';
-import '../cubit/home_cubit.dart';
-import '../cubit/home_state.dart';
+import '../../cubit/home_cubit.dart';
+import '../../cubit/home_state.dart';
 import '../widgets/fresh_find_card.dart';
 import '../widgets/speed_dial_card.dart';
 import '../widgets/trending_tile.dart';
@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: BlocBuilder<HomeCubit, HomeState>(
             builder: (context, state) {
               if (state is HomeLoading) {
-                return const Center(child: CircularProgressIndicator(color: AppColors.primary));
+                return Center(child: CircularProgressIndicator(color: AppColors.textPrimary));
               } else if (state is HomeError) {
                 return Center(
                   child: Column(
@@ -167,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             final playlist = state.featuredPlaylists[index];
                             return FreshFindCard(
                               title: playlist.name,
-                              genre: playlist.owner, // Spotify playlists often don't have direct genres, owner/description works best
+                              genre: playlist.ownerName, // Spotify playlists often don't have direct genres, owner/description works best
                               imageUrl: playlist.images.isNotEmpty ? playlist.images.first.url : null,
                               onTap: () => Navigator.pushNamed(context, AppRoutes.playlistDetails),
                             );

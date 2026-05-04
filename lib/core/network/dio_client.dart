@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:musix/core/constants/api_constants.dart';
+import 'package:musix/core/constants/spotify_constants.dart';
 import 'package:musix/core/network/auth_interceptor.dart';
 import 'package:musix/core/storage/secure_storage_service.dart';
 
