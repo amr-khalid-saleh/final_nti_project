@@ -12,6 +12,7 @@ class TrackTile extends StatelessWidget {
   final bool showImage;
   final String? imageUrl;
   final String? subtitle;
+  final VoidCallback? onTap;
 
   const TrackTile({
     super.key,
@@ -23,12 +24,13 @@ class TrackTile extends StatelessWidget {
     this.showImage = false,
     this.imageUrl,
     this.subtitle,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Navigator.pushNamed(context, AppRoutes.nowPlaying),
+      onTap: onTap ?? () => Navigator.pushNamed(context, AppRoutes.nowPlaying),
       child: Container(
         margin: EdgeInsets.only(bottom: 14.h),
         padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),

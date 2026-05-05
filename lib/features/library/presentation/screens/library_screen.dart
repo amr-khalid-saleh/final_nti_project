@@ -9,7 +9,6 @@ import '../../../../core/models/spotify_models.dart';
 import '../../cubit/library_cubit.dart';
 import '../../cubit/library_state.dart';
 
-
 class LibraryScreen extends StatefulWidget {
   const LibraryScreen({super.key});
 
@@ -41,26 +40,31 @@ class _LibraryScreenState extends State<LibraryScreen>
       body: BlocBuilder<LibraryCubit, LibraryState>(
         builder: (context, state) {
           if (state is LibraryLoading) {
-            return const Center(child: CircularProgressIndicator(color: AppColors.textPrimary));
+            return const Center(
+              child: CircularProgressIndicator(color: AppColors.textPrimary),
+            );
           } else if (state is LibraryError) {
-             return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(state.message, style: AppTextStyles.font16WhiteSemiBold),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () => context.read<LibraryCubit>().fetchLibraryData(),
-                      child: const Text('Retry'),
-                    ),
-                  ],
-                ),
-              );
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(state.message, style: AppTextStyles.font16WhiteSemiBold),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () =>
+                        context.read<LibraryCubit>().fetchLibraryData(),
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            );
           } else if (state is LibraryLoaded) {
             return Column(
               children: [
+                // ── App Bar ────────────────────────────────────────────
                 AppBar(
-                  backgroundColor: AppColors.scaffoldBg.withValues(alpha: 0.8),
+                  backgroundColor:
+                      AppColors.scaffoldBg.withValues(alpha: 0.8),
                   elevation: 0,
                   title: Row(
                     children: [
@@ -76,19 +80,21 @@ class _LibraryScreenState extends State<LibraryScreen>
                             color: AppColors.textSecondary, size: 20),
                       ),
                       const SizedBox(width: 12),
-                      Text(
-                        'Musix',
-                        style: AppTextStyles.font22WhiteBold,
-                      ),
+                      Text('Your Library',
+                          style: AppTextStyles.font22WhiteBold),
                     ],
                   ),
                   actions: [
                     IconButton(
-                      icon: const Icon(Icons.search, color: AppColors.textPrimary),
-                      onPressed: () {},
+                      icon: const Icon(Icons.search,
+                          color: AppColors.textPrimary),
+                      onPressed: () =>
+                          Navigator.pushNamed(context, AppRoutes.search),
                     ),
                   ],
                 ),
+
+                // ── Tab Bar ────────────────────────────────────────────
                 Container(
                   color: AppColors.scaffoldBg,
                   child: TabBar(
@@ -109,13 +115,15 @@ class _LibraryScreenState extends State<LibraryScreen>
                     ],
                   ),
                 ),
+
+                // ── Tab Views ──────────────────────────────────────────
                 Expanded(
                   child: TabBarView(
                     controller: _tabController,
                     children: [
-                      _playlistsView(state.playlists, state.savedTracks),
-                      _artistsView(state.followedArtists),
-                      _albumsView(state.savedAlbums),
+                      _playlistsTab(state.playlists),
+                      _artistsTab(state.artists),
+                      _albumsTab(state.savedAlbums),
                     ],
                   ),
                 ),
@@ -128,174 +136,95 @@ class _LibraryScreenState extends State<LibraryScreen>
     );
   }
 
-  Widget _playlistsView(List<PlaylistModel> playlists, List<TrackModel> savedTracks) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.only(bottom: 200),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Stack(
-              children: [
-                Container(
-                  height: 240,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    image: const DecorationImage(
-                      image: NetworkImage(
-                          'https://images.unsplash.com/photo-1493225255756-d9584f8606e9?auto=format&fit=crop&w=800&q=80'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          Colors.black.withValues(alpha: 0.8)
-                        ],
-                      ),
-                    ),
-                    padding: const EdgeInsets.all(20),
-                    child: InkWell(
-                      onTap: () =>
-                          Navigator.pushNamed(context, AppRoutes.playlistDetails),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Icon(Icons.favorite,
-                              color: AppColors.accent, size: 32),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Liked Songs',
-                            style: AppTextStyles.font28WhiteExtraBold,
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            '${savedTracks.length} tracks',
-                            style: AppTextStyles.font14WhiteMedium
-                                .copyWith(color: AppColors.textSecondary),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 20,
-                  right: 20,
-                  child: GestureDetector(
-                    onTap: () =>
-                        Navigator.pushNamed(context, AppRoutes.nowPlaying),
-                    child: Container(
-                      width: 56,
-                      height: 56,
-                      decoration: const BoxDecoration(
-                        color: AppColors.accent,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black45,
-                              blurRadius: 10,
-                              offset: Offset(0, 4)),
-                        ],
-                      ),
-                      child: const Icon(Icons.play_arrow,
-                          color: Colors.white, size: 32),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Text(
-              'YOUR PLAYLISTS',
-              style: AppTextStyles.font11GreyMedium,
-            ),
-          ),
-          ...List.generate(playlists.length, (index) {
-            final playlist = playlists[index];
-            return _itemTile(
-              playlist.images.isNotEmpty ? playlist.images.first.url : 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=200&q=80',
-              playlist.name,
-              'Playlist · ${playlist.ownerName}',
-              AppRoutes.playlistDetails,
-            );
-          }),
-        ],
-      ),
+  // ── Playlists Tab ──────────────────────────────────────────────────────────
+  Widget _playlistsTab(List<PlaylistModel> playlists) {
+    if (playlists.isEmpty) {
+      return _emptyState(
+        title: 'No playlists yet',
+        subtitle: 'Create or follow playlists to see them here.',
+        icon: Icons.queue_music_outlined,
+      );
+    }
+    return ListView.builder(
+      padding: const EdgeInsets.only(top: 8, bottom: 200),
+      itemCount: playlists.length,
+      itemBuilder: (context, index) {
+        final playlist = playlists[index];
+        return _itemTile(
+          imageUrl: playlist.images.isNotEmpty
+              ? playlist.images.first.url
+              : null,
+          title: playlist.name,
+          subtitle: 'Playlist · ${playlist.ownerName}',
+          routeName: AppRoutes.playlistDetails,
+          isCircle: false,
+        );
+      },
     );
   }
 
-  Widget _artistsView(List<ArtistModel> artists) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.only(bottom: 200),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Text('FOLLOWED ARTISTS', style: AppTextStyles.font11GreyMedium),
-          ),
-          if (artists.isEmpty)
-             const Padding(
-               padding: EdgeInsets.all(16.0),
-               child: Text('No followed artists found.', style: TextStyle(color: Colors.grey)),
-             ),
-          ...List.generate(artists.length, (index) {
-            final artist = artists[index];
-            return _itemTile(
-              'https://images.unsplash.com/photo-1520127873587-434cd6439b1e?auto=format&fit=crop&w=200&q=80', // Replace with artist image if model is updated
-              artist.name,
-              'Artist',
-              AppRoutes.artistDetails,
-            );
-          }),
-        ],
-      ),
+  // ── Artists Tab ────────────────────────────────────────────────────────────
+  // Powered by /me/following?type=artist (fallback: /me/top/artists on 403)
+  Widget _artistsTab(List<ArtistModel> artists) {
+    if (artists.isEmpty) {
+      return _emptyState(
+        title: 'No artists found',
+        subtitle: 'Follow artists or listen to more music to populate this tab.',
+        icon: Icons.person_add_outlined,
+      );
+    }
+    return ListView.builder(
+      padding: const EdgeInsets.only(top: 8, bottom: 200),
+      itemCount: artists.length,
+      itemBuilder: (context, index) {
+        final artist = artists[index];
+        return _itemTile(
+          imageUrl: artist.images.isNotEmpty
+              ? artist.images.first.url
+              : null,
+          title: artist.name,
+          subtitle: 'Artist',
+          routeName: AppRoutes.artistDetails,
+          isCircle: true,
+        );
+      },
     );
   }
 
-  Widget _albumsView(List<AlbumModel> albums) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.only(bottom: 200),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Text('SAVED ALBUMS', style: AppTextStyles.font11GreyMedium),
-          ),
-          if (albums.isEmpty)
-             const Padding(
-               padding: EdgeInsets.all(16.0),
-               child: Text('No saved albums found.', style: TextStyle(color: Colors.grey)),
-             ),
-          ...List.generate(albums.length, (index) {
-            final album = albums[index];
-            return _itemTile(
-              album.images.isNotEmpty ? album.images.first.url : 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=200&q=80',
-              album.name,
+  // ── Albums Tab ─────────────────────────────────────────────────────────────
+  Widget _albumsTab(List<AlbumModel> albums) {
+    if (albums.isEmpty) {
+      return _emptyState(
+        title: 'No saved albums',
+        subtitle: 'Save your favorite albums to listen later.',
+        icon: Icons.album_outlined,
+      );
+    }
+    return ListView.builder(
+      padding: const EdgeInsets.only(top: 8, bottom: 200),
+      itemCount: albums.length,
+      itemBuilder: (context, index) {
+        final album = albums[index];
+        return _itemTile(
+          imageUrl: album.images.isNotEmpty ? album.images.first.url : null,
+          title: album.name,
+          subtitle:
               'Album · ${album.artists?.isNotEmpty == true ? album.artists!.first.name : 'Unknown Artist'}',
-              AppRoutes.albumDetails,
-            );
-          }),
-        ],
-      ),
+          routeName: AppRoutes.albumDetails,
+          isCircle: false,
+        );
+      },
     );
   }
 
-  Widget _itemTile(
-      String imageUrl, String title, String subtitle, String routeName) {
-    bool isArtist = routeName == AppRoutes.artistDetails;
+  // ── Shared Tile ────────────────────────────────────────────────────────────
+  Widget _itemTile({
+    required String? imageUrl,
+    required String title,
+    required String subtitle,
+    required String routeName,
+    required bool isCircle,
+  }) {
     return InkWell(
       onTap: () => Navigator.pushNamed(context, routeName),
       child: Padding(
@@ -309,26 +238,45 @@ class _LibraryScreenState extends State<LibraryScreen>
           ),
           child: Row(
             children: [
+              // Thumbnail
               Container(
                 width: 60,
                 height: 60,
                 decoration: BoxDecoration(
-                  shape: isArtist ? BoxShape.circle : BoxShape.rectangle,
-                  borderRadius: isArtist ? null : BorderRadius.circular(8),
-                  image: DecorationImage(
-                    image: NetworkImage(imageUrl),
-                    fit: BoxFit.cover,
-                  ),
+                  shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
+                  borderRadius: isCircle ? null : BorderRadius.circular(8),
+                  color: AppColors.cardBg,
                 ),
+                clipBehavior: Clip.antiAlias,
+                child: imageUrl != null
+                    ? Image.network(
+                        imageUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Icon(
+                          isCircle ? Icons.person : Icons.album,
+                          color: AppColors.textSecondary,
+                          size: 28,
+                        ),
+                      )
+                    : Icon(
+                        isCircle ? Icons.person : Icons.album,
+                        color: AppColors.textSecondary,
+                        size: 28,
+                      ),
               ),
               const SizedBox(width: 16),
+              // Text
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, style: AppTextStyles.font16WhiteMedium, overflow: TextOverflow.ellipsis),
+                    Text(title,
+                        style: AppTextStyles.font16WhiteMedium,
+                        overflow: TextOverflow.ellipsis),
                     const SizedBox(height: 4),
-                    Text(subtitle, style: AppTextStyles.font12GreyRegular, overflow: TextOverflow.ellipsis),
+                    Text(subtitle,
+                        style: AppTextStyles.font12GreyRegular,
+                        overflow: TextOverflow.ellipsis),
                   ],
                 ),
               ),
@@ -339,5 +287,46 @@ class _LibraryScreenState extends State<LibraryScreen>
       ),
     );
   }
-}
 
+  // ── Empty State ────────────────────────────────────────────────────────────
+  Widget _emptyState({
+    required String title,
+    required String subtitle,
+    required IconData icon,
+  }) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon,
+                size: 64,
+                color: AppColors.textHint.withValues(alpha: 0.5)),
+            const SizedBox(height: 16),
+            Text(title, style: AppTextStyles.font18WhiteSemiBold),
+            const SizedBox(height: 8),
+            Text(
+              subtitle,
+              textAlign: TextAlign.center,
+              style: AppTextStyles.font14WhiteMedium
+                  .copyWith(color: AppColors.textSecondary),
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: () =>
+                  Navigator.pushNamed(context, AppRoutes.search),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.accent,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+              ),
+              child: const Text('Discover Music'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
