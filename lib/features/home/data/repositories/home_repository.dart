@@ -5,6 +5,7 @@ import 'package:musix/features/home/data/data_sources/home_remote_data_source.da
 
 abstract class HomeRepository {
   Future<Either<Failure, List<TrackModel>>> getRecentlyPlayedTracks();
+  Future<Either<Failure, List<AlbumModel>>> getNewReleases();
   Future<Either<Failure, List<TrackModel>>> getTopTracks();
   Future<Either<Failure, List<PlaylistModel>>> getFeaturedPlaylists();
 }
@@ -19,6 +20,18 @@ class HomeRepositoryImpl implements HomeRepository {
     try {
       final tracks = await remoteDataSource.getRecentlyPlayedTracks();
       return Right(tracks);
+    } on Failure catch (e) {
+      return Left(e);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<AlbumModel>>> getNewReleases() async {
+    try {
+      final albums = await remoteDataSource.getNewReleases();
+      return Right(albums);
     } on Failure catch (e) {
       return Left(e);
     } catch (e) {
@@ -50,4 +63,3 @@ class HomeRepositoryImpl implements HomeRepository {
     }
   }
 }
-
