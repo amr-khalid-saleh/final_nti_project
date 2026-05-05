@@ -14,19 +14,17 @@ class LibraryLoading extends LibraryState {}
 
 class LibraryLoaded extends LibraryState {
   final List<PlaylistModel> playlists;
-  final List<TrackModel> savedTracks;
-  final List<ArtistModel> followedArtists;
+  final List<ArtistModel> artists;
   final List<AlbumModel> savedAlbums;
 
   const LibraryLoaded({
     required this.playlists,
-    required this.savedTracks,
-    required this.followedArtists,
+    required this.artists,
     required this.savedAlbums,
   });
 
   @override
-  List<Object?> get props => [playlists, savedTracks, followedArtists, savedAlbums];
+  List<Object?> get props => [playlists, artists, savedAlbums];
 }
 
 class LibraryError extends LibraryState {
