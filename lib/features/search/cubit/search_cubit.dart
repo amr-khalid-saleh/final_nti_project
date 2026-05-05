@@ -14,22 +14,19 @@ class SearchCubit extends Cubit<SearchState> {
     final artistsResult = await repository.getTrendingArtists();
     final albumsResult = await repository.getDiscoverAlbums();
 
+    // Categories are essential — if they fail, show error
     categoriesResult.fold(
       (failure) => emit(SearchError(failure.message)),
       (categories) {
-        artistsResult.fold(
-          (failure) => emit(SearchError(failure.message)),
-          (artists) {
-            albumsResult.fold(
-              (failure) => emit(SearchError(failure.message)),
-              (albums) => emit(SearchInitialDataLoaded(
-                categories: categories,
-                trendingArtists: artists,
-                discoverAlbums: albums,
-              )),
-            );
-          },
-        );
+        // Artists and albums are optional — degrade gracefully
+        final artists = artistsResult.fold((_) => <dynamic>[], (data) => data);
+        final albums = albumsResult.fold((_) => <dynamic>[], (data) => data);
+
+        emit(SearchInitialDataLoaded(
+          categories: categories,
+          trendingArtists: List.from(artists),
+          discoverAlbums: List.from(albums),
+        ));
       },
     );
   }
