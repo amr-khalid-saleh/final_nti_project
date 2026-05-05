@@ -1,9 +1,4 @@
-// 📁 lib/features/onboarding/presentation/widgets/vinyl_widget.dart
-//
-// مسؤوليته: رسم الاسطوانة الدوارة
-// فيه أنيميشن واحد: دوران
 
-import 'dart:math';
 import 'package:flutter/material.dart';
 
 class VinylWidget extends StatelessWidget {

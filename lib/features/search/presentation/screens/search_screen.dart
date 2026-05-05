@@ -148,27 +148,28 @@ class _SearchScreenState extends State<SearchScreen> {
                                   child: Column(
                                     children: [
                                       CircleAvatar(
-                                      radius: 40,
-                                      backgroundColor: AppColors.cardBg,
-                                      backgroundImage: artistImage != null
-                                          ? NetworkImage(artistImage)
-                                          : null,
-                                      child: artistImage == null
-                                          ? const Icon(
-                                              Icons.person,
-                                              color: AppColors.textSecondary,
-                                              size: 30,
-                                            )
-                                          : null,
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      artist.name,
-                                      style: AppTextStyles.font14WhiteMedium,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                    ),
-                                  ],
+                                        radius: 40,
+                                        backgroundColor: AppColors.cardBg,
+                                        backgroundImage: artistImage != null
+                                            ? NetworkImage(artistImage)
+                                            : null,
+                                        child: artistImage == null
+                                            ? const Icon(
+                                                Icons.person,
+                                                color: AppColors.textSecondary,
+                                                size: 30,
+                                              )
+                                            : null,
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        artist.name,
+                                        style: AppTextStyles.font14WhiteMedium,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               );
                             },
@@ -218,8 +219,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                           : null,
                                     ),
                                     child: imageUrl == null
-                                        ? const Icon(Icons.album,
-                                            color: AppColors.textSecondary)
+                                        ? const Icon(
+                                            Icons.album,
+                                            color: AppColors.textSecondary,
+                                          )
                                         : null,
                                   ),
                                   const SizedBox(width: 12),
@@ -239,14 +242,17 @@ class _SearchScreenState extends State<SearchScreen> {
                                           album.artists?.isNotEmpty == true
                                               ? album.artists!.first.name
                                               : 'Unknown Artist',
-                                          style: AppTextStyles.font12GreyRegular,
+                                          style:
+                                              AppTextStyles.font12GreyRegular,
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ],
                                     ),
                                   ),
-                                  const Icon(Icons.chevron_right,
-                                      color: AppColors.textSecondary),
+                                  const Icon(
+                                    Icons.chevron_right,
+                                    color: AppColors.textSecondary,
+                                  ),
                                 ],
                               ),
                             );
@@ -283,16 +289,22 @@ class _SearchScreenState extends State<SearchScreen> {
                                 width: 48,
                                 height: 48,
                                 color: AppColors.cardBg,
-                                child: const Icon(Icons.music_note,
-                                    color: AppColors.accent, size: 20),
+                                child: const Icon(
+                                  Icons.music_note,
+                                  color: AppColors.accent,
+                                  size: 20,
+                                ),
                               ),
                             )
                           : Container(
                               width: 48,
                               height: 48,
                               color: AppColors.cardBg,
-                              child: const Icon(Icons.music_note,
-                                  color: AppColors.accent, size: 20),
+                              child: const Icon(
+                                Icons.music_note,
+                                color: AppColors.accent,
+                                size: 20,
+                              ),
                             ),
                     ),
                     title: Text(

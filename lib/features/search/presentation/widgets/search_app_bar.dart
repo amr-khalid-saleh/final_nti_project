@@ -12,7 +12,7 @@ class SearchAppBar extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         CircleAvatar(
-          backgroundImage: AssetImage('assets/profile_img.png'),
+          backgroundImage: AssetImage('assets/images/profile_img.png'),
         ),
         const Text(
           'Search',
