@@ -16,6 +16,7 @@ import 'package:musix/features/library/data/repositories/library_repository.dart
 import 'package:musix/features/profile/cubit/profile_cubit.dart';
 import 'package:musix/features/profile/data/data_sources/profile_remote_data_source.dart';
 import 'package:musix/features/profile/data/repositories/profile_repository.dart';
+import 'package:musix/features/now_playing/controller/now_playing_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -58,5 +59,8 @@ Future<void> init() async {
   sl.registerLazySingleton<ProfileRepository>(
       () => ProfileRepositoryImpl(remoteDataSource: sl()));
   sl.registerFactory(() => ProfileCubit(repository: sl()));
+
+  // Global - Now Playing (singleton so all screens share the same playback state)
+  sl.registerLazySingleton<NowPlayingCubit>(() => NowPlayingCubit());
 }
 
