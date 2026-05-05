@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:musix/core/utils/app_routes.dart';
 import 'package:musix/features/auth/cubit/auth_cubit.dart';
 import 'package:musix/features/auth/cubit/auth_state.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -13,52 +14,23 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  bool _obscurePassword = true;
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
   void _handleLogin() {
-    // For a Spotify-powered app, we must use Spotify OAuth to get the access token.
-    // Triggering the PKCE flow:
     context.read<AuthCubit>().loginWithSpotify();
   }
 
-  void _handleGoogleLogin() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Google login not implemented')),
-    );
-  }
-
-  void _handleAppleLogin() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Apple login not implemented')),
-    );
-  }
-
-  void _handleForgotPassword() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Password reset link sent to your email')),
-    );
-  }
-
-  void _handleSignUp() {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Navigate to Sign Up page')));
+  void _handleSignUp() async {
+    final url = Uri.parse('https://www.spotify.com/signup');
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    }
   }
 
   void _showErrorSnackbar(String message) {
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: const Color(0xFFFF5B3D),
+        backgroundColor: const Color(0xFF1DB954),
       ),
     );
   }
@@ -74,20 +46,20 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: Color(0xFF0A0A0A),
+        backgroundColor: const Color(0xFF0A0A0A),
         body: Stack(
           children: [
-            // 🔥 الخلفية البرتقاني من تحت
+            // 🔥 Background gradient
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                height: 200,
+                height: 300,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
                     colors: [
-                      Color(0xFFFF5B3D).withValues(alpha: 0.4),
+                      const Color(0xFF1DB954).withValues(alpha: 0.15),
                       Colors.transparent,
                     ],
                   ),
@@ -95,341 +67,127 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
 
-            // 🔥 باقي الصفحة زي ما هي
             SafeArea(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 24.0,
-                    vertical: 16.0,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(top: 16.0, bottom: 48.0),
-                        child: Text(
-                          'Musix',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.0,
-                          ),
-                        ),
-                      ),
-
-                      Text(
-                        'Welcome\nBack',
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(top: 16.0, bottom: 60.0),
+                      child: Text(
+                        'Musix',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 48,
+                          fontSize: 26,
+                          fontStyle: FontStyle.italic,
                           fontWeight: FontWeight.bold,
-                          height: 1.2,
+                          letterSpacing: 1.2,
                         ),
                       ),
+                    ),
 
-                      SizedBox(height: 12),
-
-                      Text(
-                        'Enter your details to continue your\nlistening journey',
-                        style: TextStyle(
-                          color: Color(0xFFB0B0B0),
-                          fontSize: 14,
-                          height: 1.5,
-                        ),
+                    const Text(
+                      'Millions of songs.\nFree on Musix.',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        height: 1.1,
                       ),
+                    ),
 
-                      SizedBox(height: 40),
+                    const SizedBox(height: 16),
 
-                      Text(
-                        'EMAIL ADDRESS',
-                        style: TextStyle(
-                          color: Color(0xFFC97C7C),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.5,
-                        ),
+                    const Text(
+                      'Log in with your Spotify account to sync your playlists and discover new music.',
+                      style: TextStyle(
+                        color: Color(0xFFB0B0B0),
+                        fontSize: 16,
+                        height: 1.5,
                       ),
+                    ),
 
-                      SizedBox(height: 12),
+                    const Spacer(),
 
-                      TextField(
-                        controller: _emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        style: TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          hintText: 'name@email.com',
-                          hintStyle: TextStyle(color: Color(0xFF555555)),
-                          filled: true,
-                          fillColor: Color(0xFF1A1A1A),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: Color(0xFF333333)),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: Color(0xFF333333)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: Color(0xFF555555)),
-                          ),
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 14,
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 24),
-
-                      Text(
-                        'PASSWORD',
-                        style: TextStyle(
-                          color: Color(0xFFC97C7C),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-
-                      SizedBox(height: 12),
-
-                      TextField(
-                        controller: _passwordController,
-                        obscureText: _obscurePassword,
-                        style: TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          hintText: '·······',
-                          hintStyle: TextStyle(color: Color(0xFF555555)),
-                          filled: true,
-                          fillColor: Color(0xFF1A1A1A),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: Color(0xFF333333)),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: Color(0xFF333333)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: Color(0xFF555555)),
-                          ),
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 14,
-                          ),
-                          suffixIcon: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _obscurePassword = !_obscurePassword;
-                              });
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.only(right: 12),
-                              child: Icon(
-                                _obscurePassword
-                                    ? Icons.visibility_off_outlined
-                                    : Icons.visibility_outlined,
-                                color: Color(0xFF888888),
-                                size: 20,
+                    // 🔥 Spotify Login Button
+                    SizedBox(
+                      width: double.infinity,
+                      height: 56,
+                      child: BlocBuilder<AuthCubit, AuthState>(
+                        builder: (context, state) {
+                          final isLoading = state is AuthLoading;
+                          return ElevatedButton(
+                            onPressed: isLoading ? null : _handleLogin,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF1DB954),
+                              foregroundColor: Colors.black,
+                              disabledBackgroundColor: const Color(0xFF1DB954).withValues(alpha: 0.5),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
                               ),
+                              elevation: 0,
                             ),
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 32),
-
-                      SizedBox(
-                        width: double.infinity,
-                        height: 50,
-                        child: BlocBuilder<AuthCubit, AuthState>(
-                          builder: (context, state) {
-                            final isLoading = state is AuthLoading;
-                            return ElevatedButton(
-                              onPressed: isLoading ? null : _handleLogin,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFFFF5B3D),
-                                disabledBackgroundColor: const Color(
-                                  0xFFFF5B3D,
-                                ).withValues(alpha: 0.7),
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 14,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                elevation: 0,
-                              ),
-                              child: isLoading
-                                  ? const SizedBox(
-                                      height: 20,
-                                      width: 20,
-                                      child: CircularProgressIndicator(
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                              Colors.white,
-                                            ),
-                                        strokeWidth: 2,
-                                      ),
-                                    )
-                                  : const Text(
-                                      'Login with Spotify',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                            child: isLoading
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                                      strokeWidth: 2,
                                     ),
-                            );
-                          },
-                        ),
+                                  )
+                                : Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(Icons.music_note, size: 24),
+                                      const SizedBox(width: 12),
+                                      const Text(
+                                        'Login with Spotify',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 0.5,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                          );
+                        },
                       ),
+                    ),
 
-                      SizedBox(height: 16),
+                    const SizedBox(height: 24),
 
-                      SizedBox(
-                        width: double.infinity,
-
-                        height: 50,
-                        child: OutlinedButton(
-                          onPressed: _handleForgotPassword,
-                          style: OutlinedButton.styleFrom(
-                            side: BorderSide(
-                              color: Color(0xFF333333),
-                              width: 1.5,
+                    Center(
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
+                            const TextSpan(
+                              text: "Don't have an account? ",
+                              style: TextStyle(
+                                color: Color(0xFF888888),
+                                fontSize: 14,
+                              ),
                             ),
-                            padding: EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: Text(
-                            'Forgot Password',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 32),
-
-                      Center(
-                        child: Text(
-                          'OR CONTINUE WITH',
-                          style: TextStyle(
-                            color: Color(0xFF888888),
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 20),
-
-                      Row(
-                        children: [
-                          Expanded(
-                            child: OutlinedButton.icon(
-                              onPressed: _handleGoogleLogin,
-                              icon: Icon(
-                                Icons.cloud,
+                            TextSpan(
+                              text: 'Sign up free',
+                              style: const TextStyle(
                                 color: Colors.white,
-                                size: 20,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
                               ),
-                              label: Text(
-                                'Google',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              style: OutlinedButton.styleFrom(
-                                side: BorderSide(
-                                  color: Color(0xFF333333),
-                                  width: 1.5,
-                                ),
-                                padding: EdgeInsets.symmetric(vertical: 12),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = _handleSignUp,
                             ),
-                          ),
-
-                          SizedBox(width: 16),
-
-                          Expanded(
-                            child: OutlinedButton.icon(
-                              onPressed: _handleAppleLogin,
-                              icon: Icon(
-                                Icons.apple,
-                                color: Colors.white,
-                                size: 20,
-                              ),
-                              label: Text(
-                                'Apple',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              style: OutlinedButton.styleFrom(
-                                side: BorderSide(
-                                  color: Color(0xFF333333),
-                                  width: 1.5,
-                                ),
-                                padding: EdgeInsets.symmetric(vertical: 12),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      SizedBox(height: 28),
-
-                      Center(
-                        child: RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: "Don't have an account? ",
-                                style: TextStyle(
-                                  color: Color(0xFF888888),
-                                  fontSize: 14,
-                                ),
-                              ),
-                              TextSpan(
-                                text: 'Sign up',
-                                style: TextStyle(
-                                  color: Color(0xFFFF5B3D),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = _handleSignUp,
-                              ),
-                            ],
-                          ),
+                          ],
                         ),
                       ),
+                    ),
 
-                      SizedBox(height: 24),
-                    ],
-                  ),
+                    const SizedBox(height: 48),
+                  ],
                 ),
               ),
             ),

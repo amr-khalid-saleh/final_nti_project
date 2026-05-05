@@ -15,18 +15,31 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void _initDeepLinkListener() {
+    // Handle links when app is already running
     _linkSubscription = _appLinks.uriLinkStream.listen((Uri? uri) {
-      if (uri != null && uri.host == 'callback') {
-        final code = uri.queryParameters['code'];
-        if (code != null) {
-          _handleAuthorizationCode(code);
-        } else {
-          emit(const AuthError('Authorization failed or was cancelled.'));
-        }
-      }
+      if (uri != null) _handleUri(uri);
     }, onError: (err) {
       emit(AuthError('Deep link error: $err'));
     });
+
+    // Handle initial link if app was launched from it
+    _appLinks.getInitialLink().then((uri) {
+      if (uri != null) _handleUri(uri);
+    });
+  }
+
+  void _handleUri(Uri uri) {
+    if (uri.scheme == 'com.amoorsaleh.musix' && uri.host == 'callback') {
+      final code = uri.queryParameters['code'];
+      if (code != null) {
+        _handleAuthorizationCode(code);
+      } else {
+        final error = uri.queryParameters['error'];
+        if (error != null) {
+          emit(AuthError('Authorization failed: $error'));
+        }
+      }
+    }
   }
 
   Future<void> checkSession() async {
@@ -44,9 +57,9 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthLoading());
       final authUrl = repository.getAuthorizationUrl();
       final uri = Uri.parse(authUrl);
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
-      } else {
+      
+      final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      if (!launched) {
         emit(const AuthError('Could not launch Spotify login page.'));
       }
     } catch (e) {

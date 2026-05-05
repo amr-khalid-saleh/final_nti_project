@@ -17,7 +17,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   String getAuthorizationUrl() {
-    _pkcePair = PkcePair.generate(length: 128); // Generates verifier and challenge
+    _pkcePair = PkcePair.generate(); // Uses default safe length
     
     final scopes = ApiConstants.scopes.join(' ');
     
