@@ -1,13 +1,22 @@
 class ArtistModel {
   final String id;
   final String name;
+  final List<ImageModel> images;
 
-  ArtistModel({required this.id, required this.name});
+  ArtistModel({
+    required this.id,
+    required this.name,
+    this.images = const [],
+  });
 
   factory ArtistModel.fromJson(Map<String, dynamic> json) {
     return ArtistModel(
       id: json['id'] ?? '',
       name: json['name'] ?? '',
+      images: (json['images'] as List?)
+              ?.map((e) => ImageModel.fromJson(e))
+              .toList() ??
+          [],
     );
   }
 }
