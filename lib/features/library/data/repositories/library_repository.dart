@@ -5,8 +5,7 @@ import 'package:musix/features/library/data/data_sources/library_remote_data_sou
 
 abstract class LibraryRepository {
   Future<Either<Failure, List<PlaylistModel>>> getUserPlaylists();
-  Future<Either<Failure, List<TrackModel>>> getSavedTracks();
-  Future<Either<Failure, List<ArtistModel>>> getFollowedArtists();
+  Future<Either<Failure, List<ArtistModel>>> getArtists();
   Future<Either<Failure, List<AlbumModel>>> getSavedAlbums();
 }
 
@@ -26,19 +25,9 @@ class LibraryRepositoryImpl implements LibraryRepository {
   }
 
   @override
-  Future<Either<Failure, List<TrackModel>>> getSavedTracks() async {
+  Future<Either<Failure, List<ArtistModel>>> getArtists() async {
     try {
-      final data = await remoteDataSource.getSavedTracks();
-      return Right(data);
-    } catch (e) {
-      return Left(ServerFailure(e.toString()));
-    }
-  }
-
-  @override
-  Future<Either<Failure, List<ArtistModel>>> getFollowedArtists() async {
-    try {
-      final data = await remoteDataSource.getFollowedArtists();
+      final data = await remoteDataSource.getArtists();
       return Right(data);
     } catch (e) {
       return Left(ServerFailure(e.toString()));
