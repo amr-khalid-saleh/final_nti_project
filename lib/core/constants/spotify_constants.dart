@@ -4,7 +4,7 @@ class ApiConstants {
   
   // Provide your Spotify Client ID here.
   // Note: Client ID is safe to store in the app. Client Secret is NOT.
-  static const String clientId = 'YOUR_SPOTIFY_CLIENT_ID'; // TODO: Replace with your actual Client ID
+  static const String clientId = '5e18b9b6b31740fc83b323132d1c3c98';
   
   // The redirect URI matching your Spotify Dashboard configuration
   static const String redirectUri = 'com.amoorsaleh.musix://callback';
@@ -19,5 +19,6 @@ class ApiConstants {
     'user-read-recently-played',
     'user-modify-playback-state', // for App Remote / Playback
     'user-read-playback-state',
+    'user-follow-read',
   ];
 }
