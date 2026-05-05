@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/shared_widgets/main_scaffold.dart';
 import '../../../../core/theming/app_colors.dart';
 import '../../../../core/theming/app_text_styles.dart';
+import '../../../../core/utils/player_utils.dart';
 import '../../cubit/search_cubit.dart';
 import '../../cubit/search_state.dart';
 import '../widgets/browse_categories_title.dart';
@@ -65,9 +66,9 @@ class _SearchScreenState extends State<SearchScreen> {
                       const SizedBox(height: 20),
                       // Pass callback to SearchBarWidget
                       SearchBarWidget(
-                        /* onSubmitted: (query) {
+                        onSubmitted: (query) {
                           context.read<SearchCubit>().searchTracks(query);
-                        },*/
+                        },
                       ),
                       const SizedBox(height: 32),
 
@@ -132,24 +133,36 @@ class _SearchScreenState extends State<SearchScreen> {
                                 const SizedBox(width: 16),
                             itemBuilder: (context, index) {
                               final artist = state.trendingArtists[index];
-                              return Column(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 40,
-                                    backgroundColor: AppColors.cardBg,
-                                    child: Icon(
-                                      Icons.person,
-                                      color: AppColors.textSecondary,
-                                      size: 30,
+                              final artistImage = artist.images.isNotEmpty
+                                  ? artist.images.first.url
+                                  : null;
+                              return SizedBox(
+                                width: 90,
+                                child: Column(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 40,
+                                      backgroundColor: AppColors.cardBg,
+                                      backgroundImage: artistImage != null
+                                          ? NetworkImage(artistImage)
+                                          : null,
+                                      child: artistImage == null
+                                          ? const Icon(
+                                              Icons.person,
+                                              color: AppColors.textSecondary,
+                                              size: 30,
+                                            )
+                                          : null,
                                     ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    artist.name,
-                                    style: AppTextStyles.font14WhiteMedium,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      artist.name,
+                                      style: AppTextStyles.font14WhiteMedium,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                  ],
+                                ),
                               );
                             },
                           ),
@@ -236,9 +249,36 @@ class _SearchScreenState extends State<SearchScreen> {
                   final track = state.tracks[index];
                   return ListTile(
                     contentPadding: EdgeInsets.zero,
+                    onTap: () => playTrackAndNavigate(context, track),
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: track.album?.images.isNotEmpty == true
+                          ? Image.network(
+                              track.album!.images.first.url,
+                              width: 48,
+                              height: 48,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => Container(
+                                width: 48,
+                                height: 48,
+                                color: AppColors.cardBg,
+                                child: const Icon(Icons.music_note,
+                                    color: AppColors.accent, size: 20),
+                              ),
+                            )
+                          : Container(
+                              width: 48,
+                              height: 48,
+                              color: AppColors.cardBg,
+                              child: const Icon(Icons.music_note,
+                                  color: AppColors.accent, size: 20),
+                            ),
+                    ),
                     title: Text(
                       track.name,
                       style: AppTextStyles.font16WhiteSemiBold,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     subtitle: Text(
                       track.artists.isNotEmpty
