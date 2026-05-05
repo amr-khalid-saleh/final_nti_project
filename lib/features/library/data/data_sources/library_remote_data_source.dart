@@ -13,20 +13,37 @@ class LibraryRemoteDataSourceImpl implements LibraryRemoteDataSource {
 
   LibraryRemoteDataSourceImpl({required this.dio});
 
-  /// Playlists tab — user's own playlists.
+  /// Playlists tab — user's owned + followed playlists.
+  /// Falls back to Spotify featured playlists if the account has none.
   @override
   Future<List<PlaylistModel>> getUserPlaylists() async {
     try {
       final response = await dio.get('/me/playlists', queryParameters: {'limit': 50});
       if (response.statusCode == 200) {
         final items = response.data['items'] as List;
-        return items.map((e) => PlaylistModel.fromJson(e)).toList();
+        final playlists = items.map((e) => PlaylistModel.fromJson(e)).toList();
+        if (playlists.isNotEmpty) return playlists;
+        // Empty account — return featured playlists as discovery content
+        return _getFeaturedPlaylistsFallback();
       }
       throw const ServerFailure('Failed to fetch user playlists');
     } on DioException catch (e) {
       throw ServerFailure(e.message ?? 'Network Error');
     } catch (e) {
       throw ServerFailure(e.toString());
+    }
+  }
+
+  Future<List<PlaylistModel>> _getFeaturedPlaylistsFallback() async {
+    try {
+      final response = await dio.get('/browse/featured-playlists', queryParameters: {'limit': 20});
+      if (response.statusCode == 200) {
+        final items = response.data['playlists']['items'] as List;
+        return items.map((e) => PlaylistModel.fromJson(e)).toList();
+      }
+      return [];
+    } catch (_) {
+      return [];
     }
   }
 
