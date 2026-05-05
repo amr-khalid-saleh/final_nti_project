@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:musix/core/models/spotify_models.dart';
 import 'package:musix/features/home/cubit/home_state.dart';
 import 'package:musix/features/home/data/repositories/home_repository.dart';
 
@@ -11,25 +12,34 @@ class HomeCubit extends Cubit<HomeState> {
     emit(HomeLoading());
 
     final recentlyPlayedResult = await repository.getRecentlyPlayedTracks();
+    final newReleasesResult = await repository.getNewReleases();
     final topTracksResult = await repository.getTopTracks();
     final featuredResult = await repository.getFeaturedPlaylists();
 
+    // Recently played is essential — if it fails, show error
     recentlyPlayedResult.fold(
       (failure) => emit(HomeError(failure.message)),
       (recentlyPlayed) {
-        topTracksResult.fold(
-          (failure) => emit(HomeError(failure.message)),
-          (topTracks) {
-            featuredResult.fold(
-              (failure) => emit(HomeError(failure.message)),
-              (playlists) => emit(HomeLoaded(
-                recentlyPlayed: recentlyPlayed,
-                topTracks: topTracks,
-                featuredPlaylists: playlists,
-              )),
-            );
-          },
+        // All other sections degrade gracefully
+        final specialDeal = newReleasesResult.fold(
+          (_) => <AlbumModel>[],
+          (data) => data,
         );
+        final topTracks = topTracksResult.fold(
+          (_) => <TrackModel>[],
+          (data) => data,
+        );
+        final playlists = featuredResult.fold(
+          (_) => <PlaylistModel>[],
+          (data) => data,
+        );
+
+        emit(HomeLoaded(
+          recentlyPlayed: recentlyPlayed,
+          specialDealAlbums: specialDeal,
+          topTracks: topTracks,
+          featuredPlaylists: playlists,
+        ));
       },
     );
   }
