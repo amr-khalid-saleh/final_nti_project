@@ -35,16 +35,55 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
   @override
   Future<List<ArtistModel>> getTrendingArtists() async {
     try {
-      final response = await dio.get('/me/top/artists', queryParameters: {'limit': 5});
+      final response = await dio.get('/me/top/artists', queryParameters: {'limit': 10, 'time_range': 'medium_term'});
       if (response.statusCode == 200) {
         final items = response.data['items'] as List;
-        return items.map((e) => ArtistModel.fromJson(e)).toList();
+        final top = items.map((e) => ArtistModel.fromJson(e)).toList();
+        // If top artists is thin (<3), supplement with recently-played track artists
+        if (top.length < 3) {
+          final extra = await _getRecentlyPlayedArtists();
+          final seen = top.map((a) => a.id).toSet();
+          for (final a in extra) {
+            if (!seen.contains(a.id)) {
+              seen.add(a.id);
+              top.add(a);
+            }
+            if (top.length >= 10) break;
+          }
+        }
+        return top;
       }
-      return []; // Graceful fallback
+      return _getRecentlyPlayedArtists();
     } on DioException catch (e) {
-      // 403 = insufficient scope, return empty instead of crashing
-      if (e.response?.statusCode == 403) return [];
-      throw ServerFailure(e.message ?? 'Network Error');
+      if (e.response?.statusCode == 403) return _getRecentlyPlayedArtists();
+      return [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  /// Extracts unique artists from /me/player/recently-played as a fallback source.
+  Future<List<ArtistModel>> _getRecentlyPlayedArtists() async {
+    try {
+      final response = await dio.get('/me/player/recently-played', queryParameters: {'limit': 50});
+      if (response.statusCode == 200) {
+        final items = response.data['items'] as List;
+        final seen = <String>{};
+        final artists = <ArtistModel>[];
+        for (final item in items) {
+          final trackArtists = item['track']?['artists'] as List? ?? [];
+          for (final a in trackArtists) {
+            final id = a['id'] as String? ?? '';
+            if (id.isNotEmpty && !seen.contains(id)) {
+              seen.add(id);
+              artists.add(ArtistModel.fromJson(a));
+            }
+          }
+          if (artists.length >= 10) break;
+        }
+        return artists;
+      }
+      return [];
     } catch (e) {
       return [];
     }
