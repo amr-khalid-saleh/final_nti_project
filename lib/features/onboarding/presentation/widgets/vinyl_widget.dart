@@ -6,27 +6,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 
-class VinylWidget extends StatefulWidget {
+class VinylWidget extends StatelessWidget {
   const VinylWidget({super.key});
-
-  @override
-  State<VinylWidget> createState() => _VinylWidgetState();
-}
-
-// StatefulWidget لأن فيه أنيميشن محتاج state
-class _VinylWidgetState extends State<VinylWidget>
-    with SingleTickerProviderStateMixin {
-  // SingleTickerProviderStateMixin: لأن عندنا أنيميشن واحد بس
-
-  late AnimationController _spinController;
-
-  // late: يعني هنعمل initialize بعدين في initState
-
-  @override
-  void dispose() {
-    _spinController.dispose(); // مهم جداً — يمنع memory leak
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {

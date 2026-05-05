@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:musix/features/auth/presentation/screens/login_screen.dart';
 import 'package:musix/features/auth/presentation/screens/signup_screen.dart';
+import 'package:musix/core/injection/injection_container.dart' as di;
+import 'package:musix/features/home/cubit/home_cubit.dart';
+import 'package:musix/features/search/cubit/search_cubit.dart';
+import 'package:musix/features/library/cubit/library_cubit.dart';
+import 'package:musix/features/profile/cubit/profile_cubit.dart';
 import '../utils/app_routes.dart';
 import '../../features/splash/presentation/screens/splash_screen.dart';
 import '../../features/onboarding/presentation/screens/onboarding1_screen.dart';
@@ -37,19 +43,39 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const SignUpScreen());
 
       case AppRoutes.home:
-        return MaterialPageRoute(builder: (_) => const HomeScreen());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => di.sl<HomeCubit>(),
+            child: const HomeScreen(),
+          ),
+        );
 
       case AppRoutes.search:
-        return MaterialPageRoute(builder: (_) => const SearchScreen());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => di.sl<SearchCubit>(),
+            child: const SearchScreen(),
+          ),
+        );
 
       case AppRoutes.nowPlaying:
         return MaterialPageRoute(builder: (_) => const NowPlayingScreen());
 
       case AppRoutes.library:
-        return MaterialPageRoute(builder: (_) => const LibraryScreen());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => di.sl<LibraryCubit>(),
+            child: const LibraryScreen(),
+          ),
+        );
 
       case AppRoutes.profile:
-        return MaterialPageRoute(builder: (_) => const ProfileScreen());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => di.sl<ProfileCubit>(),
+            child: const ProfileScreen(),
+          ),
+        );
 
       case AppRoutes.albumDetails:
         return MaterialPageRoute(builder: (_) => const AlbumDetailsScreen());
