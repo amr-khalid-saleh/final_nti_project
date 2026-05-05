@@ -5,13 +5,15 @@ import '../../../../core/theming/app_text_styles.dart';
 class FreshFindCard extends StatelessWidget {
   final String title;
   final String genre;
+  final String? imageUrl;
   final VoidCallback onTap;
 
   const FreshFindCard({
     super.key,
     required this.title,
     required this.genre,
-    required this.onTap, String? imageUrl,
+    required this.onTap,
+    this.imageUrl,
   });
 
   @override
@@ -20,22 +22,23 @@ class FreshFindCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.transparent,
+          color: AppColors.cardBg,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  borderRadius:
-                      const BorderRadius.vertical(top: Radius.circular(12)),
-                ),
-                child: const Center(
-                  child: Icon(Icons.album, color: AppColors.accent, size: 36),
-                ),
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                child: imageUrl != null
+                    ? Image.network(
+                        imageUrl!,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => const _FallbackIcon(),
+                      )
+                    : const _FallbackIcon(),
               ),
             ),
             Padding(
@@ -47,12 +50,27 @@ class FreshFindCard extends StatelessWidget {
                       style: AppTextStyles.font14WhiteMedium,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis),
-                  Text(genre, style: AppTextStyles.font11GreyMedium),
+                  Text(genre, style: AppTextStyles.font11GreyMedium,
+                      maxLines: 1, overflow: TextOverflow.ellipsis),
                 ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _FallbackIcon extends StatelessWidget {
+  const _FallbackIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: AppColors.cardBg,
+      child: const Center(
+        child: Icon(Icons.album, color: AppColors.accent, size: 36),
       ),
     );
   }
