@@ -10,13 +10,15 @@ class NowPlayingLoaded extends NowPlayingState {
   final bool isShuffle;
   final bool isRepeat;
   final double progress; // 0.0 to 1.0
+  final bool sdkConnected; // true once Spotify App Remote is linked
 
   NowPlayingLoaded({
     this.currentTrack,
-    this.isPlaying = true,
+    this.isPlaying = false,
     this.isShuffle = false,
     this.isRepeat = false,
     this.progress = 0.0,
+    this.sdkConnected = false,
   });
 
   NowPlayingLoaded copyWith({
@@ -25,6 +27,7 @@ class NowPlayingLoaded extends NowPlayingState {
     bool? isShuffle,
     bool? isRepeat,
     double? progress,
+    bool? sdkConnected,
   }) {
     return NowPlayingLoaded(
       currentTrack: currentTrack ?? this.currentTrack,
@@ -32,6 +35,7 @@ class NowPlayingLoaded extends NowPlayingState {
       isShuffle: isShuffle ?? this.isShuffle,
       isRepeat: isRepeat ?? this.isRepeat,
       progress: progress ?? this.progress,
+      sdkConnected: sdkConnected ?? this.sdkConnected,
     );
   }
 }

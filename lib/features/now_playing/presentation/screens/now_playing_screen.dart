@@ -222,29 +222,58 @@ class NowPlayingScreen extends StatelessWidget {
                     const SizedBox(height: 28),
 
                     // ── Bottom Bar ────────────────────────────────────────
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
+                    // Shows SDK connection status and output device
+                    if (!loaded.sdkConnected && track != null)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                              color: Colors.orange.withValues(alpha: 0.4)),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(Icons.speaker,
-                                color: AppColors.textSecondary, size: 18),
-                            const SizedBox(width: 6),
-                            Text('Studio Speakers',
-                                style: AppTextStyles.font12GreyRegular),
+                            const Icon(Icons.info_outline,
+                                color: Colors.orange, size: 16),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                'Install & open Spotify app for in-app playback',
+                                style: AppTextStyles.font12GreyRegular
+                                    .copyWith(color: Colors.orange),
+                              ),
+                            ),
                           ],
                         ),
-                        const Row(
-                          children: [
-                            Icon(Icons.share_outlined,
-                                color: AppColors.textSecondary, size: 20),
-                            SizedBox(width: 16),
-                            Icon(Icons.queue_music,
-                                color: AppColors.textSecondary, size: 20),
-                          ],
-                        ),
-                      ],
-                    ),
+                      ),
+                    if (loaded.sdkConnected)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(Icons.speaker,
+                                  color: AppColors.accent, size: 18),
+                              const SizedBox(width: 6),
+                              Text('Spotify Connected',
+                                  style: AppTextStyles.font12GreyRegular
+                                      .copyWith(color: AppColors.accent)),
+                            ],
+                          ),
+                          const Row(
+                            children: [
+                              Icon(Icons.share_outlined,
+                                  color: AppColors.textSecondary, size: 20),
+                              SizedBox(width: 16),
+                              Icon(Icons.queue_music,
+                                  color: AppColors.textSecondary, size: 20),
+                            ],
+                          ),
+                        ],
+                      ),
                   ],
                 ),
               ),
