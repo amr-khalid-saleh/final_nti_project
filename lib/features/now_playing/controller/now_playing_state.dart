@@ -9,33 +9,52 @@ class NowPlayingLoaded extends NowPlayingState {
   final bool isPlaying;
   final bool isShuffle;
   final bool isRepeat;
-  final double progress; // 0.0 to 1.0
-  final bool sdkConnected; // true once Spotify App Remote is linked
+  final Duration position;    // Real playback position from just_audio
+  final Duration duration;    // Real track duration (preview = up to 30s)
+  final bool hasPreview;      // false when track has no preview_url
 
   NowPlayingLoaded({
     this.currentTrack,
     this.isPlaying = false,
     this.isShuffle = false,
     this.isRepeat = false,
-    this.progress = 0.0,
-    this.sdkConnected = false,
+    this.position = Duration.zero,
+    this.duration = Duration.zero,
+    this.hasPreview = true,
   });
+
+  /// 0.0 → 1.0 progress for slider
+  double get progress {
+    if (duration.inMilliseconds == 0) return 0.0;
+    return (position.inMilliseconds / duration.inMilliseconds).clamp(0.0, 1.0);
+  }
+
+  String get positionLabel => _formatDuration(position);
+  String get durationLabel => _formatDuration(duration);
+
+  String _formatDuration(Duration d) {
+    final m = d.inMinutes;
+    final s = (d.inSeconds % 60).toString().padLeft(2, '0');
+    return '$m:$s';
+  }
 
   NowPlayingLoaded copyWith({
     TrackModel? currentTrack,
     bool? isPlaying,
     bool? isShuffle,
     bool? isRepeat,
-    double? progress,
-    bool? sdkConnected,
+    Duration? position,
+    Duration? duration,
+    bool? hasPreview,
   }) {
     return NowPlayingLoaded(
       currentTrack: currentTrack ?? this.currentTrack,
       isPlaying: isPlaying ?? this.isPlaying,
       isShuffle: isShuffle ?? this.isShuffle,
       isRepeat: isRepeat ?? this.isRepeat,
-      progress: progress ?? this.progress,
-      sdkConnected: sdkConnected ?? this.sdkConnected,
+      position: position ?? this.position,
+      duration: duration ?? this.duration,
+      hasPreview: hasPreview ?? this.hasPreview,
     );
   }
 }

@@ -15,7 +15,7 @@ class AppMiniPlayer extends StatelessWidget {
     return BlocBuilder<NowPlayingCubit, NowPlayingState>(
       builder: (context, state) {
         final cubit = context.read<NowPlayingCubit>();
-        final loaded = state is NowPlayingLoaded ? state : NowPlayingLoaded();
+        final loaded = state is NowPlayingLoaded ? state as NowPlayingLoaded : NowPlayingLoaded();
         final track = loaded.currentTrack;
 
         // Hide mini player when no track is selected

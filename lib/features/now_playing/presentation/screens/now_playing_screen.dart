@@ -16,7 +16,6 @@ class NowPlayingScreen extends StatelessWidget {
         final loaded = state is NowPlayingLoaded ? state : NowPlayingLoaded();
         final track = loaded.currentTrack;
 
-        // Resolve display strings from the real TrackModel
         final trackName = track?.name ?? 'Nothing playing';
         final artistName = track?.artists.isNotEmpty == true
             ? track!.artists.first.name
@@ -24,18 +23,6 @@ class NowPlayingScreen extends StatelessWidget {
         final imageUrl = track?.album?.images.isNotEmpty == true
             ? track!.album!.images.first.url
             : null;
-        final durationMs = track?.durationMs ?? 0;
-        final progressMs = (loaded.progress * durationMs).toInt();
-        final totalMin = (durationMs / 60000).floor();
-        final totalSec = ((durationMs % 60000) / 1000)
-            .floor()
-            .toString()
-            .padLeft(2, '0');
-        final curMin = (progressMs / 60000).floor();
-        final curSec = ((progressMs % 60000) / 1000)
-            .floor()
-            .toString()
-            .padLeft(2, '0');
 
         return Container(
           decoration: const BoxDecoration(
@@ -86,12 +73,12 @@ class NowPlayingScreen extends StatelessWidget {
                       ],
                     ),
 
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 28),
 
                     // ── Album Art ─────────────────────────────────────────
                     Container(
                       width: double.infinity,
-                      height: 280,
+                      height: 260,
                       decoration: BoxDecoration(
                         color: AppColors.cardBg,
                         borderRadius: BorderRadius.circular(16),
@@ -119,7 +106,7 @@ class NowPlayingScreen extends StatelessWidget {
                             ),
                     ),
 
-                    const SizedBox(height: 28),
+                    const SizedBox(height: 24),
 
                     // ── Song Info ─────────────────────────────────────────
                     Row(
@@ -146,7 +133,35 @@ class NowPlayingScreen extends StatelessWidget {
                       ],
                     ),
 
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 16),
+
+                    // ── No Preview Banner ─────────────────────────────────
+                    if (track != null && !loaded.hasPreview)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
+                        margin: const EdgeInsets.only(bottom: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                              color: Colors.orange.withValues(alpha: 0.4)),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.music_off,
+                                color: Colors.orange, size: 16),
+                            const SizedBox(width: 8),
+                            const Expanded(
+                              child: Text(
+                                'No preview available for this track',
+                                style: TextStyle(
+                                    color: Colors.orange, fontSize: 12),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
 
                     // ── Progress Bar ──────────────────────────────────────
                     Slider(
@@ -160,15 +175,15 @@ class NowPlayingScreen extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('$curMin:$curSec',
+                          Text(loaded.positionLabel,
                               style: AppTextStyles.font12GreyRegular),
-                          Text('$totalMin:$totalSec',
+                          Text(loaded.durationLabel,
                               style: AppTextStyles.font12GreyRegular),
                         ],
                       ),
                     ),
 
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 20),
 
                     // ── Controls ──────────────────────────────────────────
                     Row(
@@ -219,61 +234,43 @@ class NowPlayingScreen extends StatelessWidget {
                       ],
                     ),
 
-                    const SizedBox(height: 28),
+                    const SizedBox(height: 24),
 
                     // ── Bottom Bar ────────────────────────────────────────
-                    // Shows SDK connection status and output device
-                    if (!loaded.sdkConnected && track != null)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.orange.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                              color: Colors.orange.withValues(alpha: 0.4)),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
                           children: [
-                            const Icon(Icons.info_outline,
-                                color: Colors.orange, size: 16),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                'Install & open Spotify app for in-app playback',
-                                style: AppTextStyles.font12GreyRegular
-                                    .copyWith(color: Colors.orange),
+                            Icon(Icons.music_note,
+                                color: loaded.hasPreview
+                                    ? AppColors.accent
+                                    : AppColors.textSecondary,
+                                size: 18),
+                            const SizedBox(width: 6),
+                            Text(
+                              loaded.hasPreview
+                                  ? '30s Preview'
+                                  : 'No preview',
+                              style: AppTextStyles.font12GreyRegular.copyWith(
+                                color: loaded.hasPreview
+                                    ? AppColors.accent
+                                    : AppColors.textSecondary,
                               ),
                             ),
                           ],
                         ),
-                      ),
-                    if (loaded.sdkConnected)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              const Icon(Icons.speaker,
-                                  color: AppColors.accent, size: 18),
-                              const SizedBox(width: 6),
-                              Text('Spotify Connected',
-                                  style: AppTextStyles.font12GreyRegular
-                                      .copyWith(color: AppColors.accent)),
-                            ],
-                          ),
-                          const Row(
-                            children: [
-                              Icon(Icons.share_outlined,
-                                  color: AppColors.textSecondary, size: 20),
-                              SizedBox(width: 16),
-                              Icon(Icons.queue_music,
-                                  color: AppColors.textSecondary, size: 20),
-                            ],
-                          ),
-                        ],
-                      ),
+                        const Row(
+                          children: [
+                            Icon(Icons.share_outlined,
+                                color: AppColors.textSecondary, size: 20),
+                            SizedBox(width: 16),
+                            Icon(Icons.queue_music,
+                                color: AppColors.textSecondary, size: 20),
+                          ],
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),

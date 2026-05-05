@@ -1,113 +1,113 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:spotify_sdk/models/player_state.dart';
 import '../../../core/models/spotify_models.dart';
 import '../../../core/services/spotify_player_service.dart';
 import 'now_playing_state.dart';
 
 class NowPlayingCubit extends Cubit<NowPlayingState> {
-  final SpotifyPlayerService _player = SpotifyPlayerService();
-  StreamSubscription<PlayerState?>? _playerStateSubscription;
+  final AudioPlayerService _audio = AudioPlayerService();
 
-  NowPlayingCubit() : super(NowPlayingLoaded());
+  StreamSubscription<Duration>? _positionSub;
+  StreamSubscription<Duration?>? _durationSub;
+  StreamSubscription<bool>? _playingSub;
+
+  NowPlayingCubit() : super(NowPlayingLoaded()) {
+    _bindStreams();
+  }
+
+  // ── Stream binding ────────────────────────────────────────────────────────
+
+  void _bindStreams() {
+    _positionSub = _audio.positionStream.listen((pos) {
+      if (state is NowPlayingLoaded) {
+        emit((state as NowPlayingLoaded).copyWith(position: pos));
+      }
+    });
+
+    _durationSub = _audio.durationStream.listen((dur) {
+      if (dur != null && state is NowPlayingLoaded) {
+        emit((state as NowPlayingLoaded).copyWith(duration: dur));
+      }
+    });
+
+    _playingSub = _audio.playingStream.listen((playing) {
+      if (state is NowPlayingLoaded) {
+        emit((state as NowPlayingLoaded).copyWith(isPlaying: playing));
+      }
+    });
+  }
 
   // ── Public API ────────────────────────────────────────────────────────────
 
-  /// Called from any screen when the user taps a track.
-  /// Connects to Spotify App Remote and starts playing immediately.
+  /// Play a track. Immediately shows metadata in the UI, then loads the
+  /// preview audio. If the track has no preview_url, shows a notice.
   Future<void> playTrack(TrackModel track) async {
-    // Immediately emit the track so the UI updates (art, title, artist)
+    // Reset position when switching tracks
     emit(NowPlayingLoaded(
       currentTrack: track,
       isPlaying: true,
-      sdkConnected: false,
+      position: Duration.zero,
+      duration: Duration.zero,
+      hasPreview: track.previewUrl != null,
     ));
 
-    // Connect and play — if Spotify app is not installed, sdkConnected stays false
-    final connected = await _player.connect();
-    if (connected) {
-      await _player.play(track.uri);
-      _subscribeToPlayerState(track);
-      final current = state as NowPlayingLoaded;
-      emit(current.copyWith(sdkConnected: true, isPlaying: true));
+    final loaded = await _audio.playPreview(track.previewUrl);
+    if (!loaded && state is NowPlayingLoaded) {
+      // No preview URL — update flag so UI can show a notice
+      emit((state as NowPlayingLoaded).copyWith(
+        hasPreview: false,
+        isPlaying: false,
+      ));
     }
-    // If not connected, UI still shows track metadata but playback falls back to Spotify deep link
   }
 
   Future<void> togglePlay() async {
     if (state is! NowPlayingLoaded) return;
     final current = state as NowPlayingLoaded;
-    if (current.sdkConnected) {
-      if (current.isPlaying) {
-        await _player.pause();
-      } else {
-        await _player.resume();
-      }
+    if (!current.hasPreview) return;
+    if (current.isPlaying) {
+      await _audio.pause();
+    } else {
+      await _audio.play();
     }
-    emit(current.copyWith(isPlaying: !current.isPlaying));
+    // State will update via playingStream subscription
   }
 
   Future<void> skipNext() async {
-    if (state is! NowPlayingLoaded) return;
-    final current = state as NowPlayingLoaded;
-    if (current.sdkConnected) await _player.skipNext();
+    await _audio.skipNext();
   }
 
   Future<void> skipPrevious() async {
-    if (state is! NowPlayingLoaded) return;
-    final current = state as NowPlayingLoaded;
-    if (current.sdkConnected) await _player.skipPrevious();
+    await _audio.skipPrevious();
   }
 
   Future<void> toggleShuffle() async {
     if (state is! NowPlayingLoaded) return;
     final current = state as NowPlayingLoaded;
-    final newValue = !current.isShuffle;
-    if (current.sdkConnected) await _player.setShuffle(enabled: newValue);
-    emit(current.copyWith(isShuffle: newValue));
+    emit(current.copyWith(isShuffle: !current.isShuffle));
   }
 
   Future<void> toggleRepeat() async {
     if (state is! NowPlayingLoaded) return;
     final current = state as NowPlayingLoaded;
-    final newValue = !current.isRepeat;
-    if (current.sdkConnected) await _player.setRepeat(enabled: newValue);
-    emit(current.copyWith(isRepeat: newValue));
+    emit(current.copyWith(isRepeat: !current.isRepeat));
   }
 
+  /// Called when the user drags the slider.
   Future<void> seekTo(double value) async {
     if (state is! NowPlayingLoaded) return;
     final current = state as NowPlayingLoaded;
-    emit(current.copyWith(progress: value));
-    if (current.sdkConnected && current.currentTrack != null) {
-      final positionMs = (value * current.currentTrack!.durationMs).toInt();
-      await _player.seekTo(positionMs);
-    }
-  }
-
-  // ── Private helpers ───────────────────────────────────────────────────────
-
-  void _subscribeToPlayerState(TrackModel track) {
-    _playerStateSubscription?.cancel();
-    _playerStateSubscription = _player.playerStateStream.listen((playerState) {
-      if (playerState == null || state is! NowPlayingLoaded) return;
-      final current = state as NowPlayingLoaded;
-      final durationMs = playerState.track?.duration ?? track.durationMs;
-      final positionMs = playerState.playbackPosition;
-      final progress =
-          durationMs > 0 ? (positionMs / durationMs).clamp(0.0, 1.0) : 0.0;
-
-      emit(current.copyWith(
-        isPlaying: !playerState.isPaused,
-        progress: progress,
-        sdkConnected: true,
-      ));
-    });
+    if (!current.hasPreview) return;
+    final targetMs =
+        (value * current.duration.inMilliseconds).toInt();
+    await _audio.seek(Duration(milliseconds: targetMs));
   }
 
   @override
   Future<void> close() {
-    _playerStateSubscription?.cancel();
+    _positionSub?.cancel();
+    _durationSub?.cancel();
+    _playingSub?.cancel();
     return super.close();
   }
 }

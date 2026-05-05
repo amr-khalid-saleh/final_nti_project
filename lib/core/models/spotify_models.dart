@@ -90,6 +90,7 @@ class TrackModel {
   final int durationMs;
   final AlbumModel? album;
   final List<ArtistModel> artists;
+  final String? previewUrl; // 30-second MP3 preview from Spotify
 
   TrackModel({
     required this.id,
@@ -98,6 +99,7 @@ class TrackModel {
     required this.durationMs,
     this.album,
     required this.artists,
+    this.previewUrl,
   });
 
   factory TrackModel.fromJson(Map<String, dynamic> json) {
@@ -111,6 +113,7 @@ class TrackModel {
               ?.map((e) => ArtistModel.fromJson(e))
               .toList() ??
           [],
+      previewUrl: json['preview_url'] as String?,
     );
   }
 }
