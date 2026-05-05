@@ -6,6 +6,7 @@ import 'package:musix/core/utils/app_routes.dart';
 import 'package:musix/core/utils/app_router.dart';
 import 'package:musix/features/auth/cubit/auth_cubit.dart';
 import 'package:musix/features/profile/cubit/profile_cubit.dart';
+import 'package:musix/features/now_playing/controller/now_playing_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +28,8 @@ class MusixApp extends StatelessWidget {
           providers: [
             BlocProvider(create: (_) => di.sl<AuthCubit>()..checkSession()),
             BlocProvider(create: (_) => di.sl<ProfileCubit>()),
+            // Global player state — shared across all screens and the MiniPlayer
+            BlocProvider(create: (_) => di.sl<NowPlayingCubit>()),
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
