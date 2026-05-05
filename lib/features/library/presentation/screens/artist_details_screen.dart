@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/models/spotify_models.dart';
 import '../../../../core/shared_widgets/main_scaffold.dart';
+import '../../../../core/theming/app_colors.dart';
 import '../../../../core/theming/app_text_styles.dart';
-import '../../data/library_data.dart';
-import '../widgets/album_card.dart';
+import '../../../../core/utils/player_utils.dart';
 import '../widgets/primary_action_button.dart';
-import '../widgets/start_info_card.dart';
-import '../widgets/track_tile.dart';
 
 class ArtistDetailsScreen extends StatelessWidget {
-  const ArtistDetailsScreen({super.key});
+  final ArtistModel? artist;
+
+  const ArtistDetailsScreen({super.key, this.artist});
 
   @override
   Widget build(BuildContext context) {
+    final name = artist?.name ?? 'Artist';
+    final imageUrl = artist?.images.isNotEmpty == true
+        ? artist!.images.first.url
+        : null;
+    final followers = artist?.followers;
+    final genres = artist?.genres ?? [];
+    final popularity = artist?.popularity;
+
     return MainScaffold(
       currentIndex: 2,
       body: SingleChildScrollView(
@@ -23,26 +32,40 @@ class ArtistDetailsScreen extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [
-                Colors.black,
-                Color(0xFF140808),
-                Color(0xFF240908),
-              ],
+              colors: [Colors.black, Color(0xFF140808), Color(0xFF240908)],
             ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // ── Hero Header ───────────────────────────────────────────
               SizedBox(
-                height: 720.h,
+                height: 680.h,
                 child: Stack(
                   children: [
+                    // Background image
                     Positioned.fill(
-                      child: Image.network(
-                        'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1200&q=80',
-                        fit: BoxFit.cover,
-                      ),
+                      child: imageUrl != null
+                          ? Image.network(
+                              imageUrl,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => Container(
+                                color: AppColors.cardBg,
+                                child: const Center(
+                                  child: Icon(Icons.person,
+                                      color: AppColors.accent, size: 120),
+                                ),
+                              ),
+                            )
+                          : Container(
+                              color: AppColors.cardBg,
+                              child: const Center(
+                                child: Icon(Icons.person,
+                                    color: AppColors.accent, size: 120),
+                              ),
+                            ),
                     ),
+                    // Gradient overlay
                     Positioned.fill(
                       child: Container(
                         decoration: BoxDecoration(
@@ -50,7 +73,7 @@ class ArtistDetailsScreen extends StatelessWidget {
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: [
-                              Colors.black.withValues(alpha: 0.15),
+                              Colors.black.withValues(alpha: 0.1),
                               Colors.black.withValues(alpha: 0.25),
                               Colors.black.withValues(alpha: 0.85),
                               Colors.black,
@@ -59,6 +82,7 @@ class ArtistDetailsScreen extends StatelessWidget {
                         ),
                       ),
                     ),
+                    // Top bar
                     SafeArea(
                       child: Padding(
                         padding: EdgeInsets.symmetric(
@@ -72,21 +96,12 @@ class ArtistDetailsScreen extends StatelessWidget {
                               style: AppTextStyles.font22WhiteBold
                                   .copyWith(fontStyle: FontStyle.italic),
                             ),
-                            Container(
-                              width: 42.w,
-                              height: 42.w,
-                              decoration: BoxDecoration(
-                                color: Colors.white10,
-                                shape: BoxShape.circle,
-                                border: Border.all(color: Colors.white24),
-                              ),
-                              child:
-                                  const Icon(Icons.search, color: Colors.white),
-                            ),
+                            _circleIcon(context, Icons.more_vert),
                           ],
                         ),
                       ),
                     ),
+                    // Artist name + actions at bottom of hero
                     Positioned(
                       left: 24.w,
                       right: 24.w,
@@ -94,26 +109,28 @@ class ArtistDetailsScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              Icon(Icons.verified,
-                                  color: const Color(0xFFFF7A1A), size: 16.sp),
-                              SizedBox(width: 6.w),
-                              Text(
-                                LibraryData.verifiedLabel,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 13.sp,
-                                  letterSpacing: 1.2,
+                          if (artist != null)
+                            Row(
+                              children: [
+                                Icon(Icons.verified,
+                                    color: const Color(0xFFFF7A1A),
+                                    size: 16.sp),
+                                SizedBox(width: 6.w),
+                                Text(
+                                  'VERIFIED ARTIST',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 13.sp,
+                                    letterSpacing: 1.2,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
+                              ],
+                            ),
                           SizedBox(height: 14.h),
                           Text(
-                            LibraryData.artistName,
+                            name,
                             style: AppTextStyles.font28WhiteExtraBold
-                                .copyWith(fontSize: 54.sp),
+                                .copyWith(fontSize: 48.sp),
                           ),
                           SizedBox(height: 22.h),
                           Row(
@@ -133,127 +150,70 @@ class ArtistDetailsScreen extends StatelessWidget {
                   ],
                 ),
               ),
+
+              // ── Info Section ──────────────────────────────────────────
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 20.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Popular Tracks',
-                          style: TextStyle(color: Colors.white, fontSize: 24.sp),
-                        ),
-                        Text(
-                          'See all',
-                          style:
-                              TextStyle(color: Colors.white38, fontSize: 18.sp),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 18.h),
-                    ...LibraryData.popularTracks.map(
-                      (track) => TrackTile(
-                        index: track['index']!,
-                        title: track['title']!,
-                        artist: '',
-                        subtitle: track['subtitle']!,
-                        duration: '',
-                        showImage: true,
-                        imageUrl: track['image']!,
-                      ),
-                    ),
-                    SizedBox(height: 28.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Albums',
-                          style: TextStyle(color: Colors.white, fontSize: 24.sp),
-                        ),
-                        Text(
-                          'View all',
-                          style:
-                              TextStyle(color: Colors.white38, fontSize: 18.sp),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 18.h),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: LibraryData.albums
-                            .map(
-                              (album) => Padding(
-                                padding: EdgeInsets.only(right: 14.w),
-                                child: AlbumCard(
-                                  title: album['title']!,
-                                  subtitle: album['subtitle']!,
-                                  image: album['image']!,
-                                ),
-                              ),
-                            )
+
+                    // Genres
+                    if (genres.isNotEmpty) ...[
+                      Text('Genres',
+                          style: TextStyle(
+                              color: Colors.white, fontSize: 20.sp)),
+                      SizedBox(height: 10.h),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: genres
+                            .take(5)
+                            .map((g) => Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 14.w, vertical: 6.h),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.cardBg,
+                                    borderRadius: BorderRadius.circular(20.r),
+                                    border: Border.all(color: Colors.white12),
+                                  ),
+                                  child: Text(g,
+                                      style: TextStyle(
+                                          color: Colors.white70,
+                                          fontSize: 13.sp)),
+                                ))
                             .toList(),
                       ),
-                    ),
-                    SizedBox(height: 30.h),
-                    Text(
-                      'About',
-                      style: TextStyle(color: Colors.white, fontSize: 24.sp),
-                    ),
-                    SizedBox(height: 18.h),
+                      SizedBox(height: 24.h),
+                    ],
+
+                    // About card
                     Container(
                       width: double.infinity,
-                      padding: EdgeInsets.all(24.w),
+                      padding: EdgeInsets.all(20.w),
                       decoration: BoxDecoration(
                         color: const Color(0xFF141414),
-                        borderRadius: BorderRadius.circular(28.r),
+                        borderRadius: BorderRadius.circular(20.r),
                         border: Border.all(color: Colors.white10),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: Container(
-                              width: 42.w,
-                              height: 42.w,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: const Color(0xFF8A4A18),
-                                  width: 2,
-                                ),
-                              ),
-                              child: Icon(
-                                Icons.info_outline,
-                                color: const Color(0xFF8A4A18),
-                                size: 24.sp,
-                              ),
-                            ),
-                          ),
                           Text(
-                            LibraryData.aboutArtist,
+                            'About',
                             style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 18.sp,
-                              height: 1.7,
-                            ),
+                                color: Colors.white, fontSize: 18.sp),
                           ),
-                          SizedBox(height: 24.h),
+                          SizedBox(height: 16.h),
                           Row(
                             children: [
-                              const StatInfoCard(
-                                value: '4.2M',
-                                label: 'Monthly\nListeners',
-                              ),
-                              SizedBox(width: 14.w),
-                              const StatInfoCard(
-                                value: '128',
-                                label: 'Rank\nGlobal',
-                              ),
+                              if (followers != null)
+                                _statBox(
+                                    _formatFollowers(followers), 'Followers'),
+                              if (followers != null) SizedBox(width: 14.w),
+                              if (popularity != null)
+                                _statBox('$popularity / 100', 'Popularity'),
                             ],
                           ),
                         ],
@@ -269,9 +229,43 @@ class ArtistDetailsScreen extends StatelessWidget {
       ),
     );
   }
+
+  String _formatFollowers(int count) {
+    if (count >= 1000000) {
+      return '${(count / 1000000).toStringAsFixed(1)}M';
+    } else if (count >= 1000) {
+      return '${(count / 1000).toStringAsFixed(1)}K';
+    }
+    return '$count';
+  }
+
+  Widget _statBox(String value, String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white10,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          Text(value,
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold)),
+          const SizedBox(height: 4),
+          Text(label,
+              style: const TextStyle(color: Colors.white54, fontSize: 12)),
+        ],
+      ),
+    );
+  }
+
   Widget _circleIcon(BuildContext context, IconData icon) {
     return GestureDetector(
-      onTap: icon == Icons.arrow_back_ios_new ? () => Navigator.pop(context) : null,
+      onTap: icon == Icons.arrow_back_ios_new
+          ? () => Navigator.pop(context)
+          : null,
       child: Container(
         width: 44.w,
         height: 44.w,

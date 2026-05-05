@@ -185,6 +185,7 @@ class _LibraryScreenState extends State<LibraryScreen>
           title: artist.name,
           subtitle: 'Artist',
           routeName: AppRoutes.artistDetails,
+          arguments: artist,
           isCircle: true,
         );
       },
@@ -211,6 +212,7 @@ class _LibraryScreenState extends State<LibraryScreen>
           subtitle:
               'Album · ${album.artists?.isNotEmpty == true ? album.artists!.first.name : 'Unknown Artist'}',
           routeName: AppRoutes.albumDetails,
+          arguments: album,
           isCircle: false,
         );
       },
@@ -224,9 +226,10 @@ class _LibraryScreenState extends State<LibraryScreen>
     required String subtitle,
     required String routeName,
     required bool isCircle,
+    Object? arguments,
   }) {
     return InkWell(
-      onTap: () => Navigator.pushNamed(context, routeName),
+      onTap: () => Navigator.pushNamed(context, routeName, arguments: arguments),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Container(

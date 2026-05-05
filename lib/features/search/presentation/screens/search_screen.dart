@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/shared_widgets/main_scaffold.dart';
 import '../../../../core/theming/app_colors.dart';
 import '../../../../core/theming/app_text_styles.dart';
+import '../../../../core/utils/app_routes.dart';
 import '../../../../core/utils/player_utils.dart';
 import '../../cubit/search_cubit.dart';
 import '../../cubit/search_state.dart';
@@ -188,46 +189,60 @@ class _SearchScreenState extends State<SearchScreen> {
                             final imageUrl = album.images.isNotEmpty
                                 ? album.images.first.url
                                 : null;
-                            return Row(
-                              children: [
-                                Container(
-                                  width: 60,
-                                  height: 60,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: AppColors.cardBg,
-                                    image: imageUrl != null
-                                        ? DecorationImage(
-                                            image: NetworkImage(imageUrl),
-                                            fit: BoxFit.cover,
-                                          )
+                            return InkWell(
+                              onTap: () => Navigator.pushNamed(
+                                context,
+                                AppRoutes.albumDetails,
+                                arguments: album,
+                              ),
+                              borderRadius: BorderRadius.circular(8),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 60,
+                                    height: 60,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: AppColors.cardBg,
+                                      image: imageUrl != null
+                                          ? DecorationImage(
+                                              image: NetworkImage(imageUrl),
+                                              fit: BoxFit.cover,
+                                            )
+                                          : null,
+                                    ),
+                                    child: imageUrl == null
+                                        ? const Icon(Icons.album,
+                                            color: AppColors.textSecondary)
                                         : null,
                                   ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        album.name,
-                                        style:
-                                            AppTextStyles.font16WhiteSemiBold,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        album.artists?.isNotEmpty == true
-                                            ? album.artists!.first.name
-                                            : 'Unknown Artist',
-                                        style: AppTextStyles.font12GreyRegular,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          album.name,
+                                          style:
+                                              AppTextStyles.font16WhiteSemiBold,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          album.artists?.isNotEmpty == true
+                                              ? album.artists!.first.name
+                                              : 'Unknown Artist',
+                                          style: AppTextStyles.font12GreyRegular,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                  const Icon(Icons.chevron_right,
+                                      color: AppColors.textSecondary),
+                                ],
+                              ),
                             );
                           },
                         ),

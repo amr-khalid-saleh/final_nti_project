@@ -2,11 +2,17 @@ class ArtistModel {
   final String id;
   final String name;
   final List<ImageModel> images;
+  final int? followers;
+  final List<String> genres;
+  final int? popularity;
 
   ArtistModel({
     required this.id,
     required this.name,
     this.images = const [],
+    this.followers,
+    this.genres = const [],
+    this.popularity,
   });
 
   factory ArtistModel.fromJson(Map<String, dynamic> json) {
@@ -17,6 +23,9 @@ class ArtistModel {
               ?.map((e) => ImageModel.fromJson(e))
               .toList() ??
           [],
+      followers: json['followers']?['total'] as int?,
+      genres: (json['genres'] as List?)?.map((e) => e.toString()).toList() ?? [],
+      popularity: json['popularity'] as int?,
     );
   }
 }
@@ -42,12 +51,16 @@ class AlbumModel {
   final String name;
   final List<ImageModel> images;
   final List<ArtistModel>? artists;
+  final String? releaseDate;
+  final List<TrackModel> tracks;
 
   AlbumModel({
     required this.id,
     required this.name,
     required this.images,
     this.artists,
+    this.releaseDate,
+    this.tracks = const [],
   });
 
   factory AlbumModel.fromJson(Map<String, dynamic> json) {
@@ -61,6 +74,11 @@ class AlbumModel {
       artists: (json['artists'] as List?)
           ?.map((e) => ArtistModel.fromJson(e))
           .toList(),
+      releaseDate: json['release_date'],
+      tracks: (json['tracks']?['items'] as List?)
+              ?.map((e) => TrackModel.fromJson(e))
+              .toList() ??
+          [],
     );
   }
 }
