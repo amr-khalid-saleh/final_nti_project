@@ -240,17 +240,6 @@ flutter run
 
 ---
 
-## Planned Improvements
-
-- [ ] **Playlist detail data binding** — load real tracks per playlist
-- [ ] **Pagination** — infinite scroll for all list sections
-- [ ] **Local caching** — `Hive` or `drift` for offline browsing
-- [ ] **Personalized recommendations** — `/recommendations` endpoint
-- [ ] **Pull-to-refresh** across all screens
-- [ ] **Lyrics integration** — third-party lyrics API
-- [ ] **Dark/light theme toggle**
-
----
 
 ## Project Context
 
