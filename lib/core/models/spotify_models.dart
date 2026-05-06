@@ -148,3 +148,34 @@ class CategoryModel {
     );
   }
 }
+
+class SearchResultsModel {
+  final List<TrackModel> tracks;
+  final List<ArtistModel> artists;
+  final List<AlbumModel> albums;
+
+  SearchResultsModel({
+    required this.tracks,
+    required this.artists,
+    required this.albums,
+  });
+
+  factory SearchResultsModel.fromJson(Map<String, dynamic> json) {
+    return SearchResultsModel(
+      tracks: (json['tracks']?['items'] as List?)
+              ?.map((e) => TrackModel.fromJson(e))
+              .toList() ??
+          [],
+      artists: (json['artists']?['items'] as List?)
+              ?.map((e) => ArtistModel.fromJson(e))
+              .toList() ??
+          [],
+      albums: (json['albums']?['items'] as List?)
+              ?.map((e) => AlbumModel.fromJson(e))
+              .toList() ??
+          [],
+    );
+  }
+
+  bool get isEmpty => tracks.isEmpty && artists.isEmpty && albums.isEmpty;
+}

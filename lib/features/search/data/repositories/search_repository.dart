@@ -8,6 +8,7 @@ abstract class SearchRepository {
   Future<Either<Failure, List<ArtistModel>>> getTrendingArtists();
   Future<Either<Failure, List<AlbumModel>>> getDiscoverAlbums();
   Future<Either<Failure, List<TrackModel>>> searchTracks(String query);
+  Future<Either<Failure, SearchResultsModel>> searchItems(String query);
 }
 
 class SearchRepositoryImpl implements SearchRepository {
@@ -54,5 +55,15 @@ class SearchRepositoryImpl implements SearchRepository {
       return Left(ServerFailure(e.toString()));
     }
   }
-}
 
+
+  @override
+  Future<Either<Failure, SearchResultsModel>> searchItems(String query) async {
+    try {
+      final data = await remoteDataSource.searchItems(query);
+      return Right(data);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+}

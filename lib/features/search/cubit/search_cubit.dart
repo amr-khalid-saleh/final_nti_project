@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:musix/core/models/spotify_models.dart';
 import 'package:musix/features/search/data/repositories/search_repository.dart';
 import 'search_state.dart';
 
@@ -19,13 +20,19 @@ class SearchCubit extends Cubit<SearchState> {
       (failure) => emit(SearchError(failure.message)),
       (categories) {
         // Artists and albums are optional — degrade gracefully
-        final artists = artistsResult.fold((_) => <dynamic>[], (data) => data);
-        final albums = albumsResult.fold((_) => <dynamic>[], (data) => data);
+        final artists = artistsResult.fold(
+          (_) => <ArtistModel>[],
+          (data) => data,
+        );
+        final albums = albumsResult.fold(
+          (_) => <AlbumModel>[],
+          (data) => data,
+        );
 
         emit(SearchInitialDataLoaded(
           categories: categories,
-          trendingArtists: List.from(artists),
-          discoverAlbums: List.from(albums),
+          trendingArtists: artists,
+          discoverAlbums: albums,
         ));
       },
     );
@@ -43,7 +50,36 @@ class SearchCubit extends Cubit<SearchState> {
 
     result.fold(
       (failure) => emit(SearchError(failure.message)),
-      (tracks) => emit(SearchResultsLoaded(tracks: tracks)),
+      (tracks) => emit(
+        SearchResultsLoaded(
+          tracks: tracks,
+          artists: const [],
+          albums: const [],
+        ),
+      ),
+    );
+  }
+
+  Future<void> searchItems(String query) async {
+    final trimmedQuery = query.trim();
+
+    if (trimmedQuery.isEmpty) {
+      fetchInitialData();
+      return;
+    }
+
+    emit(SearchLoading());
+    final result = await repository.searchItems(trimmedQuery);
+
+    result.fold(
+      (failure) => emit(SearchError(failure.message)),
+      (results) => emit(
+        SearchResultsLoaded(
+          tracks: results.tracks,
+          artists: results.artists,
+          albums: results.albums,
+        ),
+      ),
     );
   }
 }

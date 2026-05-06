@@ -7,6 +7,7 @@ abstract class SearchRemoteDataSource {
   Future<List<ArtistModel>> getTrendingArtists();
   Future<List<AlbumModel>> getDiscoverAlbums();
   Future<List<TrackModel>> searchTracks(String query);
+  Future<SearchResultsModel> searchItems(String query);
 }
 
 class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
@@ -84,6 +85,28 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
         final items = response.data['tracks']['items'] as List;
         return items.map((e) => TrackModel.fromJson(e)).toList();
       }
+      throw const ServerFailure('Failed to fetch search results');
+    } on DioException catch (e) {
+      throw ServerFailure(e.message ?? 'Network Error');
+    } catch (e) {
+      throw ServerFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<SearchResultsModel> searchItems(String query) async {
+    try {
+      final response = await dio.get('/search', queryParameters: {
+        'q': query,
+        'type': 'track,artist,album',
+        'limit': 20,
+        'market': 'EG',
+      });
+
+      if (response.statusCode == 200) {
+        return SearchResultsModel.fromJson(response.data);
+      }
+
       throw const ServerFailure('Failed to fetch search results');
     } on DioException catch (e) {
       throw ServerFailure(e.message ?? 'Network Error');

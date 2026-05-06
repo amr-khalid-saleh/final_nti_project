@@ -29,11 +29,19 @@ class SearchInitialDataLoaded extends SearchState {
 
 class SearchResultsLoaded extends SearchState {
   final List<TrackModel> tracks;
+  final List<ArtistModel> artists;
+  final List<AlbumModel> albums;
 
-  const SearchResultsLoaded({required this.tracks});
+  const SearchResultsLoaded({
+    required this.tracks,
+    required this.artists,
+    required this.albums,
+  });
+
+  bool get isEmpty => tracks.isEmpty && artists.isEmpty && albums.isEmpty;
 
   @override
-  List<Object?> get props => [tracks];
+  List<Object?> get props => [tracks, artists, albums];
 }
 
 class SearchError extends SearchState {

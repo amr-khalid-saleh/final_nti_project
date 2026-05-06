@@ -67,7 +67,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       // Pass callback to SearchBarWidget
                       SearchBarWidget(
                         onSubmitted: (query) {
-                          context.read<SearchCubit>().searchTracks(query);
+                          context.read<SearchCubit>().searchItems(query);
                         },
                       ),
                       const SizedBox(height: 32),
@@ -238,60 +238,249 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               );
             } else if (state is SearchResultsLoaded) {
-              return ListView.separated(
+              if (state.isEmpty) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 8),
+                      const SearchAppBar(),
+                      const SizedBox(height: 20),
+                      SearchBarWidget(
+                        onSubmitted: (query) {
+                          context.read<SearchCubit>().searchItems(query);
+                        },
+                      ),
+                      const Spacer(),
+                      const Icon(
+                        Icons.search_off,
+                        color: AppColors.textSecondary,
+                        size: 56,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'No results found',
+                        style: AppTextStyles.font18WhiteSemiBold,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Try searching for another artist, track, or album.',
+                        style: AppTextStyles.font12GreyRegular,
+                        textAlign: TextAlign.center,
+                      ),
+                      const Spacer(),
+                    ],
+                  ),
+                );
+              }
+
+              return ListView(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,
                   vertical: 20,
                 ),
-                itemCount: state.tracks.length,
-                separatorBuilder: (_, __) => const SizedBox(height: 12),
-                itemBuilder: (context, index) {
-                  final track = state.tracks[index];
-                  return ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    onTap: () => playTrackAndNavigate(context, track),
-                    leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: track.album?.images.isNotEmpty == true
-                          ? Image.network(
-                              track.album!.images.first.url,
-                              width: 48,
-                              height: 48,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => Container(
-                                width: 48,
-                                height: 48,
-                                color: AppColors.cardBg,
-                                child: const Icon(Icons.music_note,
-                                    color: AppColors.accent, size: 20),
-                              ),
-                            )
-                          : Container(
-                              width: 48,
-                              height: 48,
-                              color: AppColors.cardBg,
-                              child: const Icon(Icons.music_note,
-                                  color: AppColors.accent, size: 20),
+                children: [
+                  const SearchAppBar(),
+                  const SizedBox(height: 20),
+                  SearchBarWidget(
+                    onSubmitted: (query) {
+                      context.read<SearchCubit>().searchItems(query);
+                    },
+                  ),
+                  const SizedBox(height: 28),
+                  if (state.artists.isNotEmpty) ...[
+                    Text(
+                      'Artists',
+                      style: AppTextStyles.font18WhiteSemiBold,
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      height: 122,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: state.artists.length,
+                        separatorBuilder: (_, __) => const SizedBox(width: 16),
+                        itemBuilder: (context, index) {
+                          final artist = state.artists[index];
+                          final imageUrl = artist.images.isNotEmpty
+                              ? artist.images.first.url
+                              : null;
+
+                          return SizedBox(
+                            width: 90,
+                            child: Column(
+                              children: [
+                                CircleAvatar(
+                                  radius: 40,
+                                  backgroundColor: AppColors.cardBg,
+                                  backgroundImage: imageUrl != null
+                                      ? NetworkImage(imageUrl)
+                                      : null,
+                                  child: imageUrl == null
+                                      ? const Icon(
+                                          Icons.person,
+                                          color: AppColors.textSecondary,
+                                          size: 30,
+                                        )
+                                      : null,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  artist.name,
+                                  style: AppTextStyles.font14WhiteMedium,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
                             ),
+                          );
+                        },
+                      ),
                     ),
-                    title: Text(
-                      track.name,
-                      style: AppTextStyles.font16WhiteSemiBold,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                    const SizedBox(height: 32),
+                  ],
+                  if (state.tracks.isNotEmpty) ...[
+                    Text(
+                      'Tracks',
+                      style: AppTextStyles.font18WhiteSemiBold,
                     ),
-                    subtitle: Text(
-                      track.artists.isNotEmpty
-                          ? track.artists.first.name
-                          : 'Unknown',
-                      style: AppTextStyles.font12GreyRegular,
+                    const SizedBox(height: 12),
+                    ...state.tracks.map((track) {
+                      final imageUrl = track.album?.images.isNotEmpty == true
+                          ? track.album!.images.first.url
+                          : null;
+
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          onTap: () => playTrackAndNavigate(context, track),
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(4),
+                            child: imageUrl != null
+                                ? Image.network(
+                                    imageUrl,
+                                    width: 48,
+                                    height: 48,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) => Container(
+                                      width: 48,
+                                      height: 48,
+                                      color: AppColors.cardBg,
+                                      child: const Icon(
+                                        Icons.music_note,
+                                        color: AppColors.accent,
+                                        size: 20,
+                                      ),
+                                    ),
+                                  )
+                                : Container(
+                                    width: 48,
+                                    height: 48,
+                                    color: AppColors.cardBg,
+                                    child: const Icon(
+                                      Icons.music_note,
+                                      color: AppColors.accent,
+                                      size: 20,
+                                    ),
+                                  ),
+                          ),
+                          title: Text(
+                            track.name,
+                            style: AppTextStyles.font16WhiteSemiBold,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          subtitle: Text(
+                            track.artists.isNotEmpty
+                                ? track.artists.first.name
+                                : 'Unknown Artist',
+                            style: AppTextStyles.font12GreyRegular,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          trailing: const Icon(
+                            Icons.more_horiz,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      );
+                    }),
+                    const SizedBox(height: 20),
+                  ],
+                  if (state.albums.isNotEmpty) ...[
+                    Text(
+                      'Albums',
+                      style: AppTextStyles.font18WhiteSemiBold,
                     ),
-                    trailing: const Icon(
-                      Icons.more_horiz,
-                      color: AppColors.textSecondary,
-                    ),
-                  );
-                },
+                    const SizedBox(height: 12),
+                    ...state.albums.map((album) {
+                      final imageUrl = album.images.isNotEmpty
+                          ? album.images.first.url
+                          : null;
+
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: Row(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: imageUrl != null
+                                  ? Image.network(
+                                      imageUrl,
+                                      width: 56,
+                                      height: 56,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (_, __, ___) => Container(
+                                        width: 56,
+                                        height: 56,
+                                        color: AppColors.cardBg,
+                                        child: const Icon(
+                                          Icons.album,
+                                          color: AppColors.accent,
+                                        ),
+                                      ),
+                                    )
+                                  : Container(
+                                      width: 56,
+                                      height: 56,
+                                      color: AppColors.cardBg,
+                                      child: const Icon(
+                                        Icons.album,
+                                        color: AppColors.accent,
+                                      ),
+                                    ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    album.name,
+                                    style: AppTextStyles.font16WhiteSemiBold,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    album.artists?.isNotEmpty == true
+                                        ? album.artists!.first.name
+                                        : 'Unknown Artist',
+                                    style: AppTextStyles.font12GreyRegular,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+                  ],
+                  const SizedBox(height: 140),
+                ],
               );
             }
             return const SizedBox.shrink();
