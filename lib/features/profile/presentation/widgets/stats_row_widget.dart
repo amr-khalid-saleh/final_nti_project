@@ -15,9 +15,9 @@ class StatsRowWidget extends StatelessWidget {
         children: [
           _StatItem(value: '${profile.followers}', label: 'Followers'),
           _VerticalDivider(),
-          _StatItem(value: '0', label: 'Following'), // Requires separate endpoint
+          _StatItem(value: '${profile.followingCount}', label: 'Following'),
           _VerticalDivider(),
-          _StatItem(value: '0', label: 'Playlists'), // Requires separate endpoint
+          _StatItem(value: '${profile.playlistCount}', label: 'Playlists'),
         ],
       ),
     );

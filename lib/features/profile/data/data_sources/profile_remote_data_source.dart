@@ -16,9 +16,31 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   @override
   Future<UserProfileModel> getCurrentUserProfile() async {
     try {
-      final response = await dio.get('/me');
-      if (response.statusCode == 200) {
-        return UserProfileModel.fromJson(response.data);
+      final profileRes = await dio.get('/me');
+      
+      int followingCount = 0;
+      int playlistCount = 0;
+
+      if (profileRes.statusCode == 200) {
+        try {
+          final followingRes = await dio.get('/me/following?type=artist');
+          if (followingRes.statusCode == 200) {
+            followingCount = followingRes.data['artists']?['total'] ?? 0;
+          }
+        } catch (_) {}
+
+        try {
+          final playlistRes = await dio.get('/me/playlists');
+          if (playlistRes.statusCode == 200) {
+            playlistCount = playlistRes.data['total'] ?? 0;
+          }
+        } catch (_) {}
+
+        final profile = UserProfileModel.fromJson(profileRes.data);
+        return profile.copyWith(
+          followingCount: followingCount,
+          playlistCount: playlistCount,
+        );
       }
       throw const ServerFailure('Failed to fetch user profile');
     } catch (e) {
