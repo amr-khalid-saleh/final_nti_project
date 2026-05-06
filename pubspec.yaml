@@ -22,7 +22,7 @@ dependencies:
   get_it: ^9.2.1
   dartz: ^0.10.1
   json_annotation: ^4.11.0
-  just_audio: ^0.9.43
+  spotify_sdk: ^3.0.0
 
 dev_dependencies:
   flutter_test:

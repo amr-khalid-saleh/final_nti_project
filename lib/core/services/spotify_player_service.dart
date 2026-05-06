@@ -1,66 +1,116 @@
 import 'dart:async';
-import 'package:just_audio/just_audio.dart';
+import 'package:flutter/foundation.dart';
+import 'package:spotify_sdk/spotify_sdk.dart';
+import 'package:spotify_sdk/models/player_state.dart' as sp;
+import '../constants/spotify_constants.dart';
 
-/// In-app audio player powered by just_audio.
+/// Controls playback through the Spotify app running in the background.
 ///
-/// Plays Spotify's 30-second preview_url for each track.
-/// This is the legal, official way to play audio in a Flutter app
-/// that uses the Spotify Web API.
-class AudioPlayerService {
-  static final AudioPlayerService _instance = AudioPlayerService._internal();
-  factory AudioPlayerService() => _instance;
-  AudioPlayerService._internal();
+/// The user stays in Musix at all times — Spotify runs silently behind.
+/// Requires the Spotify app to be installed on the device.
+class SpotifyPlayerService {
+  static final SpotifyPlayerService _instance =
+      SpotifyPlayerService._internal();
+  factory SpotifyPlayerService() => _instance;
+  SpotifyPlayerService._internal();
 
-  final AudioPlayer _player = AudioPlayer();
+  bool _isConnected = false;
+  bool get isConnected => _isConnected;
 
-  // ── Streams for UI binding ─────────────────────────────────────────────────
+  // ── Connection ─────────────────────────────────────────────────────────────
 
-  /// Emits the current playback position as a Duration.
-  Stream<Duration> get positionStream => _player.positionStream;
-
-  /// Emits the total duration once the source is loaded.
-  Stream<Duration?> get durationStream => _player.durationStream;
-
-  /// Emits true while the player is actively playing.
-  Stream<bool> get playingStream => _player.playingStream;
-
-  /// Emits the current player state (loading, buffering, playing, etc.)
-  Stream<PlayerState> get playerStateStream => _player.playerStateStream;
-
-  Duration get position => _player.position;
-  Duration? get duration => _player.duration;
-  bool get isPlaying => _player.playing;
-
-  // ── Playback control ───────────────────────────────────────────────────────
-
-  /// Load and auto-play a Spotify preview URL.
-  /// Returns false if the track has no preview URL.
-  Future<bool> playPreview(String? previewUrl) async {
-    if (previewUrl == null || previewUrl.isEmpty) return false;
+  /// Connect to the Spotify app via App Remote.
+  /// Returns true if connected successfully.
+  Future<bool> connect() async {
+    if (_isConnected) return true;
     try {
-      await _player.setUrl(previewUrl);
-      await _player.play();
-      return true;
-    } catch (_) {
+      final result = await SpotifySdk.connectToSpotifyRemote(
+        clientId: ApiConstants.clientId,
+        redirectUrl: ApiConstants.redirectUri,
+      );
+      _isConnected = result;
+      debugPrint('[SpotifyPlayer] Connected: $result');
+      return result;
+    } catch (e) {
+      debugPrint('[SpotifyPlayer] Connection failed: $e');
+      _isConnected = false;
       return false;
     }
   }
 
-  Future<void> play() async => _player.play();
-  Future<void> pause() async => _player.pause();
+  // ── Playback control ───────────────────────────────────────────────────────
 
-  Future<void> seek(Duration position) async => _player.seek(position);
+  /// Play a Spotify URI (e.g. "spotify:track:xxx").
+  Future<void> play(String spotifyUri) async {
+    try {
+      await SpotifySdk.play(spotifyUri: spotifyUri);
+      debugPrint('[SpotifyPlayer] Playing: $spotifyUri');
+    } catch (e) {
+      debugPrint('[SpotifyPlayer] Play failed: $e');
+    }
+  }
+
+  Future<void> pause() async {
+    try {
+      await SpotifySdk.pause();
+    } catch (e) {
+      debugPrint('[SpotifyPlayer] Pause failed: $e');
+    }
+  }
+
+  Future<void> resume() async {
+    try {
+      await SpotifySdk.resume();
+    } catch (e) {
+      debugPrint('[SpotifyPlayer] Resume failed: $e');
+    }
+  }
 
   Future<void> skipNext() async {
-    // Preview-only: no queue, so seek to end / do nothing
-    await _player.seek(_player.duration ?? Duration.zero);
-    await _player.pause();
+    try {
+      await SpotifySdk.skipNext();
+    } catch (e) {
+      debugPrint('[SpotifyPlayer] Skip next failed: $e');
+    }
   }
 
   Future<void> skipPrevious() async {
-    await _player.seek(Duration.zero);
-    await _player.play();
+    try {
+      await SpotifySdk.skipPrevious();
+    } catch (e) {
+      debugPrint('[SpotifyPlayer] Skip previous failed: $e');
+    }
   }
 
-  void dispose() => _player.dispose();
+  Future<void> seekTo(int positionMs) async {
+    try {
+      await SpotifySdk.seekTo(positionedMilliseconds: positionMs);
+    } catch (e) {
+      debugPrint('[SpotifyPlayer] Seek failed: $e');
+    }
+  }
+
+  // ── Player state stream ────────────────────────────────────────────────────
+
+  /// Live stream of Spotify player state (track, position, paused, etc.)
+  Stream<sp.PlayerState> get playerStateStream {
+    return SpotifySdk.subscribePlayerState();
+  }
+
+  /// Get current player state snapshot.
+  Future<sp.PlayerState?> getPlayerState() async {
+    try {
+      return await SpotifySdk.getPlayerState();
+    } catch (e) {
+      debugPrint('[SpotifyPlayer] Get state failed: $e');
+      return null;
+    }
+  }
+
+  void disconnect() {
+    try {
+      SpotifySdk.disconnect();
+      _isConnected = false;
+    } catch (_) {}
+  }
 }

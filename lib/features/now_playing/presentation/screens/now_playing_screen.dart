@@ -135,8 +135,8 @@ class NowPlayingScreen extends StatelessWidget {
 
                     const SizedBox(height: 16),
 
-                    // ── No Preview Banner ─────────────────────────────────
-                    if (track != null && !loaded.hasPreview)
+                    // ── Connection notice ─────────────────────────────────
+                    if (track != null && !loaded.isConnected)
                       Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 12, vertical: 8),
@@ -147,14 +147,14 @@ class NowPlayingScreen extends StatelessWidget {
                           border: Border.all(
                               color: Colors.orange.withValues(alpha: 0.4)),
                         ),
-                        child: Row(
+                        child: const Row(
                           children: [
-                            const Icon(Icons.music_off,
+                            Icon(Icons.info_outline,
                                 color: Colors.orange, size: 16),
-                            const SizedBox(width: 8),
-                            const Expanded(
+                            SizedBox(width: 8),
+                            Expanded(
                               child: Text(
-                                'No preview available for this track',
+                                'Make sure Spotify app is installed and you are logged in',
                                 style: TextStyle(
                                     color: Colors.orange, fontSize: 12),
                               ),
@@ -242,18 +242,22 @@ class NowPlayingScreen extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.music_note,
-                                color: loaded.hasPreview
-                                    ? AppColors.accent
-                                    : AppColors.textSecondary,
-                                size: 18),
+                            Icon(
+                              loaded.isConnected
+                                  ? Icons.speaker
+                                  : Icons.speaker_outlined,
+                              color: loaded.isConnected
+                                  ? AppColors.accent
+                                  : AppColors.textSecondary,
+                              size: 18,
+                            ),
                             const SizedBox(width: 6),
                             Text(
-                              loaded.hasPreview
-                                  ? '30s Preview'
-                                  : 'No preview',
+                              loaded.isConnected
+                                  ? 'Spotify Connected'
+                                  : 'Not connected',
                               style: AppTextStyles.font12GreyRegular.copyWith(
-                                color: loaded.hasPreview
+                                color: loaded.isConnected
                                     ? AppColors.accent
                                     : AppColors.textSecondary,
                               ),

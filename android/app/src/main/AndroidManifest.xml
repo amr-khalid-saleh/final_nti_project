@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="musix"
         android:name="${applicationName}"
@@ -49,5 +50,7 @@
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
+        <!-- Required by spotify_sdk to find & communicate with Spotify app -->
+        <package android:name="com.spotify.music" />
     </queries>
 </manifest>

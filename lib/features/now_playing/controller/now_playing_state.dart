@@ -9,32 +9,33 @@ class NowPlayingLoaded extends NowPlayingState {
   final bool isPlaying;
   final bool isShuffle;
   final bool isRepeat;
-  final Duration position;    // Real playback position from just_audio
-  final Duration duration;    // Real track duration (preview = up to 30s)
-  final bool hasPreview;      // false when track has no preview_url
+  final int positionMs;     // Current playback position in milliseconds
+  final int durationMs;     // Track duration in milliseconds
+  final bool isConnected;   // true when Spotify App Remote is connected
 
   NowPlayingLoaded({
     this.currentTrack,
     this.isPlaying = false,
     this.isShuffle = false,
     this.isRepeat = false,
-    this.position = Duration.zero,
-    this.duration = Duration.zero,
-    this.hasPreview = true,
+    this.positionMs = 0,
+    this.durationMs = 0,
+    this.isConnected = false,
   });
 
   /// 0.0 → 1.0 progress for slider
   double get progress {
-    if (duration.inMilliseconds == 0) return 0.0;
-    return (position.inMilliseconds / duration.inMilliseconds).clamp(0.0, 1.0);
+    if (durationMs == 0) return 0.0;
+    return (positionMs / durationMs).clamp(0.0, 1.0);
   }
 
-  String get positionLabel => _formatDuration(position);
-  String get durationLabel => _formatDuration(duration);
+  String get positionLabel => _formatMs(positionMs);
+  String get durationLabel => _formatMs(durationMs);
 
-  String _formatDuration(Duration d) {
-    final m = d.inMinutes;
-    final s = (d.inSeconds % 60).toString().padLeft(2, '0');
+  String _formatMs(int ms) {
+    final totalSeconds = ms ~/ 1000;
+    final m = totalSeconds ~/ 60;
+    final s = (totalSeconds % 60).toString().padLeft(2, '0');
     return '$m:$s';
   }
 
@@ -43,18 +44,18 @@ class NowPlayingLoaded extends NowPlayingState {
     bool? isPlaying,
     bool? isShuffle,
     bool? isRepeat,
-    Duration? position,
-    Duration? duration,
-    bool? hasPreview,
+    int? positionMs,
+    int? durationMs,
+    bool? isConnected,
   }) {
     return NowPlayingLoaded(
       currentTrack: currentTrack ?? this.currentTrack,
       isPlaying: isPlaying ?? this.isPlaying,
       isShuffle: isShuffle ?? this.isShuffle,
       isRepeat: isRepeat ?? this.isRepeat,
-      position: position ?? this.position,
-      duration: duration ?? this.duration,
-      hasPreview: hasPreview ?? this.hasPreview,
+      positionMs: positionMs ?? this.positionMs,
+      durationMs: durationMs ?? this.durationMs,
+      isConnected: isConnected ?? this.isConnected,
     );
   }
 }

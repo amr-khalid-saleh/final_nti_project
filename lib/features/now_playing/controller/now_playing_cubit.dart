@@ -1,62 +1,60 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spotify_sdk/models/player_state.dart' as sp;
 import '../../../core/models/spotify_models.dart';
 import '../../../core/services/spotify_player_service.dart';
 import 'now_playing_state.dart';
 
 class NowPlayingCubit extends Cubit<NowPlayingState> {
-  final AudioPlayerService _audio = AudioPlayerService();
+  final SpotifyPlayerService _player = SpotifyPlayerService();
+  StreamSubscription<sp.PlayerState>? _playerStateSub;
+  Timer? _positionTimer;
 
-  StreamSubscription<Duration>? _positionSub;
-  StreamSubscription<Duration?>? _durationSub;
-  StreamSubscription<bool>? _playingSub;
-
-  NowPlayingCubit() : super(NowPlayingLoaded()) {
-    _bindStreams();
-  }
-
-  // ── Stream binding ────────────────────────────────────────────────────────
-
-  void _bindStreams() {
-    _positionSub = _audio.positionStream.listen((pos) {
-      if (state is NowPlayingLoaded) {
-        emit((state as NowPlayingLoaded).copyWith(position: pos));
-      }
-    });
-
-    _durationSub = _audio.durationStream.listen((dur) {
-      if (dur != null && state is NowPlayingLoaded) {
-        emit((state as NowPlayingLoaded).copyWith(duration: dur));
-      }
-    });
-
-    _playingSub = _audio.playingStream.listen((playing) {
-      if (state is NowPlayingLoaded) {
-        emit((state as NowPlayingLoaded).copyWith(isPlaying: playing));
-      }
-    });
-  }
+  NowPlayingCubit() : super(NowPlayingLoaded());
 
   // ── Public API ────────────────────────────────────────────────────────────
 
-  /// Play a track. Immediately shows metadata in the UI, then loads the
-  /// preview audio. If the track has no preview_url, shows a notice.
+  /// Called when user taps a track anywhere in the app.
+  /// Connects to Spotify App Remote (if not yet), then plays the track.
   Future<void> playTrack(TrackModel track) async {
-    // Reset position when switching tracks
+    // Show track metadata immediately
     emit(NowPlayingLoaded(
       currentTrack: track,
       isPlaying: true,
-      position: Duration.zero,
-      duration: Duration.zero,
-      hasPreview: track.previewUrl != null,
+      durationMs: track.durationMs,
+      positionMs: 0,
+      isConnected: _player.isConnected,
     ));
 
-    final loaded = await _audio.playPreview(track.previewUrl);
-    if (!loaded && state is NowPlayingLoaded) {
-      // No preview URL — update flag so UI can show a notice
+    // Connect if not already
+    if (!_player.isConnected) {
+      final connected = await _player.connect();
+      if (!connected) {
+        debugPrint('[NowPlaying] Failed to connect to Spotify app');
+        if (state is NowPlayingLoaded) {
+          emit((state as NowPlayingLoaded).copyWith(
+            isConnected: false,
+            isPlaying: false,
+          ));
+        }
+        return;
+      }
+    }
+
+    // Play via Spotify App Remote
+    await _player.play(track.uri);
+
+    // Subscribe to player state updates
+    _subscribeToState(track);
+
+    // Start position polling (Spotify SDK doesn't stream position continuously)
+    _startPositionPolling();
+
+    if (state is NowPlayingLoaded) {
       emit((state as NowPlayingLoaded).copyWith(
-        hasPreview: false,
-        isPlaying: false,
+        isConnected: true,
+        isPlaying: true,
       ));
     }
   }
@@ -64,21 +62,26 @@ class NowPlayingCubit extends Cubit<NowPlayingState> {
   Future<void> togglePlay() async {
     if (state is! NowPlayingLoaded) return;
     final current = state as NowPlayingLoaded;
-    if (!current.hasPreview) return;
+    if (!current.isConnected) return;
+
     if (current.isPlaying) {
-      await _audio.pause();
+      await _player.pause();
     } else {
-      await _audio.play();
+      await _player.resume();
     }
-    // State will update via playingStream subscription
+    emit(current.copyWith(isPlaying: !current.isPlaying));
   }
 
   Future<void> skipNext() async {
-    await _audio.skipNext();
+    if (state is! NowPlayingLoaded) return;
+    if (!(state as NowPlayingLoaded).isConnected) return;
+    await _player.skipNext();
   }
 
   Future<void> skipPrevious() async {
-    await _audio.skipPrevious();
+    if (state is! NowPlayingLoaded) return;
+    if (!(state as NowPlayingLoaded).isConnected) return;
+    await _player.skipPrevious();
   }
 
   Future<void> toggleShuffle() async {
@@ -93,21 +96,67 @@ class NowPlayingCubit extends Cubit<NowPlayingState> {
     emit(current.copyWith(isRepeat: !current.isRepeat));
   }
 
-  /// Called when the user drags the slider.
+  /// Seek to a position (0.0 - 1.0 value from slider)
   Future<void> seekTo(double value) async {
     if (state is! NowPlayingLoaded) return;
     final current = state as NowPlayingLoaded;
-    if (!current.hasPreview) return;
-    final targetMs =
-        (value * current.duration.inMilliseconds).toInt();
-    await _audio.seek(Duration(milliseconds: targetMs));
+    if (!current.isConnected) return;
+    final targetMs = (value * current.durationMs).toInt();
+    await _player.seekTo(targetMs);
+    emit(current.copyWith(positionMs: targetMs));
+  }
+
+  // ── Private helpers ───────────────────────────────────────────────────────
+
+  void _subscribeToState(TrackModel track) {
+    _playerStateSub?.cancel();
+    try {
+      _playerStateSub = _player.playerStateStream.listen(
+        (playerState) {
+          if (state is! NowPlayingLoaded) return;
+          final current = state as NowPlayingLoaded;
+
+          final duration =
+              playerState.track?.duration ?? track.durationMs;
+          final position = playerState.playbackPosition;
+
+          emit(current.copyWith(
+            isPlaying: !playerState.isPaused,
+            positionMs: position,
+            durationMs: duration,
+            isConnected: true,
+          ));
+        },
+        onError: (e) {
+          debugPrint('[NowPlaying] Player state stream error: $e');
+        },
+      );
+    } catch (e) {
+      debugPrint('[NowPlaying] Failed to subscribe: $e');
+    }
+  }
+
+  /// Poll position every second since Spotify SDK doesn't stream position
+  /// continuously — it only fires on state changes (play/pause/skip).
+  void _startPositionPolling() {
+    _positionTimer?.cancel();
+    _positionTimer = Timer.periodic(const Duration(seconds: 1), (_) async {
+      if (state is! NowPlayingLoaded) return;
+      final current = state as NowPlayingLoaded;
+      if (!current.isPlaying || !current.isConnected) return;
+
+      // Increment position locally for smooth UI
+      final newPos = current.positionMs + 1000;
+      if (newPos <= current.durationMs) {
+        emit(current.copyWith(positionMs: newPos));
+      }
+    });
   }
 
   @override
   Future<void> close() {
-    _positionSub?.cancel();
-    _durationSub?.cancel();
-    _playingSub?.cancel();
+    _playerStateSub?.cancel();
+    _positionTimer?.cancel();
     return super.close();
   }
 }
