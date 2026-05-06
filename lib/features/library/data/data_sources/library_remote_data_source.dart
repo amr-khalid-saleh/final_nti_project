@@ -6,6 +6,7 @@ abstract class LibraryRemoteDataSource {
   Future<List<PlaylistModel>> getUserPlaylists();
   Future<List<ArtistModel>> getArtists();
   Future<List<AlbumModel>> getSavedAlbums();
+  Future<AlbumModel> getAlbumById(String albumId);
 }
 
 class LibraryRemoteDataSourceImpl implements LibraryRemoteDataSource {
@@ -87,15 +88,72 @@ class LibraryRemoteDataSourceImpl implements LibraryRemoteDataSource {
   }
 
   /// Albums tab — user's saved albums.
+  /// Falls back to albums from recently-played tracks if the user has none saved.
   @override
   Future<List<AlbumModel>> getSavedAlbums() async {
     try {
-      final response = await dio.get('/me/albums', queryParameters: {'limit': 50});
+      final response = await dio.get('/me/albums', queryParameters: {
+        'limit': 50,
+        'market': 'EG',
+      });
       if (response.statusCode == 200) {
         final items = response.data['items'] as List;
-        return items.map((e) => AlbumModel.fromJson(e['album'])).toList();
+        final albums =
+            items.map((e) => AlbumModel.fromJson(e['album'])).toList();
+        if (albums.isNotEmpty) return albums;
+        // User has no saved albums — pull from recently played instead
+        return _getRecentlyPlayedAlbums();
       }
       throw const ServerFailure('Failed to fetch saved albums');
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 403) return _getRecentlyPlayedAlbums();
+      throw ServerFailure(e.message ?? 'Network Error');
+    } catch (e) {
+      throw ServerFailure(e.toString());
+    }
+  }
+
+  /// Extracts unique albums from /me/player/recently-played.
+  Future<List<AlbumModel>> _getRecentlyPlayedAlbums() async {
+    try {
+      final response = await dio.get(
+        '/me/player/recently-played',
+        queryParameters: {'limit': 50},
+      );
+      if (response.statusCode == 200) {
+        final items = response.data['items'] as List;
+        final seen = <String>{};
+        final albums = <AlbumModel>[];
+        for (final item in items) {
+          final albumJson = item['track']?['album'] as Map<String, dynamic>?;
+          if (albumJson == null) continue;
+          final id = albumJson['id'] as String? ?? '';
+          if (id.isNotEmpty && !seen.contains(id)) {
+            seen.add(id);
+            albums.add(AlbumModel.fromJson(albumJson));
+          }
+        }
+        return albums;
+      }
+      return [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  /// Fetch the full album object — includes tracklist with preview_url.
+  /// Called by AlbumDetailsScreen when it receives a simplified album.
+  @override
+  Future<AlbumModel> getAlbumById(String albumId) async {
+    try {
+      final response = await dio.get(
+        '/albums/$albumId',
+        queryParameters: {'market': 'EG'},
+      );
+      if (response.statusCode == 200) {
+        return AlbumModel.fromJson(response.data);
+      }
+      throw const ServerFailure('Failed to fetch album details');
     } on DioException catch (e) {
       throw ServerFailure(e.message ?? 'Network Error');
     } catch (e) {

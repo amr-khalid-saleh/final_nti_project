@@ -1,28 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/injection/injection_container.dart';
 import '../../../../core/models/spotify_models.dart';
 import '../../../../core/shared_widgets/main_scaffold.dart';
 import '../../../../core/theming/app_colors.dart';
 import '../../../../core/theming/app_text_styles.dart';
 import '../../../../core/utils/player_utils.dart';
+import '../../data/repositories/library_repository.dart';
 import '../widgets/primary_action_button.dart';
 
-class AlbumDetailsScreen extends StatelessWidget {
+class AlbumDetailsScreen extends StatefulWidget {
   final AlbumModel? album;
 
   const AlbumDetailsScreen({super.key, this.album});
 
   @override
+  State<AlbumDetailsScreen> createState() => _AlbumDetailsScreenState();
+}
+
+class _AlbumDetailsScreenState extends State<AlbumDetailsScreen> {
+  late AlbumModel _album;
+  bool _loading = true;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _album = widget.album ?? AlbumModel(id: '', name: '', images: []);
+    _loadFullAlbum();
+  }
+
+  Future<void> _loadFullAlbum() async {
+    if (_album.id.isEmpty) {
+      setState(() => _loading = false);
+      return;
+    }
+    // If already has tracks, skip the full fetch
+    if (_album.tracks.isNotEmpty) {
+      setState(() => _loading = false);
+      return;
+    }
+    final result = await sl<LibraryRepository>().getAlbumById(_album.id);
+    if (!mounted) return;
+    result.fold(
+      (failure) => setState(() {
+        _error = failure.message;
+        _loading = false;
+      }),
+      (full) => setState(() {
+        _album = full;
+        _loading = false;
+      }),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final name = album?.name ?? 'Album';
-    final artistName = album?.artists?.isNotEmpty == true
-        ? album!.artists!.first.name
+    final name = _album.name.isNotEmpty ? _album.name : 'Album';
+    final artistName = _album.artists?.isNotEmpty == true
+        ? _album.artists!.first.name
         : 'Unknown Artist';
-    final imageUrl = album?.images.isNotEmpty == true
-        ? album!.images.first.url
-        : null;
-    final tracks = album?.tracks ?? [];
+    final imageUrl =
+        _album.images.isNotEmpty ? _album.images.first.url : null;
+    final tracks = _album.tracks;
 
     return MainScaffold(
       currentIndex: 2,
@@ -42,7 +83,8 @@ class AlbumDetailsScreen extends StatelessWidget {
               children: [
                 // ── Top Bar ────────────────────────────────────────────
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 24.w, vertical: 12.h),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -55,15 +97,15 @@ class AlbumDetailsScreen extends StatelessWidget {
                 // ── Album Art ──────────────────────────────────────────
                 Center(
                   child: Container(
-                    width: 300.w,
-                    height: 300.w,
+                    width: 280.w,
+                    height: 280.w,
                     margin: EdgeInsets.symmetric(horizontal: 24.w),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20.r),
                       color: AppColors.cardBg,
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.accent.withValues(alpha: 0.2),
+                          color: AppColors.accent.withValues(alpha: 0.25),
                           blurRadius: 40,
                           spreadRadius: 2,
                         ),
@@ -88,7 +130,7 @@ class AlbumDetailsScreen extends StatelessWidget {
 
                 SizedBox(height: 24.h),
 
-                // ── Album Info ─────────────────────────────────────────
+                // ── Info ───────────────────────────────────────────────
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24.w),
                   child: Column(
@@ -97,24 +139,24 @@ class AlbumDetailsScreen extends StatelessWidget {
                       Text(
                         name,
                         style: AppTextStyles.font22WhiteBold
-                            .copyWith(fontSize: 26.sp),
+                            .copyWith(fontSize: 24.sp),
                       ),
-                      SizedBox(height: 6.h),
+                      SizedBox(height: 4.h),
                       Text(
                         artistName,
                         style: AppTextStyles.font14WhiteMedium
                             .copyWith(color: AppColors.textSecondary),
                       ),
-                      if (album?.releaseDate != null) ...[
+                      if (_album.releaseDate != null) ...[
                         SizedBox(height: 4.h),
                         Text(
-                          album!.releaseDate!,
+                          _album.releaseDate!,
                           style: AppTextStyles.font12GreyRegular,
                         ),
                       ],
                       SizedBox(height: 20.h),
 
-                      // ── Action Row ──────────────────────────────────
+                      // ── Play button ────────────────────────────────
                       Row(
                         children: [
                           Expanded(
@@ -122,7 +164,8 @@ class AlbumDetailsScreen extends StatelessWidget {
                               text: 'PLAY ALBUM',
                               icon: Icons.play_arrow,
                               onTap: tracks.isNotEmpty
-                                  ? () => playTrackAndNavigate(context, tracks.first)
+                                  ? () => playTrackAndNavigate(
+                                      context, tracks.first)
                                   : null,
                             ),
                           ),
@@ -132,6 +175,7 @@ class AlbumDetailsScreen extends StatelessWidget {
                           _smallAction(Icons.file_download_outlined),
                         ],
                       ),
+
                       SizedBox(height: 28.h),
 
                       // ── Tracklist ──────────────────────────────────
@@ -143,15 +187,28 @@ class AlbumDetailsScreen extends StatelessWidget {
                                   color: Colors.white, fontSize: 22.sp)),
                           Text(
                             '${tracks.length} tracks',
-                            style:
-                                TextStyle(color: Colors.white38, fontSize: 16.sp),
+                            style: TextStyle(
+                                color: Colors.white38, fontSize: 16.sp),
                           ),
                         ],
                       ),
                       SizedBox(height: 16.h),
 
-                      if (tracks.isEmpty)
-                        _emptyTracks()
+                      // Loading / Error / Empty / List
+                      if (_loading)
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 40),
+                          child: Center(
+                            child: CircularProgressIndicator(
+                                color: AppColors.accent),
+                          ),
+                        )
+                      else if (_error != null)
+                        _emptyState('Could not load tracks', _error!)
+                      else if (tracks.isEmpty)
+                        _emptyState(
+                            'No tracks found',
+                            'This album has no tracks available in your region.')
                       else
                         ...tracks.asMap().entries.map((entry) {
                           final idx = entry.key;
@@ -159,14 +216,19 @@ class AlbumDetailsScreen extends StatelessWidget {
                           final artistStr = track.artists.isNotEmpty
                               ? track.artists.first.name
                               : artistName;
-                          final minutes = (track.durationMs / 60000).floor();
-                          final seconds = ((track.durationMs % 60000) / 1000)
-                              .floor()
-                              .toString()
-                              .padLeft(2, '0');
+                          final minutes =
+                              (track.durationMs / 60000).floor();
+                          final seconds =
+                              ((track.durationMs % 60000) / 1000)
+                                  .floor()
+                                  .toString()
+                                  .padLeft(2, '0');
+                          final hasPreview =
+                              track.previewUrl != null;
 
                           return InkWell(
-                            onTap: () => playTrackAndNavigate(context, track),
+                            onTap: () =>
+                                playTrackAndNavigate(context, track),
                             borderRadius: BorderRadius.circular(12.r),
                             child: Container(
                               margin: EdgeInsets.only(bottom: 8.h),
@@ -174,8 +236,10 @@ class AlbumDetailsScreen extends StatelessWidget {
                                   horizontal: 14.w, vertical: 12.h),
                               decoration: BoxDecoration(
                                 color: const Color(0xFF141414),
-                                borderRadius: BorderRadius.circular(12.r),
-                                border: Border.all(color: Colors.white10),
+                                borderRadius:
+                                    BorderRadius.circular(12.r),
+                                border:
+                                    Border.all(color: Colors.white10),
                               ),
                               child: Row(
                                 children: [
@@ -185,7 +249,7 @@ class AlbumDetailsScreen extends StatelessWidget {
                                       '${idx + 1}',
                                       style: TextStyle(
                                           color: Colors.white38,
-                                          fontSize: 15.sp),
+                                          fontSize: 14.sp),
                                     ),
                                   ),
                                   SizedBox(width: 10.w),
@@ -194,30 +258,45 @@ class AlbumDetailsScreen extends StatelessWidget {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(track.name,
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 16.sp,
-                                                fontWeight: FontWeight.w500),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis),
+                                        Text(
+                                          track.name,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15.sp,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                         SizedBox(height: 2.h),
-                                        Text(artistStr,
-                                            style: TextStyle(
-                                                color: Colors.white54,
-                                                fontSize: 13.sp),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis),
+                                        Text(
+                                          artistStr,
+                                          style: TextStyle(
+                                              color: Colors.white54,
+                                              fontSize: 12.sp),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                       ],
                                     ),
                                   ),
-                                  Text('$minutes:$seconds',
-                                      style: TextStyle(
-                                          color: Colors.white70,
-                                          fontSize: 13.sp)),
+                                  // Preview availability indicator
+                                  Icon(
+                                    hasPreview
+                                        ? Icons.play_circle_outline
+                                        : Icons.play_disabled,
+                                    color: hasPreview
+                                        ? AppColors.accent
+                                        : Colors.white24,
+                                    size: 18,
+                                  ),
                                   SizedBox(width: 8.w),
-                                  const Icon(Icons.more_vert,
-                                      color: Colors.white38, size: 18),
+                                  Text(
+                                    '$minutes:$seconds',
+                                    style: TextStyle(
+                                        color: Colors.white54,
+                                        fontSize: 12.sp),
+                                  ),
                                 ],
                               ),
                             ),
@@ -234,17 +313,27 @@ class AlbumDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _emptyTracks() {
+  Widget _emptyState(String title, String subtitle) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 32),
       child: Center(
         child: Column(
           children: [
-            const Icon(Icons.music_off, color: AppColors.textHint, size: 48),
+            const Icon(Icons.music_off,
+                color: AppColors.textHint, size: 48),
             const SizedBox(height: 12),
-            Text('No tracks available',
+            Text(title,
                 style: AppTextStyles.font14WhiteMedium
                     .copyWith(color: AppColors.textSecondary)),
+            const SizedBox(height: 6),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Text(
+                subtitle,
+                style: AppTextStyles.font12GreyRegular,
+                textAlign: TextAlign.center,
+              ),
+            ),
           ],
         ),
       ),
@@ -253,7 +342,9 @@ class AlbumDetailsScreen extends StatelessWidget {
 
   Widget _circleIcon(BuildContext context, IconData icon) {
     return GestureDetector(
-      onTap: icon == Icons.arrow_back_ios_new ? () => Navigator.pop(context) : null,
+      onTap: icon == Icons.arrow_back_ios_new
+          ? () => Navigator.pop(context)
+          : null,
       child: Container(
         width: 44.w,
         height: 44.w,

@@ -17,7 +17,9 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   @override
   Future<List<TrackModel>> getRecentlyPlayedTracks() async {
     try {
-      final response = await dio.get('/me/player/recently-played', queryParameters: {'limit': 10});
+      final response = await dio.get('/me/player/recently-played', queryParameters: {
+        'limit': 10,
+      });
       if (response.statusCode == 200) {
         final items = response.data['items'] as List;
         return items.map((e) => TrackModel.fromJson(e['track'])).toList();
@@ -78,13 +80,18 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   @override
   Future<List<TrackModel>> getTopTracks() async {
     try {
-      final response = await dio.get('/me/top/tracks', queryParameters: {'limit': 5});
+      final response = await dio.get('/me/top/tracks', queryParameters: {
+        'limit': 5,
+        'time_range': 'medium_term',
+      });
       if (response.statusCode == 200) {
         final items = response.data['items'] as List;
         return items.map((e) => TrackModel.fromJson(e)).toList();
       }
-      throw const ServerFailure('Failed to fetch top tracks');
+      // Fallback: recently played tracks
+      return getRecentlyPlayedTracks();
     } on DioException catch (e) {
+      if (e.response?.statusCode == 403) return getRecentlyPlayedTracks();
       throw ServerFailure(e.message ?? 'Network Error');
     } catch (e) {
       throw ServerFailure(e.toString());

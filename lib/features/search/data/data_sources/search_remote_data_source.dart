@@ -118,6 +118,7 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
         'q': query,
         'type': 'track',
         'limit': 20,
+        'market': 'EG',
       });
       if (response.statusCode == 200) {
         final items = response.data['tracks']['items'] as List;

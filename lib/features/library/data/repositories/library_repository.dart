@@ -7,6 +7,7 @@ abstract class LibraryRepository {
   Future<Either<Failure, List<PlaylistModel>>> getUserPlaylists();
   Future<Either<Failure, List<ArtistModel>>> getArtists();
   Future<Either<Failure, List<AlbumModel>>> getSavedAlbums();
+  Future<Either<Failure, AlbumModel>> getAlbumById(String albumId);
 }
 
 class LibraryRepositoryImpl implements LibraryRepository {
@@ -38,6 +39,16 @@ class LibraryRepositoryImpl implements LibraryRepository {
   Future<Either<Failure, List<AlbumModel>>> getSavedAlbums() async {
     try {
       final data = await remoteDataSource.getSavedAlbums();
+      return Right(data);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, AlbumModel>> getAlbumById(String albumId) async {
+    try {
+      final data = await remoteDataSource.getAlbumById(albumId);
       return Right(data);
     } catch (e) {
       return Left(ServerFailure(e.toString()));
