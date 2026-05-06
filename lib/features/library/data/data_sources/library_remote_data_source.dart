@@ -165,7 +165,7 @@ class LibraryRemoteDataSourceImpl implements LibraryRemoteDataSource {
   @override
   Future<List<TrackModel>> getArtistTopTracks(String artistId) async {
     try {
-      final response = await dio.get('/artists/$artistId/top-tracks');
+      final response = await dio.get('/artists/$artistId/top-tracks', queryParameters: {'market': 'EG'});
       if (response.statusCode == 200) {
         final items = response.data['tracks'] as List;
         return items.map((e) => TrackModel.fromJson(e)).toList();
