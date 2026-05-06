@@ -87,9 +87,11 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
       }
       throw const ServerFailure('Failed to fetch search results');
     } on DioException catch (e) {
-      throw ServerFailure(e.message ?? 'Network Error');
-    } catch (e) {
-      throw ServerFailure(e.toString());
+      throw ServerFailure(_getReadableDioError(e));
+    } on ServerFailure {
+      rethrow;
+    } catch (_) {
+      throw const ServerFailure('Something went wrong while searching. Please try again.');
     }
   }
 
@@ -109,9 +111,47 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
 
       throw const ServerFailure('Failed to fetch search results');
     } on DioException catch (e) {
-      throw ServerFailure(e.message ?? 'Network Error');
-    } catch (e) {
-      throw ServerFailure(e.toString());
+      throw ServerFailure(_getReadableDioError(e));
+    } on ServerFailure {
+      rethrow;
+    } catch (_) {
+      throw const ServerFailure('Something went wrong while searching. Please try again.');
+    }
+  }
+
+  String _getReadableDioError(DioException error) {
+    final statusCode = error.response?.statusCode;
+
+    if (statusCode == 401) {
+      return 'Your Spotify session has expired. Please sign in again.';
+    }
+
+    if (statusCode == 403) {
+      return 'Spotify refused this request. Please check your Spotify app access or login permissions.';
+    }
+
+    if (statusCode == 429) {
+      return 'Too many requests to Spotify. Please wait a moment and try again.';
+    }
+
+    if (statusCode != null && statusCode >= 500) {
+      return 'Spotify service is currently unavailable. Please try again later.';
+    }
+
+    switch (error.type) {
+      case DioExceptionType.connectionTimeout:
+      case DioExceptionType.sendTimeout:
+      case DioExceptionType.receiveTimeout:
+        return 'Connection timeout. Please check your internet and try again.';
+      case DioExceptionType.connectionError:
+        return 'No internet connection. Please check your network and try again.';
+      case DioExceptionType.badCertificate:
+        return 'Secure connection failed. Please try again later.';
+      case DioExceptionType.cancel:
+        return 'Search request was cancelled. Please try again.';
+      case DioExceptionType.badResponse:
+      case DioExceptionType.unknown:
+        return 'Could not complete the search. Please try again.';
     }
   }
 

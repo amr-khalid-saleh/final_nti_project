@@ -22,7 +22,7 @@ class SearchRepositoryImpl implements SearchRepository {
       final data = await remoteDataSource.getCategories();
       return Right(data);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(_mapExceptionToFailure(e));
     }
   }
 
@@ -32,7 +32,7 @@ class SearchRepositoryImpl implements SearchRepository {
       final data = await remoteDataSource.getTrendingArtists();
       return Right(data);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(_mapExceptionToFailure(e));
     }
   }
 
@@ -42,7 +42,7 @@ class SearchRepositoryImpl implements SearchRepository {
       final data = await remoteDataSource.getDiscoverAlbums();
       return Right(data);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(_mapExceptionToFailure(e));
     }
   }
 
@@ -52,7 +52,7 @@ class SearchRepositoryImpl implements SearchRepository {
       final data = await remoteDataSource.searchTracks(query);
       return Right(data);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(_mapExceptionToFailure(e));
     }
   }
 
@@ -63,7 +63,16 @@ class SearchRepositoryImpl implements SearchRepository {
       final data = await remoteDataSource.searchItems(query);
       return Right(data);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(_mapExceptionToFailure(e));
     }
   }
+
+  Failure _mapExceptionToFailure(Object error) {
+    if (error is Failure) {
+      return error;
+    }
+
+    return const ServerFailure('Something went wrong. Please try again.');
+  }
+
 }
