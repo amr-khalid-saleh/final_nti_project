@@ -274,7 +274,7 @@ class _ArtistDetailsScreenState extends State<ArtistDetailsScreen> {
                       _sectionHeader('Albums', 'View all'),
                       SizedBox(height: 16.h),
                       SizedBox(
-                        height: 190.h,
+                        height: 220.h,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: _albums.length,
