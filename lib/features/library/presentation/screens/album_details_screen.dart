@@ -223,8 +223,6 @@ class _AlbumDetailsScreenState extends State<AlbumDetailsScreen> {
                                   .floor()
                                   .toString()
                                   .padLeft(2, '0');
-                          final hasPreview =
-                              track.previewUrl != null;
 
                           return InkWell(
                             onTap: () =>
@@ -280,14 +278,10 @@ class _AlbumDetailsScreenState extends State<AlbumDetailsScreen> {
                                       ],
                                     ),
                                   ),
-                                  // Preview availability indicator
-                                  Icon(
-                                    hasPreview
-                                        ? Icons.play_circle_outline
-                                        : Icons.play_disabled,
-                                    color: hasPreview
-                                        ? AppColors.accent
-                                        : Colors.white24,
+                                  // Play icon
+                                  const Icon(
+                                    Icons.play_circle_outline,
+                                    color: AppColors.accent,
                                     size: 18,
                                   ),
                                   SizedBox(width: 8.w),

@@ -172,7 +172,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ? album.images.first.url
                                     : null,
                                 onTap: () => Navigator.pushNamed(
-                                    context, AppRoutes.albumDetails),
+                                  context,
+                                  AppRoutes.albumDetails,
+                                  arguments: album,
+                                ),
                               );
                             },
                           ),
@@ -240,7 +243,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ? playlist.images.first.url
                                   : null,
                               onTap: () => Navigator.pushNamed(
-                                  context, AppRoutes.playlistDetails),
+                                context,
+                                AppRoutes.playlistDetails,
+                                arguments: playlist,
+                              ),
                             );
                           },
                         ),

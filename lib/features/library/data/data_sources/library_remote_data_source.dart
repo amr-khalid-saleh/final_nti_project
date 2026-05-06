@@ -7,6 +7,8 @@ abstract class LibraryRemoteDataSource {
   Future<List<ArtistModel>> getArtists();
   Future<List<AlbumModel>> getSavedAlbums();
   Future<AlbumModel> getAlbumById(String albumId);
+  Future<List<TrackModel>> getArtistTopTracks(String artistId);
+  Future<List<AlbumModel>> getArtistAlbums(String artistId);
 }
 
 class LibraryRemoteDataSourceImpl implements LibraryRemoteDataSource {
@@ -158,6 +160,34 @@ class LibraryRemoteDataSourceImpl implements LibraryRemoteDataSource {
       throw ServerFailure(e.message ?? 'Network Error');
     } catch (e) {
       throw ServerFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<List<TrackModel>> getArtistTopTracks(String artistId) async {
+    try {
+      final response = await dio.get('/artists/$artistId/top-tracks', queryParameters: {'market': 'EG'});
+      if (response.statusCode == 200) {
+        final items = response.data['tracks'] as List;
+        return items.map((e) => TrackModel.fromJson(e)).toList();
+      }
+      return [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  @override
+  Future<List<AlbumModel>> getArtistAlbums(String artistId) async {
+    try {
+      final response = await dio.get('/artists/$artistId/albums', queryParameters: {'limit': 10, 'market': 'EG'});
+      if (response.statusCode == 200) {
+        final items = response.data['items'] as List;
+        return items.map((e) => AlbumModel.fromJson(e)).toList();
+      }
+      return [];
+    } catch (_) {
+      return [];
     }
   }
 }
