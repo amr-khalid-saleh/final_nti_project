@@ -2,11 +2,17 @@ class ArtistModel {
   final String id;
   final String name;
   final List<ImageModel> images;
+  final int followers;
+  final int popularity;
+  final List<String> genres;
 
   ArtistModel({
     required this.id,
     required this.name,
     this.images = const [],
+    this.followers = 0,
+    this.popularity = 0,
+    this.genres = const [],
   });
 
   factory ArtistModel.fromJson(Map<String, dynamic> json) {
@@ -15,6 +21,12 @@ class ArtistModel {
       name: json['name'] ?? '',
       images: (json['images'] as List?)
               ?.map((e) => ImageModel.fromJson(e))
+              .toList() ??
+          [],
+      followers: json['followers']?['total'] ?? 0,
+      popularity: json['popularity'] ?? 0,
+      genres: (json['genres'] as List?)
+              ?.map((e) => e.toString())
               .toList() ??
           [],
     );

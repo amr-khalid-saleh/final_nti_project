@@ -10,8 +10,11 @@ import 'package:musix/features/home/data/repositories/home_repository.dart';
 import 'package:musix/features/search/cubit/search_cubit.dart';
 import 'package:musix/features/search/data/data_sources/search_remote_data_source.dart';
 import 'package:musix/features/search/data/repositories/search_repository.dart';
+import 'package:musix/features/library/cubit/artist_details_cubit.dart';
 import 'package:musix/features/library/cubit/library_cubit.dart';
+import 'package:musix/features/library/data/data_sources/artist_details_remote_data_source.dart';
 import 'package:musix/features/library/data/data_sources/library_remote_data_source.dart';
+import 'package:musix/features/library/data/repositories/artist_details_repository.dart';
 import 'package:musix/features/library/data/repositories/library_repository.dart';
 import 'package:musix/features/profile/cubit/profile_cubit.dart';
 import 'package:musix/features/profile/data/data_sources/profile_remote_data_source.dart';
@@ -52,6 +55,13 @@ Future<void> init() async {
   sl.registerLazySingleton<LibraryRepository>(
       () => LibraryRepositoryImpl(remoteDataSource: sl()));
   sl.registerFactory(() => LibraryCubit(repository: sl()));
+
+  // Features - Artist Details
+  sl.registerLazySingleton<ArtistDetailsRemoteDataSource>(
+      () => ArtistDetailsRemoteDataSourceImpl(dio: sl<DioClient>().dio));
+  sl.registerLazySingleton<ArtistDetailsRepository>(
+      () => ArtistDetailsRepositoryImpl(remoteDataSource: sl()));
+  sl.registerFactory(() => ArtistDetailsCubit(repository: sl()));
   
   // Features - Profile
   sl.registerLazySingleton<ProfileRemoteDataSource>(

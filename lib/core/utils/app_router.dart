@@ -6,6 +6,7 @@ import 'package:musix/core/models/spotify_models.dart';
 import 'package:musix/core/injection/injection_container.dart' as di;
 import 'package:musix/features/home/cubit/home_cubit.dart';
 import 'package:musix/features/search/cubit/search_cubit.dart';
+import 'package:musix/features/library/cubit/artist_details_cubit.dart';
 import 'package:musix/features/library/cubit/library_cubit.dart';
 import 'package:musix/features/profile/cubit/profile_cubit.dart';
 import '../utils/app_routes.dart';
@@ -86,7 +87,17 @@ class AppRouter {
             ? settings.arguments as ArtistModel
             : null;
         return MaterialPageRoute(
-          builder: (_) => ArtistDetailsScreen(artist: artist),
+          builder: (_) {
+            if (artist == null) {
+              return const ArtistDetailsScreen();
+            }
+
+            return BlocProvider(
+              create: (context) => di.sl<ArtistDetailsCubit>()
+                ..fetchArtistDetails(artist),
+              child: ArtistDetailsScreen(artist: artist),
+            );
+          },
         );
 
       case AppRoutes.playlistDetails:
