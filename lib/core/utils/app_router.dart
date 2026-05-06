@@ -21,6 +21,7 @@ import '../../features/library/presentation/screens/artist_details_screen.dart';
 import '../../features/library/presentation/screens/playlist_details_screen.dart';
 import '../../features/search/presentation/screens/search_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
+import '../../features/setting_profile/presentation/screens/settings_screen.dart';
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -92,6 +93,9 @@ class AppRouter {
 
       case AppRoutes.playlistDetails:
         return MaterialPageRoute(builder: (_) => const PlaylistDetailsScreen());
+
+      case AppRoutes.settings:
+        return MaterialPageRoute(builder: (_) => const SettingsScreen());
 
       default:
         return MaterialPageRoute(
