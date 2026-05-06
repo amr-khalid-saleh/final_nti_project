@@ -1,4 +1,4 @@
-package com.example.musix;
+package com.amoorsaleh.musix;
 
 import io.flutter.embedding.android.FlutterActivity;
 
