@@ -232,8 +232,18 @@ class _AlbumDetailsScreenState extends State<AlbumDetailsScreen> {
                                   .padLeft(2, '0');
 
                           return InkWell(
-                            onTap: () =>
-                                playTrackAndNavigate(context, track),
+                            onTap: () {
+                              final trackWithAlbum = TrackModel(
+                                id: track.id,
+                                name: track.name,
+                                uri: track.uri,
+                                durationMs: track.durationMs,
+                                artists: track.artists,
+                                previewUrl: track.previewUrl,
+                                album: _album,
+                              );
+                              playTrackAndNavigate(context, trackWithAlbum);
+                            },
                             borderRadius: BorderRadius.circular(12.r),
                             child: Container(
                               margin: EdgeInsets.only(bottom: 8.h),
