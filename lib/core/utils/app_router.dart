@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:musix/features/auth/presentation/screens/login_screen.dart';
 import 'package:musix/features/auth/presentation/screens/signup_screen.dart';
+import 'package:musix/core/models/spotify_models.dart';
 import 'package:musix/core/injection/injection_container.dart' as di;
 import 'package:musix/features/home/cubit/home_cubit.dart';
 import 'package:musix/features/search/cubit/search_cubit.dart';
@@ -81,7 +82,12 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const AlbumDetailsScreen());
 
       case AppRoutes.artistDetails:
-        return MaterialPageRoute(builder: (_) => const ArtistDetailsScreen());
+        final artist = settings.arguments is ArtistModel
+            ? settings.arguments as ArtistModel
+            : null;
+        return MaterialPageRoute(
+          builder: (_) => ArtistDetailsScreen(artist: artist),
+        );
 
       case AppRoutes.playlistDetails:
         return MaterialPageRoute(builder: (_) => const PlaylistDetailsScreen());

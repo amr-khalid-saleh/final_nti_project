@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/models/spotify_models.dart';
 import '../../../../core/shared_widgets/main_scaffold.dart';
 import '../../../../core/theming/app_text_styles.dart';
 import '../../data/library_data.dart';
@@ -10,10 +11,18 @@ import '../widgets/start_info_card.dart';
 import '../widgets/track_tile.dart';
 
 class ArtistDetailsScreen extends StatelessWidget {
-  const ArtistDetailsScreen({super.key});
+  final ArtistModel? artist;
+
+  const ArtistDetailsScreen({super.key, this.artist});
 
   @override
   Widget build(BuildContext context) {
+    final artistName = artist?.name.isNotEmpty == true
+        ? artist!.name
+        : LibraryData.artistName;
+    final artistImageUrl = artist?.images.isNotEmpty == true
+        ? artist!.images.first.url
+        : 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1200&q=80';
     return MainScaffold(
       currentIndex: 2,
       body: SingleChildScrollView(
@@ -39,8 +48,16 @@ class ArtistDetailsScreen extends StatelessWidget {
                   children: [
                     Positioned.fill(
                       child: Image.network(
-                        'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1200&q=80',
+                        artistImageUrl,
                         fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Container(
+                          color: Colors.black,
+                          child: Icon(
+                            Icons.person,
+                            color: Colors.white24,
+                            size: 120.sp,
+                          ),
+                        ),
                       ),
                     ),
                     Positioned.fill(
@@ -111,7 +128,7 @@ class ArtistDetailsScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 14.h),
                           Text(
-                            LibraryData.artistName,
+                            artistName,
                             style: AppTextStyles.font28WhiteExtraBold
                                 .copyWith(fontSize: 54.sp),
                           ),

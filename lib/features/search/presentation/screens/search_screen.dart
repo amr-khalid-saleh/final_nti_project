@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/shared_widgets/main_scaffold.dart';
 import '../../../../core/theming/app_colors.dart';
 import '../../../../core/theming/app_text_styles.dart';
+import '../../../../core/utils/app_routes.dart';
 import '../../../../core/utils/player_utils.dart';
 import '../../cubit/search_cubit.dart';
 import '../../cubit/search_state.dart';
@@ -136,32 +137,39 @@ class _SearchScreenState extends State<SearchScreen> {
                               final artistImage = artist.images.isNotEmpty
                                   ? artist.images.first.url
                                   : null;
-                              return SizedBox(
-                                width: 90,
-                                child: Column(
-                                  children: [
-                                    CircleAvatar(
-                                      radius: 40,
-                                      backgroundColor: AppColors.cardBg,
-                                      backgroundImage: artistImage != null
-                                          ? NetworkImage(artistImage)
-                                          : null,
-                                      child: artistImage == null
-                                          ? const Icon(
-                                              Icons.person,
-                                              color: AppColors.textSecondary,
-                                              size: 30,
-                                            )
-                                          : null,
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      artist.name,
-                                      style: AppTextStyles.font14WhiteMedium,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                    ),
-                                  ],
+                              return GestureDetector(
+                                onTap: () => Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.artistDetails,
+                                  arguments: artist,
+                                ),
+                                child: SizedBox(
+                                  width: 90,
+                                  child: Column(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 40,
+                                        backgroundColor: AppColors.cardBg,
+                                        backgroundImage: artistImage != null
+                                            ? NetworkImage(artistImage)
+                                            : null,
+                                        child: artistImage == null
+                                            ? const Icon(
+                                                Icons.person,
+                                                color: AppColors.textSecondary,
+                                                size: 30,
+                                              )
+                                            : null,
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        artist.name,
+                                        style: AppTextStyles.font14WhiteMedium,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               );
                             },
@@ -306,32 +314,39 @@ class _SearchScreenState extends State<SearchScreen> {
                               ? artist.images.first.url
                               : null;
 
-                          return SizedBox(
-                            width: 90,
-                            child: Column(
-                              children: [
-                                CircleAvatar(
-                                  radius: 40,
-                                  backgroundColor: AppColors.cardBg,
-                                  backgroundImage: imageUrl != null
-                                      ? NetworkImage(imageUrl)
-                                      : null,
-                                  child: imageUrl == null
-                                      ? const Icon(
-                                          Icons.person,
-                                          color: AppColors.textSecondary,
-                                          size: 30,
-                                        )
-                                      : null,
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  artist.name,
-                                  style: AppTextStyles.font14WhiteMedium,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
+                          return GestureDetector(
+                            onTap: () => Navigator.pushNamed(
+                              context,
+                              AppRoutes.artistDetails,
+                              arguments: artist,
+                            ),
+                            child: SizedBox(
+                              width: 90,
+                              child: Column(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 40,
+                                    backgroundColor: AppColors.cardBg,
+                                    backgroundImage: imageUrl != null
+                                        ? NetworkImage(imageUrl)
+                                        : null,
+                                    child: imageUrl == null
+                                        ? const Icon(
+                                            Icons.person,
+                                            color: AppColors.textSecondary,
+                                            size: 30,
+                                          )
+                                        : null,
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    artist.name,
+                                    style: AppTextStyles.font14WhiteMedium,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
                             ),
                           );
                         },
