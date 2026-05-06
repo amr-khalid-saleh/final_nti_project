@@ -227,11 +227,7 @@ class _ArtistDetailsContent extends StatelessWidget {
                   children: [
                     if (isLoading) ...[
                       SizedBox(height: 20.h),
-                      const Center(
-                        child: CircularProgressIndicator(
-                          color: AppColors.textPrimary,
-                        ),
-                      ),
+                      const _LoadingInfoCard(),
                       SizedBox(height: 28.h),
                     ],
                     if (errorMessage != null) ...[
@@ -247,14 +243,17 @@ class _ArtistDetailsContent extends StatelessWidget {
                       actionText: 'See all',
                     ),
                     SizedBox(height: 18.h),
-                    ..._buildTrackTiles(context),
+                    if (isLoading)
+                      const _LoadingList(itemCount: 4)
+                    else
+                      ..._buildTrackTiles(context),
                     SizedBox(height: 28.h),
                     _SectionHeader(
                       title: 'Albums',
                       actionText: 'View all',
                     ),
                     SizedBox(height: 18.h),
-                    _buildAlbumsList(),
+                    if (isLoading) const _LoadingAlbumsRow() else _buildAlbumsList(),
                     SizedBox(height: 30.h),
                     Text(
                       'About',
@@ -331,19 +330,13 @@ class _ArtistDetailsContent extends StatelessWidget {
 
   List<Widget> _buildTrackTiles(BuildContext context) {
     if (topTracks.isEmpty) {
-      return LibraryData.popularTracks
-          .map(
-            (track) => TrackTile(
-              index: track['index']!,
-              title: track['title']!,
-              artist: '',
-              subtitle: track['subtitle']!,
-              duration: '',
-              showImage: true,
-              imageUrl: track['image']!,
-            ),
-          )
-          .toList();
+      return const [
+        _EmptyStateCard(
+          icon: Icons.music_off,
+          title: 'No popular tracks found',
+          subtitle: 'Spotify did not return top tracks for this artist yet.',
+        ),
+      ];
     }
 
     return topTracks.asMap().entries.map((entry) {
@@ -375,22 +368,10 @@ class _ArtistDetailsContent extends StatelessWidget {
         .toList();
 
     if (displayedAlbums.isEmpty) {
-      return SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: LibraryData.albums
-              .map(
-                (album) => Padding(
-                  padding: EdgeInsets.only(right: 14.w),
-                  child: AlbumCard(
-                    title: album['title']!,
-                    subtitle: album['subtitle']!,
-                    image: album['image']!,
-                  ),
-                ),
-              )
-              .toList(),
-        ),
+      return const _EmptyStateCard(
+        icon: Icons.album_outlined,
+        title: 'No albums found',
+        subtitle: 'Spotify did not return albums or singles for this artist yet.',
       );
     }
 
@@ -481,6 +462,188 @@ class _SectionHeader extends StatelessWidget {
           style: TextStyle(color: Colors.white38, fontSize: 18.sp),
         ),
       ],
+    );
+  }
+}
+
+
+class _LoadingInfoCard extends StatelessWidget {
+  const _LoadingInfoCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(18.w),
+      decoration: BoxDecoration(
+        color: const Color(0xFF141414),
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: Colors.white10),
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 22.w,
+            height: 22.w,
+            child: const CircularProgressIndicator(
+              strokeWidth: 2,
+              color: AppColors.textPrimary,
+            ),
+          ),
+          SizedBox(width: 14.w),
+          Expanded(
+            child: Text(
+              'Loading artist details from Spotify...',
+              style: AppTextStyles.font14WhiteMedium,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _EmptyStateCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+
+  const _EmptyStateCard({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(18.w),
+      decoration: BoxDecoration(
+        color: const Color(0xFF141414),
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: Colors.white10),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 46.w,
+            height: 46.w,
+            decoration: const BoxDecoration(
+              color: Colors.white10,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: Colors.white54, size: 24.sp),
+          ),
+          SizedBox(width: 14.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: AppTextStyles.font16WhiteSemiBold),
+                SizedBox(height: 6.h),
+                Text(subtitle, style: AppTextStyles.font12GreyRegular),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LoadingList extends StatelessWidget {
+  final int itemCount;
+
+  const _LoadingList({required this.itemCount});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: List.generate(
+        itemCount,
+        (_) => Padding(
+          padding: EdgeInsets.only(bottom: 14.h),
+          child: const _LoadingTile(),
+        ),
+      ),
+    );
+  }
+}
+
+class _LoadingTile extends StatelessWidget {
+  const _LoadingTile();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        _LoadingBox(width: 54.w, height: 54.w, radius: 10.r),
+        SizedBox(width: 14.w),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _LoadingBox(width: double.infinity, height: 14.h, radius: 8.r),
+              SizedBox(height: 10.h),
+              _LoadingBox(width: 160.w, height: 12.h, radius: 8.r),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _LoadingAlbumsRow extends StatelessWidget {
+  const _LoadingAlbumsRow();
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: List.generate(
+          3,
+          (_) => Padding(
+            padding: EdgeInsets.only(right: 14.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _LoadingBox(width: 140.w, height: 140.w, radius: 24.r),
+                SizedBox(height: 12.h),
+                _LoadingBox(width: 120.w, height: 12.h, radius: 8.r),
+                SizedBox(height: 8.h),
+                _LoadingBox(width: 80.w, height: 10.h, radius: 8.r),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _LoadingBox extends StatelessWidget {
+  final double width;
+  final double height;
+  final double radius;
+
+  const _LoadingBox({
+    required this.width,
+    required this.height,
+    required this.radius,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: Colors.white10,
+        borderRadius: BorderRadius.circular(radius),
+      ),
     );
   }
 }
