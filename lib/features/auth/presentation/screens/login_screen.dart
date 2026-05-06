@@ -6,6 +6,8 @@ import 'package:musix/features/auth/cubit/auth_cubit.dart';
 import 'package:musix/features/auth/cubit/auth_state.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../core/theming/app_colors.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -59,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
                     colors: [
-                      const Color(0xFF1DB954).withValues(alpha: 0.15),
+                      Color(0xFFFF2D12).withValues(alpha: 0.15),
                       Colors.transparent,
                     ],
                   ),
@@ -110,7 +112,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     const Spacer(),
 
-                    // 🔥 Spotify Login Button
                     SizedBox(
                       width: double.infinity,
                       height: 56,
@@ -120,9 +121,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           return ElevatedButton(
                             onPressed: isLoading ? null : _handleLogin,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF1DB954),
+                              backgroundColor: AppColors.accent,
                               foregroundColor: Colors.black,
-                              disabledBackgroundColor: const Color(0xFF1DB954).withValues(alpha: 0.5),
+                              disabledBackgroundColor: AppColors.accentDark
+                                  .withValues(alpha: 0.5),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30),
                               ),
@@ -133,19 +135,26 @@ class _LoginScreenState extends State<LoginScreen> {
                                     height: 20,
                                     width: 20,
                                     child: CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white,
+                                      ),
                                       strokeWidth: 2,
                                     ),
                                   )
                                 : Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const Icon(Icons.music_note, size: 24),
+                                      const Icon(
+                                        Icons.music_note,
+                                        size: 24,
+                                        color: Colors.white,
+                                      ),
                                       const SizedBox(width: 12),
                                       const Text(
                                         'Login with Spotify',
                                         style: TextStyle(
                                           fontSize: 16,
+                                          color: Colors.white,
                                           fontWeight: FontWeight.bold,
                                           letterSpacing: 0.5,
                                         ),
@@ -164,14 +173,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         text: TextSpan(
                           children: [
                             const TextSpan(
-                              text: "Don't have an account? ",
+                              text: "Don't have an account?  ",
                               style: TextStyle(
-                                color: Color(0xFF888888),
+                                color: Color(0xFFaaaaaa),
                                 fontSize: 14,
                               ),
                             ),
                             TextSpan(
-                              text: 'Sign up free',
+                              text: 'Sign up',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 14,

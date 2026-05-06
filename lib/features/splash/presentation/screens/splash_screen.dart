@@ -31,11 +31,14 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: Colors.black,
       body: Container(
         width: double.infinity,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: RadialGradient(
             center: Alignment.bottomCenter,
             radius: 1.2,
-            colors: [Color(0xFF5A1207), Color(0xFF170503), Colors.black],
+            colors: [
+              Color(0xFFFF2D12).withValues(alpha: 0.35),
+              Colors.black45,
+            ],
           ),
         ),
         child: Stack(
@@ -43,8 +46,8 @@ class _SplashScreenState extends State<SplashScreen> {
             Positioned.fill(
               child: Opacity(
                 opacity: .18,
-                child: Image.network(
-                  'https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=1200&q=80',
+                child: Image.asset(
+                  'assets/images/splash_background_image.png',
                   fit: BoxFit.cover,
                 ),
               ),
