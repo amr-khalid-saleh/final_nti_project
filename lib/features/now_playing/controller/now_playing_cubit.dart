@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spotify_sdk/models/player_state.dart' as sp;
+import 'package:spotify_sdk/models/track.dart' as sp_track;
 import '../../../core/models/spotify_models.dart';
 import '../../../core/services/spotify_player_service.dart';
 import 'now_playing_state.dart';
@@ -120,7 +121,15 @@ class NowPlayingCubit extends Cubit<NowPlayingState> {
               playerState.track?.duration ?? track.durationMs;
           final position = playerState.playbackPosition;
 
+          TrackModel? updatedTrack = current.currentTrack;
+          
+          // If Spotify started playing a different track, sync it to our state
+          if (playerState.track != null && playerState.track!.uri != current.currentTrack?.uri) {
+            updatedTrack = _trackFromPlayerState(playerState.track!);
+          }
+
           emit(current.copyWith(
+            currentTrack: updatedTrack,
             isPlaying: !playerState.isPaused,
             positionMs: position,
             durationMs: duration,
@@ -134,6 +143,29 @@ class NowPlayingCubit extends Cubit<NowPlayingState> {
     } catch (e) {
       debugPrint('[NowPlaying] Failed to subscribe: $e');
     }
+  }
+
+  TrackModel _trackFromPlayerState(sp_track.Track spTrack) {
+    String? imageUrl;
+    // Spotify image URIs look like "spotify:image:ab67616d0000b273..."
+    // We can extract the hash to construct the CDN URL
+    if (spTrack.imageUri.raw.isNotEmpty && spTrack.imageUri.raw.contains(':')) {
+      final hash = spTrack.imageUri.raw.split(':').last;
+      imageUrl = 'https://i.scdn.co/image/$hash';
+    }
+
+    return TrackModel(
+      id: spTrack.uri.split(':').last,
+      name: spTrack.name,
+      uri: spTrack.uri,
+      durationMs: spTrack.duration,
+      artists: [ArtistModel(id: '', name: spTrack.artist.name ?? 'Unknown Artist')],
+      album: AlbumModel(
+        id: (spTrack.album.uri ?? '').split(':').last,
+        name: spTrack.album.name ?? 'Unknown Album',
+        images: imageUrl != null ? [ImageModel(url: imageUrl)] : [],
+      ),
+    );
   }
 
   /// Poll position every second since Spotify SDK doesn't stream position
