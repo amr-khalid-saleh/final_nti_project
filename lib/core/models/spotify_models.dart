@@ -90,7 +90,7 @@ class TrackModel {
   final int durationMs;
   final AlbumModel? album;
   final List<ArtistModel> artists;
-  final String? previewUrl; // 30-second MP3 preview from Spotify
+  final String? previewUrl;
 
   TrackModel({
     required this.id,

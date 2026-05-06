@@ -60,7 +60,7 @@ Future<void> init() async {
       () => ProfileRepositoryImpl(remoteDataSource: sl()));
   sl.registerFactory(() => ProfileCubit(repository: sl()));
 
-  // Global - Now Playing (singleton so all screens share the same playback state)
+  // Global - Now Playing
   sl.registerLazySingleton<NowPlayingCubit>(() => NowPlayingCubit());
 }
 

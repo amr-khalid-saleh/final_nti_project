@@ -18,7 +18,7 @@ class AppMiniPlayer extends StatelessWidget {
         final loaded = state is NowPlayingLoaded ? state : NowPlayingLoaded();
         final track = loaded.currentTrack;
 
-        // Hide mini player when no track is selected
+        // Hide mini player
         if (track == null) return const SizedBox.shrink();
 
         final imageUrl = track.album?.images.isNotEmpty == true

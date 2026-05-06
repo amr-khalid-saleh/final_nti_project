@@ -41,247 +41,299 @@ class NowPlayingScreen extends StatelessWidget {
             ),
             child: Scaffold(
               backgroundColor: Colors.transparent,
-            body: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 16),
+              body: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 16),
 
-                    // ── Top Bar ───────────────────────────────────────────
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () => Navigator.pop(context),
-                          child: const Icon(Icons.keyboard_arrow_down,
-                              color: AppColors.textPrimary, size: 28),
-                        ),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Text('NOW PLAYING',
-                                  style: AppTextStyles.font11GreyMedium),
-                              Text(
-                                artistName,
-                                style: const TextStyle(
-                                  color: AppColors.textPrimary,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
+                      // Top Bar
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () => Navigator.pop(context),
+                            child: const Icon(
+                              Icons.keyboard_arrow_down,
+                              color: AppColors.textPrimary,
+                              size: 28,
+                            ),
                           ),
-                        ),
-                        const Icon(Icons.more_vert,
-                            color: AppColors.textPrimary, size: 22),
-                      ],
-                    ),
-
-                    const SizedBox(height: 28),
-
-                    // ── Album Art ─────────────────────────────────────────
-                    Container(
-                      width: double.infinity,
-                      height: 260,
-                      decoration: BoxDecoration(
-                        color: AppColors.cardBg,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.accent.withValues(alpha: 0.3),
-                            blurRadius: 40,
-                            offset: const Offset(0, 12),
+                          Expanded(
+                            child: Column(
+                              children: [
+                                Text(
+                                  'NOW PLAYING',
+                                  style: AppTextStyles.font11GreyMedium,
+                                ),
+                                Text(
+                                  artistName,
+                                  style: const TextStyle(
+                                    color: AppColors.textPrimary,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Icon(
+                            Icons.more_vert,
+                            color: AppColors.textPrimary,
+                            size: 22,
                           ),
                         ],
                       ),
-                      clipBehavior: Clip.antiAlias,
-                      child: imageUrl != null
-                          ? Image.network(
-                              imageUrl,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => const Center(
-                                child: Icon(Icons.music_note,
-                                    color: AppColors.accent, size: 80),
-                              ),
-                            )
-                          : const Center(
-                              child: Icon(Icons.music_note,
-                                  color: AppColors.accent, size: 80),
+
+                      const SizedBox(height: 28),
+
+                      // ── Album Art ─────────────────────────────────────────
+                      Container(
+                        width: double.infinity,
+                        height: 260,
+                        decoration: BoxDecoration(
+                          color: AppColors.cardBg,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.accent.withValues(alpha: 0.3),
+                              blurRadius: 40,
+                              offset: const Offset(0, 12),
                             ),
-                    ),
+                          ],
+                        ),
+                        clipBehavior: Clip.antiAlias,
+                        child: imageUrl != null
+                            ? Image.network(
+                                imageUrl,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, __, ___) => const Center(
+                                  child: Icon(
+                                    Icons.music_note,
+                                    color: AppColors.accent,
+                                    size: 80,
+                                  ),
+                                ),
+                              )
+                            : const Center(
+                                child: Icon(
+                                  Icons.music_note,
+                                  color: AppColors.accent,
+                                  size: 80,
+                                ),
+                              ),
+                      ),
 
-                    const SizedBox(height: 24),
+                      const SizedBox(height: 24),
 
-                    // ── Song Info ─────────────────────────────────────────
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(trackName,
+                      // ── Song Info ─────────────────────────────────────────
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  trackName,
                                   style: AppTextStyles.font22WhiteBold,
                                   maxLines: 1,
-                                  overflow: TextOverflow.ellipsis),
-                              const SizedBox(height: 4),
-                              Text(artistName,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  artistName,
                                   style: AppTextStyles.font12GreyRegular,
                                   maxLines: 1,
-                                  overflow: TextOverflow.ellipsis),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Icon(
+                            Icons.favorite_border,
+                            color: AppColors.textSecondary,
+                            size: 24,
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      // ── Connection notice ─────────────────────────────────
+                      if (track != null && !loaded.isConnected)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          margin: const EdgeInsets.only(bottom: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.orange.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: Colors.orange.withValues(alpha: 0.4),
+                            ),
+                          ),
+                          child: const Row(
+                            children: [
+                              Icon(
+                                Icons.info_outline,
+                                color: Colors.orange,
+                                size: 16,
+                              ),
+                              SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  'Make sure Spotify app is installed and you are logged in',
+                                  style: TextStyle(
+                                    color: Colors.orange,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                        const Icon(Icons.favorite_border,
-                            color: AppColors.textSecondary, size: 24),
-                      ],
-                    ),
 
-                    const SizedBox(height: 16),
-
-                    // ── Connection notice ─────────────────────────────────
-                    if (track != null && !loaded.isConnected)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 8),
-                        margin: const EdgeInsets.only(bottom: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.orange.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                              color: Colors.orange.withValues(alpha: 0.4)),
-                        ),
-                        child: const Row(
+                      // ── Progress Bar ──────────────────────────────────────
+                      Slider(
+                        value: loaded.progress,
+                        onChanged: (v) => cubit.seekTo(v),
+                        activeColor: AppColors.accent,
+                        inactiveColor: AppColors.divider,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Icon(Icons.info_outline,
-                                color: Colors.orange, size: 16),
-                            SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                'Make sure Spotify app is installed and you are logged in',
-                                style: TextStyle(
-                                    color: Colors.orange, fontSize: 12),
-                              ),
+                            Text(
+                              loaded.positionLabel,
+                              style: AppTextStyles.font12GreyRegular,
+                            ),
+                            Text(
+                              loaded.durationLabel,
+                              style: AppTextStyles.font12GreyRegular,
                             ),
                           ],
                         ),
                       ),
 
-                    // ── Progress Bar ──────────────────────────────────────
-                    Slider(
-                      value: loaded.progress,
-                      onChanged: (v) => cubit.seekTo(v),
-                      activeColor: AppColors.accent,
-                      inactiveColor: AppColors.divider,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      const SizedBox(height: 20),
+
+                      // ── Controls ──────────────────────────────────────────
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text(loaded.positionLabel,
-                              style: AppTextStyles.font12GreyRegular),
-                          Text(loaded.durationLabel,
-                              style: AppTextStyles.font12GreyRegular),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    // ── Controls ──────────────────────────────────────────
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.shuffle,
+                          IconButton(
+                            icon: Icon(
+                              Icons.shuffle,
                               color: loaded.isShuffle
                                   ? AppColors.accent
                                   : AppColors.textSecondary,
-                              size: 22),
-                          onPressed: cubit.toggleShuffle,
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.skip_previous,
-                              color: AppColors.textPrimary, size: 32),
-                          onPressed: cubit.skipPrevious,
-                        ),
-                        GestureDetector(
-                          onTap: cubit.togglePlay,
-                          child: Container(
-                            width: 60,
-                            height: 60,
-                            decoration: const BoxDecoration(
-                              color: AppColors.accent,
-                              shape: BoxShape.circle,
+                              size: 22,
                             ),
-                            child: Icon(
-                              loaded.isPlaying ? Icons.pause : Icons.play_arrow,
-                              color: Colors.white,
-                              size: 30,
+                            onPressed: cubit.toggleShuffle,
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.skip_previous,
+                              color: AppColors.textPrimary,
+                              size: 32,
+                            ),
+                            onPressed: cubit.skipPrevious,
+                          ),
+                          GestureDetector(
+                            onTap: cubit.togglePlay,
+                            child: Container(
+                              width: 60,
+                              height: 60,
+                              decoration: const BoxDecoration(
+                                color: AppColors.accent,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                loaded.isPlaying
+                                    ? Icons.pause
+                                    : Icons.play_arrow,
+                                color: Colors.white,
+                                size: 30,
+                              ),
                             ),
                           ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.skip_next,
-                              color: AppColors.textPrimary, size: 32),
-                          onPressed: cubit.skipNext,
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.repeat,
+                          IconButton(
+                            icon: const Icon(
+                              Icons.skip_next,
+                              color: AppColors.textPrimary,
+                              size: 32,
+                            ),
+                            onPressed: cubit.skipNext,
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              Icons.repeat,
                               color: loaded.isRepeat
                                   ? AppColors.accent
                                   : AppColors.textSecondary,
-                              size: 22),
-                          onPressed: cubit.toggleRepeat,
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 24),
-
-                    // ── Bottom Bar ────────────────────────────────────────
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              loaded.isConnected
-                                  ? Icons.speaker
-                                  : Icons.speaker_outlined,
-                              color: loaded.isConnected
-                                  ? AppColors.accent
-                                  : AppColors.textSecondary,
-                              size: 18,
+                              size: 22,
                             ),
-                            const SizedBox(width: 6),
-                            Text(
-                              loaded.isConnected
-                                  ? 'Spotify Connected'
-                                  : 'Not connected',
-                              style: AppTextStyles.font12GreyRegular.copyWith(
+                            onPressed: cubit.toggleRepeat,
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // ── Bottom Bar ────────────────────────────────────────
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                loaded.isConnected
+                                    ? Icons.speaker
+                                    : Icons.speaker_outlined,
                                 color: loaded.isConnected
                                     ? AppColors.accent
                                     : AppColors.textSecondary,
+                                size: 18,
                               ),
-                            ),
-                          ],
-                        ),
-                        const Row(
-                          children: [
-                            Icon(Icons.share_outlined,
-                                color: AppColors.textSecondary, size: 20),
-                            SizedBox(width: 16),
-                            Icon(Icons.queue_music,
-                                color: AppColors.textSecondary, size: 20),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
+                              const SizedBox(width: 6),
+                              Text(
+                                loaded.isConnected
+                                    ? 'Spotify Connected'
+                                    : 'Not connected',
+                                style: AppTextStyles.font12GreyRegular.copyWith(
+                                  color: loaded.isConnected
+                                      ? AppColors.accent
+                                      : AppColors.textSecondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Row(
+                            children: [
+                              Icon(
+                                Icons.share_outlined,
+                                color: AppColors.textSecondary,
+                                size: 20,
+                              ),
+                              SizedBox(width: 16),
+                              Icon(
+                                Icons.queue_music,
+                                color: AppColors.textSecondary,
+                                size: 20,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -18,7 +18,6 @@ class DioClient {
 
     dio.interceptors.add(AuthInterceptor(secureStorage, dio));
     
-    // Add logging in debug mode
     dio.interceptors.add(LogInterceptor(
       request: true,
       requestBody: true,
