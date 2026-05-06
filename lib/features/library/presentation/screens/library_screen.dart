@@ -147,9 +147,54 @@ class _LibraryScreenState extends State<LibraryScreen>
     }
     return ListView.builder(
       padding: const EdgeInsets.only(top: 8, bottom: 200),
-      itemCount: playlists.length,
+      itemCount: playlists.length + 1,
       itemBuilder: (context, index) {
-        final playlist = playlists[index];
+        if (index == 0) {
+          return InkWell(
+            onTap: () => Navigator.pushNamed(context, AppRoutes.playlistDetails),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.cardBg,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.divider),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF450af5), Color(0xFFc4efd9)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Center(
+                        child: Icon(Icons.favorite, color: Colors.white, size: 28),
+                      ),
+                    ),
+                    const SizedBox(width: 14),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Liked Songs', style: AppTextStyles.font16WhiteSemiBold),
+                        const SizedBox(height: 4),
+                        Text('Playlist · You', style: AppTextStyles.font12GreyRegular),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+        
+        final playlist = playlists[index - 1];
         return _itemTile(
           imageUrl: playlist.images.isNotEmpty
               ? playlist.images.first.url

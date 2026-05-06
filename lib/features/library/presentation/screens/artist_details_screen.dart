@@ -33,7 +33,7 @@ class _ArtistDetailsScreenState extends State<ArtistDetailsScreen> {
   }
 
   Future<void> _fetchArtistData() async {
-    if (widget.artist?.id == null) {
+    if (widget.artist?.id == null || widget.artist!.id.isEmpty) {
       setState(() => _loading = false);
       return;
     }

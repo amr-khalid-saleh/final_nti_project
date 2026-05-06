@@ -150,7 +150,6 @@ class LibraryRemoteDataSourceImpl implements LibraryRemoteDataSource {
     try {
       final response = await dio.get(
         '/albums/$albumId',
-        queryParameters: {'market': 'EG'},
       );
       if (response.statusCode == 200) {
         return AlbumModel.fromJson(response.data);
@@ -166,7 +165,7 @@ class LibraryRemoteDataSourceImpl implements LibraryRemoteDataSource {
   @override
   Future<List<TrackModel>> getArtistTopTracks(String artistId) async {
     try {
-      final response = await dio.get('/artists/$artistId/top-tracks', queryParameters: {'market': 'EG'});
+      final response = await dio.get('/artists/$artistId/top-tracks');
       if (response.statusCode == 200) {
         final items = response.data['tracks'] as List;
         return items.map((e) => TrackModel.fromJson(e)).toList();
@@ -180,7 +179,7 @@ class LibraryRemoteDataSourceImpl implements LibraryRemoteDataSource {
   @override
   Future<List<AlbumModel>> getArtistAlbums(String artistId) async {
     try {
-      final response = await dio.get('/artists/$artistId/albums', queryParameters: {'limit': 10, 'market': 'EG'});
+      final response = await dio.get('/artists/$artistId/albums', queryParameters: {'limit': 10});
       if (response.statusCode == 200) {
         final items = response.data['items'] as List;
         return items.map((e) => AlbumModel.fromJson(e)).toList();

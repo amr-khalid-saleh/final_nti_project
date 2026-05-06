@@ -49,7 +49,14 @@ class _AlbumDetailsScreenState extends State<AlbumDetailsScreen> {
         _loading = false;
       }),
       (full) => setState(() {
-        _album = full;
+        _album = AlbumModel(
+          id: full.id.isNotEmpty ? full.id : _album.id,
+          name: full.name.isNotEmpty ? full.name : _album.name,
+          images: full.images.isNotEmpty ? full.images : _album.images,
+          artists: full.artists ?? _album.artists,
+          releaseDate: full.releaseDate ?? _album.releaseDate,
+          tracks: full.tracks,
+        );
         _loading = false;
       }),
     );
