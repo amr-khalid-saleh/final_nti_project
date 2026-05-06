@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/shared_widgets/main_scaffold.dart';
@@ -19,10 +21,76 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  Timer? _searchDebounce;
+
   @override
   void initState() {
     super.initState();
     context.read<SearchCubit>().fetchInitialData();
+  }
+
+  @override
+  void dispose() {
+    _searchDebounce?.cancel();
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged(String query) {
+    _searchDebounce?.cancel();
+    _searchDebounce = Timer(const Duration(milliseconds: 500), () {
+      _runSearch(query);
+    });
+  }
+
+  void _onSearchSubmitted(String query) {
+    _searchDebounce?.cancel();
+    _runSearch(query);
+  }
+
+  void _runSearch(String query) {
+    if (!mounted) return;
+
+    final trimmedQuery = query.trim();
+    if (trimmedQuery.isEmpty) {
+      context.read<SearchCubit>().fetchInitialData();
+      return;
+    }
+
+    context.read<SearchCubit>().searchItems(trimmedQuery);
+  }
+
+  Widget _buildSearchBar() {
+    return SearchBarWidget(
+      controller: _searchController,
+      onChanged: _onSearchChanged,
+      onSubmitted: _onSearchSubmitted,
+    );
+  }
+
+  Widget _buildLoadingView() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: [
+          const SizedBox(height: 8),
+          const SearchAppBar(),
+          const SizedBox(height: 20),
+          _buildSearchBar(),
+          const Spacer(),
+          const CircularProgressIndicator(color: AppColors.textPrimary),
+          const SizedBox(height: 16),
+          Text(
+            _searchController.text.trim().isEmpty
+                ? 'Loading Spotify data...'
+                : 'Searching Spotify...',
+            style: AppTextStyles.font14WhiteMedium,
+          ),
+          const Spacer(),
+        ],
+      ),
+    );
   }
 
   @override
@@ -33,9 +101,7 @@ class _SearchScreenState extends State<SearchScreen> {
         child: BlocBuilder<SearchCubit, SearchState>(
           builder: (context, state) {
             if (state is SearchLoading) {
-              return const Center(
-                child: CircularProgressIndicator(color: AppColors.textPrimary),
-              );
+              return _buildLoadingView();
             } else if (state is SearchError) {
               return Center(
                 child: Column(
@@ -66,11 +132,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       const SearchAppBar(),
                       const SizedBox(height: 20),
                       // Pass callback to SearchBarWidget
-                      SearchBarWidget(
-                        onSubmitted: (query) {
-                          context.read<SearchCubit>().searchItems(query);
-                        },
-                      ),
+                      _buildSearchBar(),
                       const SizedBox(height: 32),
 
                       const BrowseCategoriesTitle(),
@@ -254,11 +316,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       const SizedBox(height: 8),
                       const SearchAppBar(),
                       const SizedBox(height: 20),
-                      SearchBarWidget(
-                        onSubmitted: (query) {
-                          context.read<SearchCubit>().searchItems(query);
-                        },
-                      ),
+                      _buildSearchBar(),
                       const Spacer(),
                       const Icon(
                         Icons.search_off,
@@ -290,11 +348,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 children: [
                   const SearchAppBar(),
                   const SizedBox(height: 20),
-                  SearchBarWidget(
-                    onSubmitted: (query) {
-                      context.read<SearchCubit>().searchItems(query);
-                    },
-                  ),
+                  _buildSearchBar(),
                   const SizedBox(height: 28),
                   if (state.artists.isNotEmpty) ...[
                     Text(
