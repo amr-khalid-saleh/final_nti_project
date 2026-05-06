@@ -1,6 +1,6 @@
-# Musix — Spotify-Powered Music App
+# Musix — Spotify-Powered Music App (NTI Final Project)
 
-A Flutter graduation project that integrates the **Spotify Web API** to deliver a full music browsing experience on mobile. Musix supports authentication via PKCE, real-time music discovery, library management, and a global playback state layer.
+A Flutter graduation project built for NTI that integrates the **Spotify Web API** and **Spotify App Remote SDK** to deliver a full music browsing and streaming experience on mobile. Musix supports authentication via PKCE, real-time music discovery, library management, and a robust global playback state layer synchronized with the Spotify App.
 
 ---
 
@@ -122,15 +122,18 @@ lib/
 | Artists | `GET /me/following?type=artist` | Falls back to `/me/top/artists` on 403 |
 | Albums | `GET /me/albums` | User's saved albums |
 
-### Now Playing
+### Now Playing & Playback
 - Global `NowPlayingCubit` singleton shared across all screens
-- Any track tap from Home, Search, Library, or detail screens invokes `playTrack()` and navigates
+- Full **Spotify App Remote** integration using `spotify_sdk` for real in-app playback
+- Any track tap from Home, Search, Library, or detail screens invokes `playTrack()` and seamlessly plays in the background
 - Now Playing screen displays real album art, title, artist, and formatted duration
+- **Real-time Sync**: The UI dynamically updates and stays in sync even if songs are skipped or auto-played directly inside the Spotify app
 - MiniPlayer auto-shows on all main screens once a track is selected
-- Playback controls (play/pause, shuffle, repeat, seek) update shared state
+- Swipe-down gesture to dismiss Now Playing view
 
 ### Profile
 - User display name, email, follower count
+- Dynamic counts for **Following** and **Playlists**
 - Subscription type (Free / Premium)
 - Recent listening activity
 
@@ -229,19 +232,17 @@ flutter run
 
 | Limitation | Detail |
 |-----------|--------|
-| **No audio playback** | Spotify's mobile SDK (`spotify_sdk`) requires the Spotify app to be installed and the user to have a **Premium** account for full playback control. This is not yet integrated. |
+| **Premium Account Required** | Spotify's mobile SDK (`spotify_sdk`) requires the Spotify app to be installed and the user to have a **Premium** account for playback control. |
 | **Browse endpoints may return 403** | `/browse/categories` and `/browse/new-releases` can be restricted depending on the Spotify app's market configuration. All affected endpoints have local fallbacks. |
 | **`/me/following` requires re-auth** | If the token was issued before `user-follow-read` was added to scopes, the Artists tab falls back to top artists silently. |
 | **No pagination** | All list endpoints use a fixed `limit` (20–50 items). Infinite scroll / pagination is not implemented. |
 | **No offline support** | All data is fetched live. No local caching layer is in place. |
-| **Playlist and Album detail screens** | These screens currently display static placeholder track lists. Real track loading from Spotify is not yet connected. |
 
 ---
 
 ## Planned Improvements
 
-- [ ] **Spotify App Remote integration** — connect `spotify_sdk` for real in-app playback
-- [ ] **Playlist and Album detail data binding** — load real tracks per playlist/album
+- [ ] **Playlist detail data binding** — load real tracks per playlist
 - [ ] **Pagination** — infinite scroll for all list sections
 - [ ] **Local caching** — `Hive` or `drift` for offline browsing
 - [ ] **Personalized recommendations** — `/recommendations` endpoint
@@ -253,8 +254,9 @@ flutter run
 
 ## Project Context
 
-Musix is a **Flutter graduation project** built to demonstrate:
+Musix is a **Flutter final graduation project for NTI** built to demonstrate:
 - Real-world API integration with proper auth (PKCE, OAuth2)
+- Complex Spotify App Remote SDK integration for seamless background audio streaming
 - Clean architecture with feature separation
 - Resilient error handling for restricted API scopes
 - Global state management for shared playback context
