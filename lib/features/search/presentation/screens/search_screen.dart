@@ -137,11 +137,17 @@ class _SearchScreenState extends State<SearchScreen> {
                               final artistImage = artist.images.isNotEmpty
                                   ? artist.images.first.url
                                   : null;
-                              return SizedBox(
-                                width: 90,
-                                child: Column(
-                                  children: [
-                                    CircleAvatar(
+                              return GestureDetector(
+                                onTap: () => Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.artistDetails,
+                                  arguments: artist,
+                                ),
+                                child: SizedBox(
+                                  width: 90,
+                                  child: Column(
+                                    children: [
+                                      CircleAvatar(
                                       radius: 40,
                                       backgroundColor: AppColors.cardBg,
                                       backgroundImage: artistImage != null
