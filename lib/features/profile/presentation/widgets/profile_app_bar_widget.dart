@@ -23,8 +23,11 @@ class ProfileAppBarWidget extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          const Icon(Icons.settings_outlined,
-              color: Colors.white, size: 22),
+          GestureDetector(
+            onTap: () => Navigator.pushNamed(context, '/settings'),
+            child: const Icon(Icons.settings_outlined,
+                color: Colors.white, size: 22),
+          ),
         ],
       ),
     );

@@ -24,17 +24,23 @@ class NowPlayingScreen extends StatelessWidget {
             ? track!.album!.images.first.url
             : null;
 
-        return Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [AppColors.scaffoldBgTop, AppColors.scaffoldBgBottom],
-              stops: [0.6, 0.97],
+        return GestureDetector(
+          onVerticalDragEnd: (details) {
+            if (details.primaryVelocity! > 300) {
+              Navigator.pop(context);
+            }
+          },
+          child: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [AppColors.scaffoldBgTop, AppColors.scaffoldBgBottom],
+                stops: [0.6, 0.97],
+              ),
             ),
-          ),
-          child: Scaffold(
-            backgroundColor: Colors.transparent,
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
             body: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
