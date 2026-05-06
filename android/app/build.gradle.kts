@@ -28,6 +28,10 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders += mapOf(
+            "redirectSchemeName" to "com.amoorsaleh.musix",
+            "redirectHostName" to "callback"
+        )
     }
 
     buildTypes {
