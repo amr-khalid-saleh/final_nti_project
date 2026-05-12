@@ -7,6 +7,7 @@ abstract class SearchRemoteDataSource {
   Future<List<ArtistModel>> getTrendingArtists();
   Future<List<AlbumModel>> getDiscoverAlbums();
   Future<List<TrackModel>> searchTracks(String query);
+  Future<List<TrackModel>> getCategoryTracks(String categoryId);
 }
 
 class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
@@ -126,6 +127,50 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
       }
       throw const ServerFailure('Failed to fetch search results');
     } on DioException catch (e) {
+      throw ServerFailure(e.message ?? 'Network Error');
+    } catch (e) {
+      throw ServerFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<List<TrackModel>> getCategoryTracks(String categoryId) async {
+    try {
+      // Step 1: Get playlists for the category
+      final response = await dio.get('/browse/categories/$categoryId/playlists',
+          queryParameters: {'limit': 5, 'country': 'EG'});
+
+      if (response.statusCode == 200) {
+        final playlists = response.data['playlists']['items'] as List;
+        if (playlists.isNotEmpty) {
+          // Step 2: Get tracks from the first few playlists to build a list
+          final allTracks = <TrackModel>[];
+          for (var i = 0; i < (playlists.length > 3 ? 3 : playlists.length); i++) {
+            final playlistId = playlists[i]['id'];
+            final tracksResponse = await dio.get('/playlists/$playlistId/tracks',
+                queryParameters: {'limit': 10});
+            if (tracksResponse.statusCode == 200) {
+              final items = tracksResponse.data['items'] as List;
+              for (final item in items) {
+                if (item['track'] != null) {
+                  allTracks.add(TrackModel.fromJson(item['track']));
+                }
+              }
+            }
+          }
+          // Remove duplicates and return
+          final seen = <String>{};
+          return allTracks.where((t) => seen.add(t.id)).toList();
+        }
+      }
+
+      // Fallback: Search for category name as genre
+      return searchTracks('genre:$categoryId');
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+         // Some categories might not have browseable playlists, try search
+         return searchTracks('genre:$categoryId');
+      }
       throw ServerFailure(e.message ?? 'Network Error');
     } catch (e) {
       throw ServerFailure(e.toString());
