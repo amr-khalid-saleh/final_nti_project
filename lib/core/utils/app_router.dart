@@ -20,6 +20,8 @@ import '../../features/library/presentation/screens/album_details_screen.dart';
 import '../../features/library/presentation/screens/artist_details_screen.dart';
 import '../../features/library/presentation/screens/playlist_details_screen.dart';
 import '../../features/search/presentation/screens/search_screen.dart';
+import '../../features/search/presentation/screens/category_tracks_screen.dart';
+import '../../features/search/cubit/category_tracks_cubit.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/setting_profile/presentation/screens/settings_screen.dart';
 
@@ -96,6 +98,15 @@ class AppRouter {
 
       case AppRoutes.settings:
         return MaterialPageRoute(builder: (_) => const SettingsScreen());
+      
+      case AppRoutes.categoryTracks:
+        final category = settings.arguments as CategoryModel;
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => di.sl<CategoryTracksCubit>(),
+            child: CategoryTracksScreen(category: category),
+          ),
+        );
 
       default:
         return MaterialPageRoute(

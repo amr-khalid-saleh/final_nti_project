@@ -16,4 +16,5 @@ class AppRoutes {
   static const String artistDetails = '/artist-details';
   static const String playlistDetails = '/playlist-details';
   static const String settings = '/settings';
+  static const String categoryTracks = '/category-tracks';
 }

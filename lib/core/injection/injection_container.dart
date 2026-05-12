@@ -8,6 +8,7 @@ import 'package:musix/features/home/cubit/home_cubit.dart';
 import 'package:musix/features/home/data/data_sources/home_remote_data_source.dart';
 import 'package:musix/features/home/data/repositories/home_repository.dart';
 import 'package:musix/features/search/cubit/search_cubit.dart';
+import 'package:musix/features/search/cubit/category_tracks_cubit.dart';
 import 'package:musix/features/search/data/data_sources/search_remote_data_source.dart';
 import 'package:musix/features/search/data/repositories/search_repository.dart';
 import 'package:musix/features/library/cubit/library_cubit.dart';
@@ -45,6 +46,7 @@ Future<void> init() async {
   sl.registerLazySingleton<SearchRepository>(
       () => SearchRepositoryImpl(remoteDataSource: sl()));
   sl.registerFactory(() => SearchCubit(repository: sl()));
+  sl.registerFactory(() => CategoryTracksCubit(repository: sl()));
   
   // Features - Library
   sl.registerLazySingleton<LibraryRemoteDataSource>(
