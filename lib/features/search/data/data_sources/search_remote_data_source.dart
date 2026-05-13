@@ -105,7 +105,7 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
       }
       return []; // Graceful fallback
     } on DioException catch (e) {
-      if (e.response?.statusCode == 403) return [];
+      if (e.response?.statusCode == 403 || e.response?.data?['error']?['message'] == 'Invalid limit') return [];
       throw ServerFailure(e.message ?? 'Network Error');
     } catch (e) {
       return [];
@@ -126,7 +126,12 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
       }
       throw const ServerFailure('Failed to fetch search results');
     } on DioException catch (e) {
-      throw ServerFailure(e.response?.data?['error']?['message'] ?? e.message ?? 'Network Error');
+      final message = e.response?.data?['error']?['message'] ?? e.message ?? 'Network Error';
+      // Fallback for Spotify Development Mode restriction on /search endpoint
+      if (message == 'Invalid limit') {
+        return _fallbackSearchTracks(query);
+      }
+      throw ServerFailure(message);
     } catch (e) {
       if (e is Failure) throw e;
       throw ServerFailure(e.toString());
@@ -167,15 +172,73 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
       // Fallback: Search for category name as genre
       return searchTracks('genre:$categoryId');
     } on DioException catch (e) {
+      final message = e.response?.data?['error']?['message'];
       if (e.response?.statusCode == 404 || e.response?.statusCode == 400 || e.response?.statusCode == 403) {
          // Some categories might not have browseable playlists, try search
          return searchTracks('genre:$categoryId');
       }
-      throw ServerFailure(e.response?.data?['error']?['message'] ?? e.message ?? 'Network Error');
+      if (message == 'Invalid limit') {
+         return _fallbackCategoryTracks();
+      }
+      throw ServerFailure(message ?? e.message ?? 'Network Error');
     } catch (e) {
       if (e is Failure) throw e;
       throw ServerFailure(e.toString());
     }
+  }
+
+  Future<List<TrackModel>> _fallbackSearchTracks(String query) async {
+    try {
+      final List<TrackModel> allTracks = [];
+      
+      // 1. Get top tracks
+      try {
+        final topResponse = await dio.get('/me/top/tracks', queryParameters: {'limit': 50});
+        if (topResponse.statusCode == 200) {
+           final items = topResponse.data['items'] as List;
+           allTracks.addAll(items.map((e) => TrackModel.fromJson(e)));
+        }
+      } catch (_) {}
+      
+      // 2. Get recently played
+      try {
+         final recentResponse = await dio.get('/me/player/recently-played', queryParameters: {'limit': 50});
+         if (recentResponse.statusCode == 200) {
+            final items = recentResponse.data['items'] as List;
+            allTracks.addAll(items.map((e) => TrackModel.fromJson(e['track'])));
+         }
+      } catch (_) {}
+
+      final uniqueTracks = <String, TrackModel>{};
+      for (var t in allTracks) {
+        uniqueTracks[t.id] = t;
+      }
+      
+      final q = query.toLowerCase();
+      final results = uniqueTracks.values.where((t) {
+         return t.name.toLowerCase().contains(q) || 
+                t.artists.any((a) => a.name.toLowerCase().contains(q));
+      }).toList();
+      
+      return results;
+    } catch (e) {
+       return [];
+    }
+  }
+
+  Future<List<TrackModel>> _fallbackCategoryTracks() async {
+     try {
+       final response = await dio.get('/me/top/tracks', queryParameters: {'limit': 20});
+       if (response.statusCode == 200) {
+          final items = response.data['items'] as List;
+          final tracks = items.map((e) => TrackModel.fromJson(e)).toList();
+          tracks.shuffle();
+          return tracks.take(10).toList();
+       }
+       return [];
+     } catch (_) {
+       return [];
+     }
   }
 
   List<CategoryModel> _getFallbackCategories() {
@@ -213,4 +276,3 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
     ];
   }
 }
-
