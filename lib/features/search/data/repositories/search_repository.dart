@@ -22,6 +22,7 @@ class SearchRepositoryImpl implements SearchRepository {
       final data = await remoteDataSource.getCategories();
       return Right(data);
     } catch (e) {
+      if (e is Failure) return Left(e);
       return Left(ServerFailure(e.toString()));
     }
   }
@@ -32,6 +33,7 @@ class SearchRepositoryImpl implements SearchRepository {
       final data = await remoteDataSource.getTrendingArtists();
       return Right(data);
     } catch (e) {
+      if (e is Failure) return Left(e);
       return Left(ServerFailure(e.toString()));
     }
   }
@@ -42,6 +44,7 @@ class SearchRepositoryImpl implements SearchRepository {
       final data = await remoteDataSource.getDiscoverAlbums();
       return Right(data);
     } catch (e) {
+      if (e is Failure) return Left(e);
       return Left(ServerFailure(e.toString()));
     }
   }
@@ -52,6 +55,7 @@ class SearchRepositoryImpl implements SearchRepository {
       final data = await remoteDataSource.searchTracks(query);
       return Right(data);
     } catch (e) {
+      if (e is Failure) return Left(e);
       return Left(ServerFailure(e.toString()));
     }
   }
@@ -63,8 +67,8 @@ class SearchRepositoryImpl implements SearchRepository {
       final data = await remoteDataSource.getCategoryTracks(categoryId);
       return Right(data);
     } catch (e) {
+      if (e is Failure) return Left(e);
       return Left(ServerFailure(e.toString()));
     }
   }
 }
-

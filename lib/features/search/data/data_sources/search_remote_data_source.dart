@@ -119,7 +119,6 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
         'q': query,
         'type': 'track',
         'limit': 20,
-        'market': 'EG',
       });
       if (response.statusCode == 200) {
         final items = response.data['tracks']['items'] as List;
@@ -127,8 +126,9 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
       }
       throw const ServerFailure('Failed to fetch search results');
     } on DioException catch (e) {
-      throw ServerFailure(e.message ?? 'Network Error');
+      throw ServerFailure(e.response?.data?['error']?['message'] ?? e.message ?? 'Network Error');
     } catch (e) {
+      if (e is Failure) throw e;
       throw ServerFailure(e.toString());
     }
   }
@@ -138,7 +138,7 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
     try {
       // Step 1: Get playlists for the category
       final response = await dio.get('/browse/categories/$categoryId/playlists',
-          queryParameters: {'limit': 5, 'country': 'EG'});
+          queryParameters: {'limit': 5});
 
       if (response.statusCode == 200) {
         final playlists = response.data['playlists']['items'] as List;
@@ -167,12 +167,13 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
       // Fallback: Search for category name as genre
       return searchTracks('genre:$categoryId');
     } on DioException catch (e) {
-      if (e.response?.statusCode == 404) {
+      if (e.response?.statusCode == 404 || e.response?.statusCode == 400 || e.response?.statusCode == 403) {
          // Some categories might not have browseable playlists, try search
          return searchTracks('genre:$categoryId');
       }
-      throw ServerFailure(e.message ?? 'Network Error');
+      throw ServerFailure(e.response?.data?['error']?['message'] ?? e.message ?? 'Network Error');
     } catch (e) {
+      if (e is Failure) throw e;
       throw ServerFailure(e.toString());
     }
   }
